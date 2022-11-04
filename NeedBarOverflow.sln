@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeedBarOverflow", "NeedBarOverflow\NeedBarOverflow.csproj", "{7D93F655-092F-4AEE-B27B-8D064CFFFABB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		1.2|Any CPU = 1.2|Any CPU
+		1.3|Any CPU = 1.3|Any CPU
+		1.4|Any CPU = 1.4|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D93F655-092F-4AEE-B27B-8D064CFFFABB}.1.2|Any CPU.ActiveCfg = 1.2|Any CPU
+		{7D93F655-092F-4AEE-B27B-8D064CFFFABB}.1.2|Any CPU.Build.0 = 1.2|Any CPU
+		{7D93F655-092F-4AEE-B27B-8D064CFFFABB}.1.3|Any CPU.ActiveCfg = 1.3|Any CPU
+		{7D93F655-092F-4AEE-B27B-8D064CFFFABB}.1.3|Any CPU.Build.0 = 1.3|Any CPU
+		{7D93F655-092F-4AEE-B27B-8D064CFFFABB}.1.4|Any CPU.ActiveCfg = 1.4|Any CPU
+		{7D93F655-092F-4AEE-B27B-8D064CFFFABB}.1.4|Any CPU.Build.0 = 1.4|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6DE6D6DB-008D-41CD-B4D4-80B78B9286F6}
+	EndGlobalSection
+EndGlobal
