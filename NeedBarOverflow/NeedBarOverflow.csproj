@@ -17,7 +17,7 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\Mods\NeedBarOverflow\1.4\Assemblies\</OutputPath>
-    <DefineConstants>DEBUG;v1_4</DefineConstants>
+    <DefineConstants>v1_4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -42,6 +42,29 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.4_Debug|AnyCPU'">
+    <OutputPath>..\..\..\Mods\NeedBarOverflow\1.4\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;v1_4</DefineConstants>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
+    <OutputPath>..\..\..\Mods\NeedBarOverflow\1.5\Assemblies\</OutputPath>
+    <DefineConstants>v1_5</DefineConstants>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.5_Debug|AnyCPU'">
+    <OutputPath>..\..\..\Mods\NeedBarOverflow\1.5\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;v1_5</DefineConstants>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="NeedBarOverflow_Extensions.cs" />
     <Compile Include="NeedBarOverflow_Patches.cs" />
@@ -52,11 +75,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
-      <Version>1.4.3537</Version>
+      <Version>1.5.4033-beta</Version>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
       <ExcludeAssets>runtime</ExcludeAssets>
-      <Version>2.2.2</Version>
+      <Version>2.3.1.1</Version>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

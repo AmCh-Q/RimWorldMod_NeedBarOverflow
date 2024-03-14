@@ -1,6 +1,6 @@
 ﻿namespace NeedBarOverflow
 {
-    using HarmonyLib;
+	using HarmonyLib;
     using RimWorld;
     using System;
     using System.Collections.Generic;
@@ -11,88 +11,85 @@
     using Verse;
     using C = NeedBarOverflow_Consts;
     using S = NeedBarOverflow_Settings;
+	using D = NeedBarOverflow_Debug;
 
-    public class NeedBarOverflow : Mod
+	public class NeedBarOverflow : Mod
 	{
 		public static S s;
-		private static readonly MethodInfo 
-			get_MaxLevel = AccessTools.PropertyGetter(typeof(Need), nameof(Need.MaxLevel)),
-			get_CurLevel = AccessTools.PropertyGetter(typeof(Need), nameof(Need.CurLevel)),
-			set_CurLevel = AccessTools.PropertySetter(typeof(Need), nameof(Need.CurLevel)),
-			get_CurLevelPercentage = AccessTools.PropertyGetter(typeof(Need), nameof(Need.CurLevelPercentage)),
-			set_CurLevelPercentage = AccessTools.PropertySetter(typeof(Need), nameof(Need.CurLevelPercentage)),
-			DrawBarThreshold = AccessTools.Method(typeof(Need), "DrawBarThreshold"),
-			DrawBarInstantMarkerAt = AccessTools.Method(typeof(Need), "DrawBarInstantMarkerAt"),
-			clamp01Method = ((Func<float, float>)Mathf.Clamp01).Method,
-			clampMethod = ((Func<float, float, float, float>)Mathf.Clamp).Method,
-			maxMethod = ((Func<float, float, float>)Mathf.Max).Method,
-			minMethod = ((Func<float, float, float>)Mathf.Min).Method,
-			adjustDrain = ((Func<float, Need, int, float>)Adjust_NeedInterval_Drain).Method,
-			adjustGain = ((Func<float, Need, int, float>)Adjust_NeedInterval_Gain).Method;
+		private static readonly PropertyInfo 
+			p_MaxLevel = AccessTools.Property(typeof(Need), nameof(Need.MaxLevel)),
+			p_CurLevel = AccessTools.Property(typeof(Need), nameof(Need.CurLevel)),
+			p_CurLevelPercentage = AccessTools.Property(typeof(Need), nameof(Need.CurLevelPercentage));
+		private static readonly MethodInfo
+			m_DrawBarThreshold = AccessTools.Method(typeof(Need), "DrawBarThreshold"),
+			m_DrawBarInstantMarkerAt = AccessTools.Method(typeof(Need), "DrawBarInstantMarkerAt"),
+			m_clamp01 = ((Func<float, float>)Mathf.Clamp01).Method,
+			m_clamp = ((Func<float, float, float, float>)Mathf.Clamp).Method,
+			m_max = ((Func<float, float, float>)Mathf.Max).Method,
+			m_min = ((Func<float, float, float>)Mathf.Min).Method,
+			m_adjustDrain = ((Func<float, Need, int, float>)Adjust_NeedInterval_Drain).Method,
+			m_adjustGain = ((Func<float, Need, int, float>)Adjust_NeedInterval_Gain).Method;
 		private static readonly FieldInfo 
-			settingsField = typeof(NeedBarOverflow).GetField("s"),
-			statsAField = typeof(S).GetField("statsA"),
-			needDef = AccessTools.Field(typeof(Need), nameof(Need.def)),
-			scaleBarDef = AccessTools.Field(typeof(NeedDef), nameof(NeedDef.scaleBar)),
-			needPawnField = AccessTools.Field(typeof(Need), "pawn"),
-			curLevelIntField = AccessTools.Field(typeof(Need), "curLevelInt");
+			f_settings = typeof(NeedBarOverflow).GetField("s"),
+			f_statsA = typeof(S).GetField(nameof(S.statsA)),
+			f_needDef = AccessTools.Field(typeof(Need), nameof(Need.def)),
+			f_scaleBarDef = AccessTools.Field(typeof(NeedDef), nameof(NeedDef.scaleBar)),
+			f_needPawn = AccessTools.Field(typeof(Need), "pawn"),
+			f_curLevelInt = AccessTools.Field(typeof(Need), "curLevelInt");
 		public static HediffDef foodOverflow;
-#if DEBUG
-		private const string transpilerStateWarning = "[Need Bar Overflow]: Patch {0} is not fully applied (state: {1} < {2})";
-#endif
 		public NeedBarOverflow(ModContentPack content) : base(content)
 		{
-#if DEBUG
-			Log.Message("[Need Bar Overflow]: NeedBarOverflow constructor called");
-#endif
+			D.Message("[Need Bar Overflow]: NeedBarOverflow constructor called");
 			s = GetSettings<S>();
+			NeedBarOverflow_Patches.s = s;
 			LongEventHandler.QueueLongEvent(delegate
 			{
 				foodOverflow = HediffDef.Named("FoodOverflow");
 				HediffComp_FoodOverflow.gourmand = TraitDef.Named("Gourmand");
-				s.ApplyFoodHediffSettings();
-			}, "NeedBarOverflow.Mod.ctor", false, null);
+                NeedBarOverflow_Patches.ApplyPatches();
+                s.ApplyFoodHediffSettings();
+            }, "NeedBarOverflow.Mod.ctor", false, null);
 		}
-		public static void GenUI_Prefix(ref float pct)
-		{
-			pct = Mathf.Clamp01(pct);
-		}
-		/*private static readonly MethodInfo DrawBarThreshold = AccessTools.Method(typeof(Need), "DrawBarThreshold");
-		private static readonly MethodInfo DrawBarDivision = AccessTools.Method(typeof(Need), "DrawBarDivision");
-		private static readonly MethodInfo DrawBarInstantMarkerAt = AccessTools.Method(typeof(Need), "DrawBarInstantMarkerAt");
-		public static void DrawOnGUI_PatchS(Rect rect3, Need n, bool drawArrows, List<float> threshPercents)
-        {
-			Rect rect6 = rect3;
-			float num4 = 1f;
-			float mult = 1f;
-			float max = n.MaxLevel;
-			float cur = n.CurLevel;
-			if (max < cur)
+		public static void GenUI_Prefix(ref float pct) => pct = Mathf.Clamp01(pct);
+
+		/*
+			private static readonly MethodInfo m_DrawBarThreshold = AccessTools.Method(typeof(Need), "DrawBarThreshold");
+			private static readonly MethodInfo m_DrawBarDivision = AccessTools.Method(typeof(Need), "DrawBarDivision");
+			private static readonly MethodInfo m_DrawBarInstantMarkerAt = AccessTools.Method(typeof(Need), "m_DrawBarInstantMarkerAt");
+			public static void DrawOnGUI_PatchS(Rect rect3, Need n, bool drawArrows, List<float> threshPercents)
 			{
-				mult = max / cur;
-				if (1f < cur)
-					mult *= max;
-				else
-					mult *= mult;
-				max = cur;
+				Rect rect6 = rect3;
+				float num4 = 1f;
+				float mult = 1f;
+				float max = n.MaxLevel;
+				float cur = n.CurLevel;
+				if (max < cur)
+				{
+					mult = max / cur;
+					if (1f < cur)
+						mult *= max;
+					else
+						mult *= mult;
+					max = cur;
+				}
+				if (n.def.scaleBar && max < 1f)
+					num4 = max;
+				rect6.width *= num4;
+				mult *= num4;
+				Rect barRect = Widgets.FillableBar(rect6, cur / max);
+				if (drawArrows)
+					Widgets.FillableBarChangeArrows(rect6, n.GUIChangeArrow);
+				if (threshPercents != null)
+					for (int i = 0; i < threshPercents.Count; i++)
+						m_DrawBarThreshold.Invoke(n, new object[2] { barRect, threshPercents[i] * mult } );
+				if (n.MaxLevel == 1f || n.def.showUnitTicks)
+					for (float j = 1; j < max; j++)
+						m_DrawBarDivision.Invoke(n, new object[2] { barRect, j / max * num4 });
+				float curInstantLevelPercentage = n.CurInstantLevelPercentage;
+				if (curInstantLevelPercentage >= 0f)
+					m_DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.Clamp01(curInstantLevelPercentage * mult) });
 			}
-			if (n.def.scaleBar && max < 1f)
-				num4 = max;
-			rect6.width *= num4;
-			mult *= num4;
-			Rect barRect = Widgets.FillableBar(rect6, cur / max);
-			if (drawArrows)
-				Widgets.FillableBarChangeArrows(rect6, n.GUIChangeArrow);
-			if (threshPercents != null)
-				for (int i = 0; i < threshPercents.Count; i++)
-					DrawBarThreshold.Invoke(n, new object[2] { barRect, threshPercents[i] * mult } );
-			if (n.MaxLevel == 1f || n.def.showUnitTicks)
-				for (float j = 1; j < max; j++)
-					DrawBarDivision.Invoke(n, new object[2] { barRect, j / max * num4 });
-			float curInstantLevelPercentage = n.CurInstantLevelPercentage;
-			if (curInstantLevelPercentage >= 0f)
-				DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.Clamp01(curInstantLevelPercentage * mult) });
-		}*/
+		*/
 		public static IEnumerable<CodeInstruction> DrawOnGUI_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			List<CodeInstruction> instructionList = instructions.ToList();
@@ -120,22 +117,22 @@
 				if (state > 0 && i < instructionList.Count - 1 &&
 					codeInstruction.opcode == OpCodes.Ldarg_0)
 				{
-					if (instructionList[i + 1].LoadsField(needDef))
+					if (instructionList[i + 1].LoadsField(f_needDef))
 					{
 						if (state == 1 && i < instructionList.Count - 2 &&
-							instructionList[i + 2].LoadsField(scaleBarDef))
+							instructionList[i + 2].LoadsField(f_scaleBarDef))
 						{
 							state = 2;
 							//0								#Consumed at #Pop or #End
 							yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
 							//1	float max = n.MaxLevel;
 							yield return new CodeInstruction(OpCodes.Ldarg_0);
-							yield return new CodeInstruction(OpCodes.Callvirt, get_MaxLevel);
+							yield return new CodeInstruction(OpCodes.Callvirt, p_MaxLevel.GetGetMethod());
 							yield return new CodeInstruction(OpCodes.Dup);  // consumed at #Bge_Un_S
 							yield return new CodeInstruction(OpCodes.Stloc_S, max.LocalIndex);
 							//2	float cur = n.CurLevel;
 							yield return new CodeInstruction(OpCodes.Ldarg_0);
-							yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevel);
+							yield return new CodeInstruction(OpCodes.Callvirt, p_CurLevel.GetGetMethod());
 							yield return new CodeInstruction(OpCodes.Dup);  // consumed at #Bge_Un_S
 							yield return new CodeInstruction(OpCodes.Stloc_S, cur.LocalIndex);
 							//3	if (max < cur)				#Bge_Un_S
@@ -175,7 +172,7 @@
 							state = 5;
 							//	if (n.def.scaleBar && max < 1f)
 							yield return new CodeInstruction(OpCodes.Ldarg_0);
-							yield return new CodeInstruction(OpCodes.Callvirt, get_MaxLevel);
+							yield return new CodeInstruction(OpCodes.Callvirt, p_MaxLevel.GetGetMethod());
 							yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
 							yield return new CodeInstruction(OpCodes.Beq_S, jumpLabels[3]);
 							yield return codeInstruction;
@@ -187,14 +184,14 @@
 							continue;
 						}
 					}
-					if (state > 1 && instructionList[i + 1].Calls(get_MaxLevel))
+					if (state > 1 && instructionList[i + 1].Calls(p_MaxLevel.GetGetMethod()))
 					{
 						// n.MaxLevel => max;
 						yield return new CodeInstruction(OpCodes.Ldloc_S, max.LocalIndex);
 						i++;
 						continue;
 					}
-					if (state > 1 && instructionList[i + 1].Calls(get_CurLevelPercentage))
+					if (state > 1 && instructionList[i + 1].Calls(p_CurLevelPercentage.GetGetMethod()))
 					{
 						// n.CurLevelPercentage => cur / max;
 						yield return new CodeInstruction(OpCodes.Ldloc_S, cur.LocalIndex);
@@ -221,47 +218,34 @@
 					codeInstruction.opcode == OpCodes.Ldloc_S &&
 					codeInstruction.OperandIs(num4Idx) &&
 					instructionList[i + 1].opcode == OpCodes.Mul &&
-					(instructionList[i + 2].Calls(DrawBarThreshold) ||
-					instructionList[i + 2].Calls(DrawBarInstantMarkerAt)))
+					(instructionList[i + 2].Calls(m_DrawBarThreshold) ||
+					instructionList[i + 2].Calls(m_DrawBarInstantMarkerAt)))
 				{
 					state += 1;
-					//	DrawBarThreshold.Invoke(n, new object[2] { barRect, threshPercents[i] * mult });
-					//	DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.Clamp01(curInstantLevelPercentage * mult) });
+					//	m_DrawBarThreshold.Invoke(n, new object[2] { barRect, threshPercents[i] * mult });
+					//	m_DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.Clamp01(curInstantLevelPercentage * mult) });
 					yield return new CodeInstruction(OpCodes.Ldloc_S, mult.LocalIndex);
 					continue;
 				}
 				if (state == 6 &&
-					codeInstruction.Calls(DrawBarInstantMarkerAt) &&
+					codeInstruction.Calls(m_DrawBarInstantMarkerAt) &&
 					instructionList[i - 1].opcode == OpCodes.Mul)
 				{
 					state = 7;
-					//	DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.Clamp01(curInstantLevelPercentage * mult) });
-					yield return new CodeInstruction(OpCodes.Call, clamp01Method);
+					//	m_DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.Clamp01(curInstantLevelPercentage * mult) });
+					yield return new CodeInstruction(OpCodes.Call, m_clamp01);
 					yield return codeInstruction;
 					continue;
 				}
 				yield return codeInstruction;
 			}
-#if DEBUG
-			const int expectedState = 7;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "DrawOnGUI_Transpiler", state, expectedState));
-#endif
-		}
-		public static float Adjust_MaxLevel(float m, Need n)
-		{
-			int i = C.needTypes.GetValueOrDefault(n.GetType(), C.Default);
-			if (!s.enabledA[i])
-				return m;
-			if (i == C.Food)
-				return Mathf.Max(m * s.statsA[i], m + s.statsB[new IntVec2(C.Food, 1)]);
-			return m * s.statsA[i];
+			D.CheckTranspiler(state, 7);
 		}
 		public static float Adjust_NeedInterval_Drain(float m, Need n, int c)
 		{
 			float overflowAmount = n.CurLevelPercentage - 1f;
 			IntVec2 v;
-			if (overflowAmount > 0 && s.enabledA[c] && s.enabledB[v = new IntVec2(c, 1)])
+			if (overflowAmount > 0 && s.enabledA[c] && s.enabledB[v = C.V(c, 1)])
 				return m * (s.statsB[v] * overflowAmount + 1f);
 			return m;
 		}
@@ -269,9 +253,18 @@
 		{
 			float overflowAmount = n.CurLevelPercentage - 1f;
 			IntVec2 v;
-			if (overflowAmount > 0 && s.enabledA[c] && s.enabledB[v = new IntVec2(c, 2)])
+			if (overflowAmount > 0 && s.enabledA[c] && s.enabledB[v = C.V(c, 2)])
 				return m / (s.statsB[v] * overflowAmount + 1f);
 			return m;
+		}
+		public static float Adjust_MaxLevel(float m, Need n)
+		{
+			int i = C.needTypes.GetValueOrDefault(n.GetType(), C.DefaultNeed);
+			if (!s.enabledA[i])
+				return m;
+			if (i == C.Food)
+				return Mathf.Max(m * s.statsA[i], m + s.statsB[C.V(C.Food, 1)]);
+			return m * s.statsA[i];
 		}
 		public static IEnumerable<CodeInstruction> CurLevel_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
@@ -282,39 +275,30 @@
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				yield return codeInstruction;
-				if (codeInstruction.Calls(get_MaxLevel))
+				if (codeInstruction.Calls(p_MaxLevel.GetGetMethod()))
 				{
 					state++;
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Call, adjust);
 				}
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "CurLevel_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
 		public static IEnumerable<CodeInstruction> CurLevelPercentage_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
 			List<CodeInstruction> instructionList = instructions.ToList();
 			int state = 0;
-			MethodInfo clamp01Method = ((Func<float, float>)Mathf.Clamp01).Method;
 			for (int i = 0; i < instructionList.Count; i++)
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				yield return codeInstruction;
-				if (codeInstruction.Calls(get_CurLevelPercentage))
+				if (codeInstruction.Calls(p_CurLevelPercentage.GetGetMethod()))
                 {
 					state++;
-					yield return new CodeInstruction(OpCodes.Call, clamp01Method);
+					yield return new CodeInstruction(OpCodes.Call, m_clamp01);
 				}
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "CurLevelPercentage_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
 		public static IEnumerable<CodeInstruction> Clamp01_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
@@ -323,30 +307,24 @@
 			for (int i = 0; i < instructionList.Count; i++)
 			{
 				CodeInstruction codeInstruction = instructionList[i];
-				if (codeInstruction.Calls(clamp01Method))
-				{
-					// stackTop, before ops: the value to be clamped
-					// vanilla, after ops: value clamped to 0-1
-					// patched, after ops: value clamped to 0-statsA[S.patchParamInt[0]]
-					// S.patchParamInt[0] is a constant, statsA is a static array
-					state++;
-					yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
-					yield return new CodeInstruction(OpCodes.Ldsfld, settingsField);
-					yield return new CodeInstruction(OpCodes.Ldfld, statsAField);
-					yield return new CodeInstruction(OpCodes.Ldc_I4, S.patchParamInt[0]);
-					yield return new CodeInstruction(OpCodes.Ldelem_R4);
-					yield return new CodeInstruction(OpCodes.Call, clampMethod);
-				}
-				else
+				if (!codeInstruction.Calls(m_clamp01))
 				{
 					yield return codeInstruction;
+					continue;
 				}
+				// stackTop, before ops: the value to be clamped
+				// vanilla, after ops: value clamped to 0-1
+				// patched, after ops: value clamped to 0-statsA[S.patchParamInt[0]]
+				// S.patchParamInt[0] is a constant, statsA is a static array
+				state++;
+				yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
+				yield return new CodeInstruction(OpCodes.Ldsfld, f_settings);
+				yield return new CodeInstruction(OpCodes.Ldfld, f_statsA);
+				yield return new CodeInstruction(OpCodes.Ldc_I4, S.patchParamInt[0]);
+				yield return new CodeInstruction(OpCodes.Ldelem_R4);
+				yield return new CodeInstruction(OpCodes.Call, m_clamp);
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "Clamp01_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
 		public static void NutritionWanted_Postfix(ref float __result)
         {
@@ -355,43 +333,62 @@
 		}
 		public static void AddHumanlikeOrders_Postfix(Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
 		{
-			if (!s.enabledA[C.Food] || !s.enabledB[new IntVec2(C.Food, 1)])
+			if (!s.enabledA[C.Food] || !s.enabledB[C.V(C.Food, 1)])
 				return;
 			Need_Food need_Food = pawn.needs?.food;
 			if (need_Food == null
 				|| need_Food.CurCategory > HungerCategory.Fed
-				|| need_Food.CurLevel < s.statsB[new IntVec2(C.Food, 2)] * need_Food.MaxLevel)
+				|| need_Food.CurLevel < s.statsB[C.V(C.Food, 2)] * need_Food.MaxLevel)
 				return;
 			IntVec3 c = IntVec3.FromVector3(clickPos);
+			if (c.ContainsStaticFire(pawn.Map))
+				return;
+			HashSet<string> ingestOrders = new HashSet<string>();
 			foreach (FloatMenuOption opt in opts)
 			{
 				if (opt.action == null)
 					continue;
-				foreach (Thing thing in c.GetThingList(pawn.Map))
+				if (ingestOrders.Count == 0)
 				{
-					if (pawn.RaceProps.CanEverEat(thing) && thing.def.IsNutritionGivingIngestible)
+                    List<Thing> thingList = c.GetThingList(pawn.Map);
+					if (thingList.NullOrEmpty())
+						return;
+					foreach (Thing thing in thingList)
 					{
-						string value = "ConsumeThing".Translate(thing.LabelShort, thing);
-						if (opt.Label.Contains(value))
-						{
-							opt.Label = opt.Label + ": " + "NBO.Disabled_FoodFull".Translate();
-							opt.action = null;
-							break;
-						}
-					}
-				}
+						ThingDef thingDef = thing.def;
+						if (!thingDef.IsNutritionGivingIngestible
+							|| !pawn.RaceProps.CanEverEat(thing))
+							continue;
+						string ingestCommand = thingDef.ingestible.ingestCommandString;
+						string ingestAction;
+                        if (ingestCommand.NullOrEmpty())
+                            ingestAction = "ConsumeThing".Translate(thing.LabelShort, thing);
+						else
+                            ingestAction = ingestCommand.Formatted(thing.LabelShort);
+						if (!ingestOrders.Contains(ingestAction))
+							ingestOrders.Add(ingestAction);
+                    }
+                    if (ingestOrders.Count == 0)
+                        return;
+                }
+				string label = opt.Label;
+                if (ingestOrders.Any(s => label.StartsWith(s)))
+                {
+                    opt.Label = label + ": " + "NBO.Disabled_FoodFull".Translate();
+                    opt.action = null;
+                }
 			}
 		}
 		public static void WillIngestFromInventoryNow_Postfix(Pawn pawn, Thing inv, ref bool __result)
-		{
-			__result &= !__result
-			|| !s.enabledA[C.Food]
-			|| !s.enabledB[new IntVec2(C.Food, 1)]
-			|| !inv.def.IsNutritionGivingIngestible
-			|| pawn.needs.food.CurCategory > HungerCategory.Fed
-			|| pawn.needs.food.CurLevel < s.statsB[new IntVec2(C.Food, 2)] * pawn.needs.food.MaxLevel;
-		}
-		public static void Food_NeedInterval_Inject(Pawn pawn)
+        {
+            __result &= !s.enabledA[C.Food]
+                || !s.enabledB[C.V(C.Food, 1)]
+                || !inv.def.IsNutritionGivingIngestible
+				|| pawn.needs?.food == null
+                || pawn.needs.food.CurCategory > HungerCategory.Fed
+                || pawn.needs.food.CurLevel < s.statsB[C.V(C.Food, 2)] * pawn.needs.food.MaxLevel;
+        }
+        public static void Food_NeedInterval_Inject(Pawn pawn)
 		{
 			if (HediffComp_FoodOverflow.pawnsWithFoodOverflow.Contains(pawn) ||
 				!s.enabledA[C.Food] || !s.FoodOverflowAffectHealth)
@@ -410,17 +407,17 @@
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				if (state == 0 &&
-					codeInstruction.Calls(set_CurLevel))
+					codeInstruction.Calls(p_CurLevel.GetSetMethod()))
 				{
 					state++;
 					// If curLevel <= maxLevel, skip
 					// otherwise do rest of checks in Food_NeedInterval_Inject and apply hediff
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Callvirt, get_MaxLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, p_MaxLevel.GetGetMethod());
 					yield return new CodeInstruction(OpCodes.Ble_S, jumpLabel);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Ldfld, needPawnField);
+					yield return new CodeInstruction(OpCodes.Ldfld, f_needPawn);
 					yield return new CodeInstruction(OpCodes.Call, inject);
 					yield return codeInstruction.WithLabels(jumpLabel);
 				}
@@ -429,47 +426,7 @@
 					yield return codeInstruction;
 				}
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "Food_NeedInterval_Transpiler", state, expectedState));
-#endif
-		}
-		public static IEnumerable<CodeInstruction> Rest_NeedInterval_Transpiler(IEnumerable<CodeInstruction> instructions)
-		{
-			List<CodeInstruction> instructionList = instructions.ToList();
-			int state = 0;
-			for (int i = 0; i < instructionList.Count; i++)
-			{
-				CodeInstruction codeInstruction = instructionList[i];
-				if (i > 0 && i < instructionList.Count - 1 &&
-					instructionList[i + 1].Calls(set_CurLevel))
-				{
-					if (codeInstruction.opcode == OpCodes.Sub &&
-						s.patches_Session[C.RestDrain])
-					{
-						state++;
-						yield return new CodeInstruction(OpCodes.Ldarg_0);
-						yield return new CodeInstruction(OpCodes.Ldc_I4, C.Rest);
-						yield return new CodeInstruction(OpCodes.Call, adjustDrain);
-					}
-					else if (codeInstruction.opcode == OpCodes.Add &&
-						s.patches_Session[C.RestGain] &&
-						!instructionList[i - 1].Calls(get_CurLevel))
-					{
-						state++;
-						yield return new CodeInstruction(OpCodes.Ldarg_0);
-						yield return new CodeInstruction(OpCodes.Ldc_I4, C.Rest);
-						yield return new CodeInstruction(OpCodes.Call, adjustGain);
-					}
-				}
-				yield return codeInstruction;
-			}
-#if DEBUG
-			int expectedState = (s.patches_Session[C.RestDrain] ? 1 : 0) + (s.patches_Session[C.RestGain] ? 1 : 0);
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "Rest_NeedInterval_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
 		public static IEnumerable<CodeInstruction> GainJoy_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
@@ -482,9 +439,9 @@
 					codeInstruction.opcode == OpCodes.Ldarg_1 &&
 					instructionList[i + 1].opcode == OpCodes.Ldc_R4 &&
 					instructionList[i + 2].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 3].Calls(get_CurLevel) &&
+					instructionList[i + 3].Calls(p_CurLevel.GetGetMethod()) &&
 					instructionList[i + 4].opcode == OpCodes.Sub &&
-					instructionList[i + 5].Calls(minMethod) &&
+					instructionList[i + 5].Calls(m_min) &&
 					instructionList[i + 6].opcode == OpCodes.Starg_S)
 				{
 					state = 1;
@@ -493,11 +450,7 @@
 				}
 				yield return codeInstruction;
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "GainJoy_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
 		public static void GainJoy_Prefix(Need_Joy __instance, ref float amount)
 		{
@@ -511,21 +464,17 @@
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				yield return codeInstruction;
-				if (codeInstruction.Calls(get_CurLevel))
+				if (codeInstruction.Calls(p_CurLevel.GetGetMethod()))
 				{
 					state++;
-					yield return new CodeInstruction(OpCodes.Call, clamp01Method);
+					yield return new CodeInstruction(OpCodes.Call, m_clamp01);
 				}
 
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "GainJoy_Prefix", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
-#if !v1_2
-		public static IEnumerable<CodeInstruction> DrawSuppressionBar_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+#if (v1_3 || v1_4 || v1_5)
+        public static IEnumerable<CodeInstruction> DrawSuppressionBar_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			List<CodeInstruction> instructionList = instructions.ToList();
 			int state = 0;
@@ -535,12 +484,12 @@
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				if (state == 0 && i > 0 &&
-                    instructionList[i - 1].Calls(get_CurLevelPercentage))
+                    instructionList[i - 1].Calls(p_CurLevelPercentage.GetGetMethod()))
                 {
 					state = 1;
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-					yield return new CodeInstruction(OpCodes.Call, maxMethod);
+					yield return new CodeInstruction(OpCodes.Call, m_max);
 					yield return new CodeInstruction(OpCodes.Stloc_S, perc.LocalIndex);
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
 					yield return new CodeInstruction(OpCodes.Ldloc_S, perc.LocalIndex);
@@ -550,14 +499,14 @@
 				yield return codeInstruction;
 				if (state > 0 && state < 3 && i < instructionList.Count - 1 &&
 					codeInstruction.opcode == OpCodes.Ldc_R4 &&
-					instructionList[i + 1].Calls(DrawBarThreshold))
+					instructionList[i + 1].Calls(m_DrawBarThreshold))
                 {
 					state++;
 					yield return new CodeInstruction(OpCodes.Ldloc_S, perc.LocalIndex);
 					yield return new CodeInstruction(OpCodes.Mul);
 				}
 				if (state == 3 && i < instructionList.Count - 1 && 
-					codeInstruction.Calls(DrawBarThreshold))
+					codeInstruction.Calls(m_DrawBarThreshold))
                 {
 					state++;
 					i++;
@@ -567,19 +516,15 @@
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Ldarg_1);
 					yield return new CodeInstruction(OpCodes.Ldloc_S, perc.LocalIndex);
-					yield return new CodeInstruction(OpCodes.Call, DrawBarThreshold);
+					yield return new CodeInstruction(OpCodes.Call, m_DrawBarThreshold);
 					yield return instructionList[i].WithLabels(end);
 				}
 			}
-#if DEBUG
-			const int expectedState = 4;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "DrawSuppressionBar_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 4);
 		}
 #endif
-#if !v1_2 && !v1_3
-		public static IEnumerable<CodeInstruction> KillThirst_KilledPawn_Transpiler(IEnumerable<CodeInstruction> instructions)
+#if (v1_4 || v1_5)
+        public static IEnumerable<CodeInstruction> KillThirst_KilledPawn_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
 			List<CodeInstruction> instructionList = instructions.ToList();
 			int state = 0;
@@ -589,25 +534,21 @@
 				if (state == 0 && i > 0 && i < instructionList.Count - 1 &&
 					instructionList[i - 1].opcode == OpCodes.Ldarg_0 &&
 					codeInstruction.LoadsConstant(1d) &&
-					instructionList[i + 1].Calls(set_CurLevel))
+					instructionList[i + 1].Calls(p_CurLevel.GetSetMethod()))
 				{
 					state++;
 					yield return new CodeInstruction(OpCodes.Dup);
-					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, p_CurLevel.GetGetMethod());
 					yield return codeInstruction;
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Ldc_I4, C.KillThirst);
-					yield return new CodeInstruction(OpCodes.Call, adjustGain);
+					yield return new CodeInstruction(OpCodes.Call, m_adjustGain);
 					yield return new CodeInstruction(OpCodes.Add);
 				}
 				else
 					yield return codeInstruction;
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "KillThirst_KilledPawn_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
 		public static IEnumerable<CodeInstruction> Learn_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
@@ -620,9 +561,9 @@
 					codeInstruction.opcode == OpCodes.Ldarg_1 &&
 					instructionList[i + 1].LoadsConstant(1d) &&
 					instructionList[i + 2].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 3].Calls(get_CurLevel) &&
+					instructionList[i + 3].Calls(p_CurLevel.GetGetMethod()) &&
 					instructionList[i + 4].opcode == OpCodes.Sub &&
-					instructionList[i + 5].Calls(minMethod) &&
+					instructionList[i + 5].Calls(m_min) &&
 					instructionList[i + 6].opcode == OpCodes.Starg_S &&
 					instructionList[i + 7].opcode == OpCodes.Ldarg_0)
 				{
@@ -632,20 +573,16 @@
 					continue;
 				}
 				if (state == 1 &&
-					codeInstruction.StoresField(curLevelIntField) &&
+					codeInstruction.StoresField(f_curLevelInt) &&
 					instructionList[i - 1].opcode == OpCodes.Add)
 				{
 					state = 2;
-					yield return new CodeInstruction(OpCodes.Callvirt, set_CurLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, p_CurLevel.GetSetMethod());
 					continue;
 				}
 				yield return codeInstruction;
 			}
-#if DEBUG
-			const int expectedState = 2;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "Learn_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 2);
 		}
 		public static IEnumerable<CodeInstruction> DrawLearning_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
@@ -656,17 +593,13 @@
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				yield return codeInstruction;
-				if (state == 0 && codeInstruction.Calls(get_CurLevelPercentage))
+				if (state == 0 && codeInstruction.Calls(p_CurLevelPercentage.GetGetMethod()))
 				{
 					state++;
 					yield return new CodeInstruction(OpCodes.Call, clamp01Method);
 				}
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "DrawLearning_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
 		public static IEnumerable<CodeInstruction> Play_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
@@ -678,9 +611,9 @@
 				if (state == 0 && i < instructionList.Count - 5 &&
 					codeInstruction.opcode == OpCodes.Ldarg_0 &&
 					instructionList[i + 1].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 2].Calls(get_CurLevelPercentage) &&
-					instructionList[i + 3].Calls(clamp01Method) &&
-					instructionList[i + 4].Calls(set_CurLevelPercentage))
+					instructionList[i + 2].Calls(p_CurLevelPercentage.GetGetMethod()) &&
+					instructionList[i + 3].Calls(m_clamp01) &&
+					instructionList[i + 4].Calls(p_CurLevelPercentage.GetSetMethod()))
 				{
 					state++;
 					i += 4;
@@ -688,11 +621,7 @@
 				}
 				yield return codeInstruction;
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "Play_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
 		}
 #endif
 		public static IEnumerable<CodeInstruction> Drain_NeedInterval_Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -704,21 +633,37 @@
 				CodeInstruction codeInstruction = instructionList[i];
 				if (i > 0 && i < instructionList.Count - 1 &&
 					codeInstruction.opcode == OpCodes.Sub &&
-					instructionList[i + 1].Calls(set_CurLevel) &&
-					s.patches_Session[S.patchParamInt[0]])
+					instructionList[i + 1].Calls(p_CurLevel.GetSetMethod()))
 				{
 					state++;
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Ldc_I4, S.patchParamInt[1]);
-					yield return new CodeInstruction(OpCodes.Call, adjustDrain);
+					yield return new CodeInstruction(OpCodes.Ldc_I4, S.patchParamInt[0]);
+					yield return new CodeInstruction(OpCodes.Call, m_adjustDrain);
 				}
 				yield return codeInstruction;
 			}
-#if DEBUG
-			const int expectedState = 1;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "Drain_NeedInterval_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 1);
+		}
+		public static IEnumerable<CodeInstruction> Gain_NeedInterval_Transpiler(IEnumerable<CodeInstruction> instructions)
+		{
+			List<CodeInstruction> instructionList = instructions.ToList();
+			int state = 0;
+			for (int i = 0; i < instructionList.Count; i++)
+			{
+				CodeInstruction codeInstruction = instructionList[i];
+				if (i > 0 && i < instructionList.Count - 1 &&
+					codeInstruction.opcode == OpCodes.Add &&
+					instructionList[i + 1].Calls(p_CurLevel.GetSetMethod()) &&
+					!instructionList[i - 1].Calls(p_CurLevel.GetGetMethod()))
+				{
+					state++;
+					yield return new CodeInstruction(OpCodes.Ldarg_0);
+					yield return new CodeInstruction(OpCodes.Ldc_I4, S.patchParamInt[0]);
+					yield return new CodeInstruction(OpCodes.Call, m_adjustGain);
+				}
+				yield return codeInstruction;
+			}
+			D.CheckTranspiler(state, 1);
 		}
 		public static IEnumerable<CodeInstruction> RemoveLastMin_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
@@ -728,7 +673,7 @@
 			for (int i = instructionList.Count - 2; i > 0; i--)
 			{
 				if (instructionList[i].LoadsConstant(1.0) &&
-					instructionList[i + 1].Calls(minMethod))
+					instructionList[i + 1].Calls(m_min))
 				{
 					state++;
 					lastIdxBeforeLdc = i - 1;
@@ -744,11 +689,7 @@
 					i += 2;
 				}
 			}
-#if DEBUG
-			const int expectedState = 2;
-			if (state < expectedState)
-				Log.Warning(string.Format(transpilerStateWarning, "RemoveLastMin_Transpiler", state, expectedState));
-#endif
+			D.CheckTranspiler(state, 2);
 		}
 		public override string SettingsCategory() => "NBO.Name".Translate();
 		public override void DoSettingsWindowContents(Rect inRect)
@@ -761,9 +702,7 @@
 	{
 		public HediffCompProperties_FoodOverflow()
 		{
-#if DEBUG
-			Log.Message("[Need Bar Overflow]: HediffCompProperties_FoodOverflow constructor called");
-#endif
+			D.Message("[Need Bar Overflow]: HediffCompProperties_FoodOverflow constructor called");
 			compClass = typeof(HediffComp_FoodOverflow);
 		}
 	}
@@ -771,56 +710,52 @@
 	{
 		public static S s;
 		private static readonly MethodInfo IsFrozen = AccessTools.PropertyGetter(typeof(Need_Food), "IsFrozen");
+		private static readonly FieldInfo visible = AccessTools.Field(typeof(Hediff), "visible");
 		public static TraitDef gourmand;
 		public static HashSet<Pawn> pawnsWithFoodOverflow = new HashSet<Pawn>();
 		public float effectMultiplier = 0f;
-		public Pawn pawn;
 		public HediffCompProperties_FoodOverflow Props => (HediffCompProperties_FoodOverflow)props;
 		public HediffComp_FoodOverflow()
 		{
-#if DEBUG
-			Log.Message("[Need Bar Overflow]: HediffComp_FoodOverflow constructor called");
-#endif
+			D.Message("[Need Bar Overflow]: HediffComp_FoodOverflow constructor called");
 			if (s == null)
 				s = NeedBarOverflow.s;
 		}
         public override void CompPostTick(ref float severityAdjustment)
 		{
-			base.CompPostTick(ref severityAdjustment);
-			if (pawn == null)
-				pawn = Pawn;
-			int hash = pawn.HashOffsetTicks();
-			if (hash % 150 != 0)
+			if (!Pawn.IsHashIntervalTick(150))
 				return;
 			Need_Food need;
-			if (!s.enabledA[C.Food] ||
-				!s.FoodOverflowAffectHealth ||
-				(need = pawn.needs?.food) == null ||
-				(bool)IsFrozen.Invoke(need, null))
+			if ((need = Pawn.needs?.food) == null ||
+				(bool)IsFrozen.Invoke(need, null) ||
+				!s.enabledA[C.Food] ||
+				!s.FoodOverflowAffectHealth)
 			{
-				pawn.health.RemoveHediff(parent);
+                Pawn.health.RemoveHediff(parent);
 				return;
 			}
-			if (effectMultiplier <= 0f || hash % 3600 == 0)
+			if (Pawn.IsHashIntervalTick(3600) || effectMultiplier <= 0f)
 			{
-				if (!pawn.RaceProps.Humanlike)
-					effectMultiplier = s.statsB[new IntVec2(C.Food, 3)];
-				else if(gourmand != null && (bool)(pawn.story?.traits?.HasTrait(gourmand)))
-					effectMultiplier = s.statsB[new IntVec2(C.Food, 4)];
+				if (!Pawn.RaceProps.Humanlike)
+					effectMultiplier = s.statsB[C.V(C.Food, 3)];
+				else if(gourmand != null && (bool)(Pawn.story?.traits?.HasTrait(gourmand)))
+					effectMultiplier = s.statsB[C.V(C.Food, 4)];
 				else
 					effectMultiplier = 1f;
 			}
-			parent.Severity = (need.CurLevelPercentage - 1) * effectMultiplier;
+			float severity = (need.CurLevelPercentage - 1) * effectMultiplier;
+			parent.Severity = severity;
+			bool shouldBeVisible = severity > (s.statsB[C.V(C.Food, 5)] - 1f);
+			if (parent.Visible != shouldBeVisible)
+				visible.SetValue(parent, shouldBeVisible);
 		}
-        public override void CompPostPostRemoved()
-        {
-            base.CompPostPostRemoved();
-			pawnsWithFoodOverflow.Remove(Pawn);
-		}
-		public override void Notify_PawnDied()
-		{
-			base.Notify_PawnDied();
-			Pawn.health.RemoveHediff(parent);
-		}
+#if (v1_2 || v1_3 || v1_4)
+		// Removed as of 1.5
+		public override void Notify_PawnDied() => Pawn.health.RemoveHediff(parent);
+#else
+        // New since 1.5
+        public override void Notify_PawnDied(DamageInfo? _, Hediff __) => Pawn.health.RemoveHediff(parent);
+#endif
+        public override void CompPostPostRemoved() => pawnsWithFoodOverflow.Remove(Pawn);
 	}
 }

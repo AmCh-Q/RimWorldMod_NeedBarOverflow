@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <NBO.Name>需求條溢出</NBO.Name>
+
+  <NBO.RestartReq>（重啓游戲后生效）</NBO.RestartReq>
+  <NBO.RestartNReq>（設置無需重啓）</NBO.RestartNReq>
+  <NBO.RestartReq_tip>有一部分設置需要重啓游戲后才能完全生效，在此之前它們有可能部分生效</NBO.RestartReq_tip>
+  <NBO.RestartNReq_tip>除非另有説明，關閉設置窗口后立即剩下，無需重啓游戲</NBO.RestartNReq_tip>
+
+  <NBO.FoodOverfEnabled>啓用食物值溢出</NBO.FoodOverfEnabled>
+  <NBO.FoodOverfEnabled_Tip>允許小人的飲食條溢出</NBO.FoodOverfEnabled_Tip>
+  <NBO.FoodOverfPerc>食物值溢出倍率：{0}</NBO.FoodOverfPerc>
+  <NBO.FoodOverfPerc_Tip>小人最大可以達到{0}食物值。實際取此條和下一條之間的較高者生效。</NBO.FoodOverfPerc_Tip>
+  <NBO.FoodOverfVal>食物值溢出加成：{0}</NBO.FoodOverfVal>
+  <NBO.FoodOverfVal_Tip>小人最多可以额外吃{0}点食物值。實際取此條和上一條之間的較高者生效。</NBO.FoodOverfVal_Tip>
+  <NBO.FoodOverfDisableEating>吃飽(>{0})后禁止繼續進食</NBO.FoodOverfDisableEating>
+  <NBO.FoodOverfDisableEating_Tip>如果小人的食物值大於{0}，將無法命令小人進食食物（小人仍然可以服用沒有營養的藥物）。</NBO.FoodOverfDisableEating_Tip>
+  <NBO.Disabled_FoodFull>吃飽了</NBO.Disabled_FoodFull>
+  <NBO.FoodOverfAffectHunger>吃過飽后餓的更快</NBO.FoodOverfAffectHunger>
+  <NBO.FoodOverfAffectHunger_Tip>如果小人的食物值大於100%，他的食物值將更快下降。</NBO.FoodOverfAffectHunger_Tip>
+  <NBO.FoodOverfAffectHealing>吃過飽后傷愈更快</NBO.FoodOverfAffectHealing>
+  <NBO.FoodOverfAffectHealing_Tip>如果小人的食物值大於100%，他的傷口將更快恢復。</NBO.FoodOverfAffectHealing_Tip>
+  <NBO.FoodOverfAffectMoving>吃過飽后移速更慢</NBO.FoodOverfAffectMoving>
+  <NBO.FoodOverfAffectMoving_Tip>如果小人的食物值大於100%，他的移動速度將受影響。</NBO.FoodOverfAffectMoving_Tip>
+  <NBO.FoodOverfCauseVomit>吃過飽后可能嘔吐</NBO.FoodOverfCauseVomit>
+  <NBO.FoodOverfCauseVomit_Tip>如果小人的食物值大於100%，他可能會把多餘的食物吐出來。</NBO.FoodOverfCauseVomit_Tip>
+  <NBO.FoodOverfAffectEating>吃過飽后進食變慢</NBO.FoodOverfAffectEating>
+  <NBO.FoodOverfAffectEating_Tip>如果小人的食物值大於100%，他的進食速度將受影響。</NBO.FoodOverfAffectEating_Tip>
+  <NBO.FoodOverfHealthDetails>顯示健康影響详细設置</NBO.FoodOverfHealthDetails>
+  <NBO.FoodOverfHealthDetails_Tip>顯示/隱藏選項細節，無論以下設置是否顯示，只要上面關於吃過飽的選項啓動，對應的數值都會生效。</NBO.FoodOverfHealthDetails_Tip>
+
+  <NBO.FoodOverfNonHumanMult>非人類過飽影響乘數：{0}</NBO.FoodOverfNonHumanMult>
+  <NBO.FoodOverfNonHumanMult_Tip>當非人類生物的食物值大於100%，他們受到的影響將會降低，每溢出100%的影響只相當于普通小人溢出{0}的影響。</NBO.FoodOverfNonHumanMult_Tip>
+  <NBO.FoodOverfGourmandMult>貪食小人過飽影響乘數：{0}</NBO.FoodOverfGourmandMult>
+  <NBO.FoodOverfGourmandMult_Tip>當貪食小人的食物值大於100%，他們受到的影響將會降低，每溢出100%的影響只相當于普通小人溢出{0}的影響。</NBO.FoodOverfGourmandMult_Tip>
+  <NBO.FoodOverfShowHediffLvl>食物值超過{0}后顯示健康影響</NBO.FoodOverfShowHediffLvl>
+  <NBO.FoodOverfShowHediffLvl_Tip>如果小人的食物值大於{0}，過飽的健康影響將顯示在健康栏里。这个設置會考虑到前兩條設置，因此非人類生物和貪食小人可能要吃更多后才會顯示健康影響。</NBO.FoodOverfShowHediffLvl_Tip>
+
+  <NBO.FoodOverfLevel>如果小人的食物值達到{0}...</NBO.FoodOverfLevel>
+  <NBO.FoodHungerFactor>他的食物值將以{0}倍速下降</NBO.FoodHungerFactor>
+  <NBO.FoodHealingFactor>他的傷口將以{0}倍速痊愈</NBO.FoodHealingFactor>
+  <NBO.FoodMovingOffset>他的移速將减{0}</NBO.FoodMovingOffset>
+  <NBO.FoodVomitFreq>他將以平均每天{0}次的頻率嘔吐</NBO.FoodVomitFreq>
+  <NBO.FoodEatingOffset>他的進食速度將减{0}</NBO.FoodEatingOffset>
+
+  <NBO.RestOverfEnabled>啓用睡眠值溢出</NBO.RestOverfEnabled>
+  <NBO.RestOverfEnabled_Tip>允許小人的睡眠值溢出</NBO.RestOverfEnabled_Tip>
+  <NBO.RestOverfPerc>睡眠值溢出倍率：{0}</NBO.RestOverfPerc>
+  <NBO.RestOverfPerc_Tip>小人最大可以達到{0}睡眠值</NBO.RestOverfPerc_Tip>
+  <NBO.RestOverfFastDrain>睡飽后睡眠值更快下降：{0}效果</NBO.RestOverfFastDrain>
+  <NBO.RestOverfFastDrain_Tip>如果小人的睡眠值大於100%，他清醒时的睡眠值下降速度將增加({0} × 溢出值)。此設置越高、睡眠值越高，累地越快。</NBO.RestOverfFastDrain_Tip>
+  <NBO.RestOverfSlowGain>睡飽后再睡觉回復更慢：{0}效果</NBO.RestOverfSlowGain>
+  <NBO.RestOverfSlowGain_Tip>如果小人的睡眠值大於100%，他睡眠的效率將被除以({0} × 溢出值 + 100%)。此設置越高、睡眠值越高，睡眠效率越低。此設置仅影響正常睡眠，不影響药物效果。</NBO.RestOverfSlowGain_Tip>
+
+  <NBO.JoyOverfEnabled>啓用娛樂值溢出</NBO.JoyOverfEnabled>
+  <NBO.JoyOverfEnabled_Tip>允許小人的娛樂值溢出</NBO.JoyOverfEnabled_Tip>
+  <NBO.JoyOverfPerc>娛樂值溢出倍率：{0}</NBO.JoyOverfPerc>
+  <NBO.JoyOverfPerc_Tip>小人最大可以達到{0}娛樂值</NBO.JoyOverfPerc_Tip>
+  <NBO.JoyOverfFastDrain>娛樂值溢出后更快下降：{0}效果</NBO.JoyOverfFastDrain>
+  <NBO.JoyOverfFastDrain_Tip>如果小人的娛樂值大於100%，他的娛樂值下降速度將增加({0} × 溢出值)。此設置越高、娛樂值越高，娛樂值下降地越快。</NBO.JoyOverfFastDrain_Tip>
+  <NBO.JoyOverfSlowGain>娛樂值溢出后娛樂效率更低：{0}效果</NBO.JoyOverfSlowGain>
+  <NBO.JoyOverfSlowGain_Tip>如果小人的娛樂值大於100%，他的娛樂效率被除以({0} × 溢出值 + 100%)。此設置越高、娛樂值越高，娛樂效率越低。</NBO.JoyOverfSlowGain_Tip>
+
+  <NBO.MoodOverfEnabled>啓用心情值溢出</NBO.MoodOverfEnabled>
+  <NBO.MoodOverfEnabled_Tip>允許小人的心情值溢出</NBO.MoodOverfEnabled_Tip>
+  <NBO.MoodOverfPerc>心情值溢出倍率：{0}</NBO.MoodOverfPerc>
+  <NBO.MoodOverfPerc_Tip>小人最大可以達到{0}心情值</NBO.MoodOverfPerc_Tip>
+
+  <NBO.BeautyOverfEnabled>啓用美觀度溢出</NBO.BeautyOverfEnabled>
+  <NBO.BeautyOverfEnabled_Tip>允許小人的美觀度溢出</NBO.BeautyOverfEnabled_Tip>
+  <NBO.BeautyOverfPerc>美觀度溢出倍率：{0}</NBO.BeautyOverfPerc>
+  <NBO.BeautyOverfPerc_Tip>小人最大可以達到{0}美觀度</NBO.BeautyOverfPerc_Tip>
+
+  <NBO.ComfortOverfEnabled>啓用舒適度溢出</NBO.ComfortOverfEnabled>
+  <NBO.ComfortOverfEnabled_Tip>允許小人的舒適度溢出</NBO.ComfortOverfEnabled_Tip>
+  <NBO.ComfortOverfPerc>舒適度溢出倍率：{0}</NBO.ComfortOverfPerc>
+  <NBO.ComfortOverfPerc_Tip>小人最大可以達到{0}舒適度</NBO.ComfortOverfPerc_Tip>
+
+  <NBO.ChemicalOverfEnabled>啓用（成癮）藥物值溢出</NBO.ChemicalOverfEnabled>
+  <NBO.ChemicalOverfEnabled_Tip>允許小人的藥物值溢出，这種需求條一般會要求某類特定藥品，常因为成癮而出现。</NBO.ChemicalOverfEnabled_Tip>
+  <NBO.ChemicalOverfPerc>藥物值溢出倍率：{0}</NBO.ChemicalOverfPerc>
+  <NBO.ChemicalOverfPerc_Tip>小人最大可以達到{0}藥物值</NBO.ChemicalOverfPerc_Tip>
+
+  <NBO.ChemicalAnyOverfEnabled>啓用（特性）藥物值溢出</NBO.ChemicalAnyOverfEnabled>
+  <NBO.ChemicalAnyOverfEnabled_Tip>允許小人的藥物值溢出，这種需求條一般不區分特定藥品，常因为小人特性而出现。</NBO.ChemicalAnyOverfEnabled_Tip>
+  <NBO.ChemicalAnyOverfPerc>藥物值溢出倍率：{0}</NBO.ChemicalAnyOverfPerc>
+  <NBO.ChemicalAnyOverfPerc_Tip>小人最大可以達到{0}藥物值</NBO.ChemicalAnyOverfPerc_Tip>
+
+  <NBO.OutdoorsOverfEnabled>啓用戶外值溢出</NBO.OutdoorsOverfEnabled>
+  <NBO.OutdoorsOverfEnabled_Tip>允許小人的戶外值溢出</NBO.OutdoorsOverfEnabled_Tip>
+  <NBO.OutdoorsOverfPerc>戶外值溢出倍率：{0}</NBO.OutdoorsOverfPerc>
+  <NBO.OutdoorsOverfPerc_Tip>小人最大可以達到{0}戶外值</NBO.OutdoorsOverfPerc_Tip>
+
+  <NBO.IndoorsOverfEnabled>啓用室內值溢出</NBO.IndoorsOverfEnabled>
+  <NBO.IndoorsOverfEnabled_Tip>允許小人的室內值溢出</NBO.IndoorsOverfEnabled_Tip>
+  <NBO.IndoorsOverfPerc>室內值溢出倍率：{0}</NBO.IndoorsOverfPerc>
+  <NBO.IndoorsOverfPerc_Tip>小人最大可以達到{0}室內值</NBO.IndoorsOverfPerc_Tip>
+
+  <NBO.SuppressionOverfEnabled>啓用壓制值溢出</NBO.SuppressionOverfEnabled>
+  <NBO.SuppressionOverfEnabled_Tip>允許小人的壓制值溢出，注意原版里并沒有使其溢出的手段</NBO.SuppressionOverfEnabled_Tip>
+  <NBO.SuppressionOverfPerc>壓制值溢出倍率：{0}</NBO.SuppressionOverfPerc>
+  <NBO.SuppressionOverfPerc_Tip>小人最大可以達到{0}壓制值</NBO.SuppressionOverfPerc_Tip>
+
+  <NBO.RoomSizeOverfEnabled>啓用房間尺寸值溢出</NBO.RoomSizeOverfEnabled>
+  <NBO.RoomSizeOverfEnabled_Tip>允許小人的房間尺寸值溢出，注意原版里并沒有使其溢出的手段</NBO.RoomSizeOverfEnabled_Tip>
+  <NBO.RoomSizeOverfPerc>房間尺寸值溢出倍率：{0}</NBO.RoomSizeOverfPerc>
+  <NBO.RoomSizeOverfPerc_Tip>小人最大可以達到{0}房間尺寸值</NBO.RoomSizeOverfPerc_Tip>
+
+  <NBO.DeathrestOverfEnabled>啓用死眠值溢出</NBO.DeathrestOverfEnabled>
+  <NBO.DeathrestOverfEnabled_Tip>允許小人的死眠值溢出</NBO.DeathrestOverfEnabled_Tip>
+  <NBO.DeathrestOverfPerc>死眠值溢出倍率：{0}</NBO.DeathrestOverfPerc>
+  <NBO.DeathrestOverfPerc_Tip>小人最大可以達到{0}死眠值</NBO.DeathrestOverfPerc_Tip>
+
+  <NBO.KillThirstOverfEnabled>啓用殺欲值溢出</NBO.KillThirstOverfEnabled>
+  <NBO.KillThirstOverfEnabled_Tip>允許小人的殺欲值溢出</NBO.KillThirstOverfEnabled_Tip>
+  <NBO.KillThirstOverfPerc>殺欲值溢出倍率：{0}</NBO.KillThirstOverfPerc>
+  <NBO.KillThirstOverfPerc_Tip>小人最大可以達到{0}殺欲值</NBO.KillThirstOverfPerc_Tip>
+  <NBO.KillThirstOverfFastDrain>殺欲值溢出后更快下降：{0}效果</NBO.KillThirstOverfFastDrain>
+  <NBO.KillThirstOverfFastDrain_Tip>如果小人的殺欲值大於100%，他的殺欲值下降速度將增加({0} × 溢出值)。此設置越高、殺欲值越高，殺欲值下降地越快。</NBO.KillThirstOverfFastDrain_Tip>
+  <NBO.KillThirstOverfSlowGain>溢出后杀戮滿足效率更低：{0}效果</NBO.KillThirstOverfSlowGain>
+  <NBO.KillThirstOverfSlowGain_Tip>如果小人的殺欲值大於100%，他的杀戮滿足效率將被除以({0} × 溢出值 + 100%)。此設置越高、殺欲值越高，杀戮滿足效率越低。</NBO.KillThirstOverfSlowGain_Tip>
+
+  <NBO.MechEnergyOverfEnabled>啓用能量值溢出</NBO.MechEnergyOverfEnabled>
+  <NBO.MechEnergyOverfEnabled_Tip>允許機械体能量值溢出</NBO.MechEnergyOverfEnabled_Tip>
+  <NBO.MechEnergyOverfPerc>能量值溢出倍率：{0}</NBO.MechEnergyOverfPerc>
+  <NBO.MechEnergyOverfPerc_Tip>機械最大可以達到{0}能量值</NBO.MechEnergyOverfPerc_Tip>
+
+  <NBO.LearningOverfEnabled>啓用學習值溢出</NBO.LearningOverfEnabled>
+  <NBO.LearningOverfEnabled_Tip>允許孩子的學習值溢出，注意原版里并沒有使其溢出的手段</NBO.LearningOverfEnabled_Tip>
+  <NBO.LearningOverfPerc>學習值溢出倍率：{0}</NBO.LearningOverfPerc>
+  <NBO.LearningOverfPerc_Tip>孩子最大可以達到{0}學習值</NBO.LearningOverfPerc_Tip>
+
+  <NBO.PlayOverfEnabled>啓用玩樂值溢出</NBO.PlayOverfEnabled>
+  <NBO.PlayOverfEnabled_Tip>允許嬰兒的玩樂值溢出，注意原版里并沒有使其溢出的手段</NBO.PlayOverfEnabled_Tip>
+  <NBO.PlayOverfPerc>玩樂值溢出倍率：{0}</NBO.PlayOverfPerc>
+  <NBO.PlayOverfPerc_Tip>嬰兒最大可以達到{0}玩樂值</NBO.PlayOverfPerc_Tip>
+
+  <NBO.ShowHiddenSettings>顯示不推薦啓用的需求溢出</NBO.ShowHiddenSettings>
+  <NBO.ShowHiddenSettings_Tip>以下需求溢出設置要么官方支持很差，要么很容易出錯，不建议開。注意这條設置本身只能顯示/隱藏選項細節，如果你開過了，還需一个个關。</NBO.ShowHiddenSettings_Tip>
+
+  <NBO.DefaultOverfEnabled>啓用缺省需求條溢出</NBO.DefaultOverfEnabled>
+  <NBO.DefaultOverfEnabled_Tip>允許任何目前尚未正式支持的需求條溢出。可能會報各種奇怪的錯誤，但是如果你真的想溢出模組的需求條的话，只能開这个了。</NBO.DefaultOverfEnabled_Tip>
+  <NBO.DefaultOverfPerc>缺省需求條溢出倍率：{0}</NBO.DefaultOverfPerc>
+  <NBO.DefaultOverfPerc_Tip>小人的其他任何需求條都最大可以達到{0}</NBO.DefaultOverfPerc_Tip>
+
+  <NBO.AuthorityOverfEnabled>啓用威嚴值溢出</NBO.AuthorityOverfEnabled>
+  <NBO.AuthorityOverfEnabled_Tip>允許小人的威嚴值溢出，这个應該沒有什麽實際作用。</NBO.AuthorityOverfEnabled_Tip>
+  <NBO.AuthorityOverfPerc>威嚴值溢出倍率：{0}</NBO.AuthorityOverfPerc>
+  <NBO.AuthorityOverfPerc_Tip>小人最大可以達到{0}威嚴值</NBO.AuthorityOverfPerc_Tip>
+
+  <NBO.SadismOverfEnabled>啓用虐待值溢出</NBO.SadismOverfEnabled>
+  <NBO.SadismOverfEnabled_Tip>允許小人的虐待值溢出，这个在原版游戏里并沒有完成，所以沒有什麽實際作用。</NBO.SadismOverfEnabled_Tip>
+  <NBO.SadismOverfPerc>虐待值溢出倍率：{0}</NBO.SadismOverfPerc>
+  <NBO.SadismOverfPerc_Tip>小人最大可以達到{0}虐待值</NBO.SadismOverfPerc_Tip>
+</LanguageData>

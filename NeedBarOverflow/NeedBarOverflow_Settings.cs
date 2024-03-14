@@ -8,6 +8,7 @@
 	using RimWorld;
 	using Verse;
 	using C = NeedBarOverflow_Consts;
+	using D = NeedBarOverflow_Debug;
 	using N = NeedBarOverflow;
 
 	public class NeedBarOverflow_Settings : ModSettings
@@ -16,8 +17,8 @@
 		private readonly StringBuilder sb1 = new StringBuilder();
 		private Vector2 settingsScrollPos;
 		private float height = 100000f;
-		private string restartReqStr;
-		private bool restartRequired = false;
+		//private string restartReqStr;
+		//private bool restartRequired = false;
 		public bool enableGlobal_Session = false;
 		public bool[] patches_Session = new bool[C.PatchCount];
 		public bool[] enabledA = new bool[C.NeedCount];
@@ -30,9 +31,7 @@
 		public NeedBarOverflow_Settings() => Init();
 		public void Init()
 		{
-#if DEBUG
-			Log.Message("[Need Bar Overflow]: NeedBarOverflow_Settings constructor called");
-#endif
+			D.Message("[Need Bar Overflow]: NeedBarOverflow_Settings constructor called");
 			Array.Copy(C.enabledA, enabledA, C.NeedCount);
 			enabledB = new Dictionary<IntVec2, bool>(C.enabledB);
 			Array.Copy(C.statsA, statsA, C.NeedCount);
@@ -48,18 +47,24 @@
 			float slider_min = -2.002f, float slider_max = 2.002f, float txt_min = 0f, float txt_max = float.PositiveInfinity,
 			string name = null, string tip = null, bool showAsPerc = false)
 		{
-			string numString = (showAsPerc && !float.IsInfinity(num)) ? num.Round().ToStringPercent() : num.Round().ToString((num < 1) ? "N2" : (num < 10) ? "N1" : "0");
+			string numString = (showAsPerc && !float.IsInfinity(num))
+				? num.Round().ToStringPercent()
+				: num.Round().ToString((num < 1) ? "N2" : (num < 10) ? "N1" : "0");
 			if (!name.NullOrEmpty())
 			{
 				string labeltxt = name.Translate(numString);
 				if (!tip.NullOrEmpty())
-					TooltipHandler.TipRegion(new Rect(0, ls.CurHeight, ls.ColumnWidth, Text.LineHeight * 1.2f + Text.CalcHeight(labeltxt, ls.ColumnWidth)), tip.Translate(numString));
+					TooltipHandler.TipRegion(
+						new Rect(0, ls.CurHeight, ls.ColumnWidth, Text.LineHeight * 1.2f + Text.CalcHeight(labeltxt, ls.ColumnWidth)), 
+						tip.Translate(numString));
 				ls.Label(labeltxt);
 			}
 			else
 			{
 				if (!tip.NullOrEmpty())
-					TooltipHandler.TipRegion(new Rect(0, ls.CurHeight, ls.ColumnWidth, Text.LineHeight * 1.2f), tip.Translate(numString));
+					TooltipHandler.TipRegion(
+						new Rect(0, ls.CurHeight, ls.ColumnWidth, Text.LineHeight * 1.2f), 
+						tip.Translate(numString));
 				ls.Gap(ls.verticalSpacing * 1.5f);
 			}
 			float mul = showAsPerc ? 100f : 1f;
@@ -80,8 +85,14 @@
 					num_pow = slider_max;
 				else
 					num_pow = Mathf.Log10(num);
-				num_pow = Widgets.HorizontalSlider(rectSlider, (float)num_pow, slider_min, slider_max);
-				if (num_pow == slider_min)
+#if (v1_2 || v1_3)
+				// Obsolete as of 1.4
+                num_pow = Widgets.HorizontalSlider(rectSlider, (float)num_pow, slider_min, slider_max);
+#else
+                // New since 1.4
+				Widgets.HorizontalSlider(rectSlider, ref num_pow, new FloatRange(slider_min, slider_max));
+#endif
+                if (num_pow == slider_min)
 					num = txt_min;
 				else if (num_pow == slider_max)
 					num = txt_max;
@@ -89,8 +100,17 @@
 					num = Mathf.Pow(10f, (float)num_pow).Round();
 			}
 			else
-				num = Widgets.HorizontalSlider(rectSlider, num, txt_min, txt_max).Round();
-			ls.Gap(ls.verticalSpacing * 1.5f + Text.LineHeight);
+            {
+#if (v1_2 || v1_3)
+				// Obsolete as of 1.4
+                num = Widgets.HorizontalSlider(rectSlider, num, txt_min, txt_max).Round();
+#else
+				// New since 1.4
+				Widgets.HorizontalSlider(rectSlider, ref num, new FloatRange(txt_min, txt_max));
+                num = num.Round();
+#endif
+            }
+            ls.Gap(ls.verticalSpacing * 1.5f + Text.LineHeight);
 		}
 		private void LsGap(Listing_Standard ls)
 		{
@@ -100,12 +120,15 @@
 			else
 				height = ls.CurHeight;
 		}
-		private void AddSimpleSetting(Listing_Standard ls, int category, string nameString, bool additionalPatch)
+		//private void AddSimpleSetting(Listing_Standard ls, int category, string nameString, bool additionalPatch)
+		private void AddSimpleSetting(Listing_Standard ls, int category, string nameString)
 		{
 			LsGap(ls);
-			ls.CheckboxLabeled(string.Concat(sb1.Clear().Trans("NBO.", nameString, "OverfEnabled"), 
-				enabledA[category] && additionalPatch ? restartReqStr : string.Empty), ref enabledA[category], sb1.Trans("_Tip"));
-			restartRequired |= enabledA[category] && additionalPatch;
+			//ls.CheckboxLabeled(string.Concat(sb1.Clear().Trans("NBO.", nameString, "OverfEnabled"), 
+			//	enabledA[category] && additionalPatch ? restartReqStr : string.Empty), ref enabledA[category], sb1.Trans("_Tip"));
+			ls.CheckboxLabeled(sb1.Clear().Trans("NBO.", nameString, "OverfEnabled"),
+				ref enabledA[category], sb1.Trans("_Tip"));
+			//restartRequired |= enabledA[category] && additionalPatch;
 			ls.Gap(ls.verticalSpacing * -0.5f);
 			if (enabledA[category])
 				AddNumSetting(ls, ref statsA[category], true, 0f, 2.002f, 1f, float.PositiveInfinity, 
@@ -121,26 +144,29 @@
 			height = 0f;
 			ls.Begin(scrollView);
 			LsGap(ls);
-			ls.Label(sb1.Clear().Trans("NBO.Restart", restartRequired ? string.Empty : "N", "Req_tip"));
-			restartRequired = false;
-			restartReqStr = "NBO.RestartReq".Translate();
+			//ls.Label(sb1.Clear().Trans("NBO.Restart", restartRequired ? string.Empty : "N", "Req_tip"));
+			//restartRequired = false;
+			//restartReqStr = "NBO.RestartReq".Translate();
+			ls.Label("NBO.RestartNReq_tip".Translate());
 			bool b1;
 			float f1;
 			IntVec2 v1, v2;
 			// Food Settings
-			AddSimpleSetting(ls, C.Food, "Food", !patches_Session[C.FoodNutri]);
+			AddSimpleSetting(ls, C.Food, "Food");
 			if (enabledA[C.Food])
 			{
-				f1 = statsB[v1 = new IntVec2(C.Food, 1)];
+				f1 = statsB[v1 = C.V(C.Food, 1)];
 				AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, "NBO.FoodOverfVal", "NBO.FoodOverfVal_Tip", false);
 				statsB[v1] = f1;
 				b1 = enabledB[v1];
-				f1 = statsB[v2 = new IntVec2(C.Food, 2)];
-				ls.CheckboxLabeled(string.Concat((string)"NBO.FoodOverfDisableEating".Translate(f1.ToStringPercent()), 
-						b1 && !patches_Session[C.FoodNoEat] ? restartReqStr : string.Empty),
-					ref b1, (string)"NBO.FoodOverfDisableEating_Tip".Translate(f1.ToStringPercent()));
+				f1 = statsB[v2 = C.V(C.Food, 2)];
+				//ls.CheckboxLabeled(string.Concat((string)"NBO.FoodOverfDisableEating".Translate(f1.ToStringPercent()), 
+				//		b1 && !patches_Session[C.FoodNoEat] ? restartReqStr : string.Empty),
+				//	ref b1, (string)"NBO.FoodOverfDisableEating_Tip".Translate(f1.ToStringPercent()));
+				ls.CheckboxLabeled("NBO.FoodOverfDisableEating".Translate(f1.ToStringPercent()),
+					ref b1, "NBO.FoodOverfDisableEating_Tip".Translate(f1.ToStringPercent()));
 				enabledB[v1] = b1;
-				restartRequired |= b1 && !patches_Session[C.FoodNoEat];
+				//restartRequired |= b1 && !patches_Session[C.FoodNoEat];
 				if (b1)
 				{
 					AddNumSetting(ls, ref f1, true, Mathf.Log10(0.5f), 1f, 0.5f, 10f, null, "NBO.FoodOverfDisableEating_Tip", true);
@@ -160,16 +186,18 @@
 					int k = reorder[j];
 					string checkLabel = "NBO.FoodOverf" + checkLabels[k];
 					bool tmp_e = foodOverflowEffects[k];
-					ls.CheckboxLabeled((string)checkLabel.Translate()
-							+ ((tmp_e && !patches_Session[C.FoodHediff]) ? restartReqStr : string.Empty),
-						ref tmp_e, (string)(checkLabel + "_Tip").Translate());
+					//ls.CheckboxLabeled((string)checkLabel.Translate()
+					//		+ ((tmp_e && !patches_Session[C.FoodHediff]) ? restartReqStr : string.Empty),
+					ls.CheckboxLabeled(checkLabel.Translate(),
+						ref tmp_e, (checkLabel + "_Tip").Translate());
 					foodOverflowEffects[k] = tmp_e;
-					restartRequired |= tmp_e && !patches_Session[C.FoodHediff];
+					//restartRequired |= tmp_e && !patches_Session[C.FoodHediff];
 				}
 				if (FoodOverflowAffectHealth)
 				{
-					b1 = enabledB[v1 = new IntVec2(C.Food, 2)];
-					ls.CheckboxLabeled((string)"NBO.FoodOverfHealthDetails".Translate(), ref b1, (string)"NBO.FoodOverfHealthDetails_Tip".Translate());
+					b1 = enabledB[v1 = C.V(C.Food, 2)];
+					ls.CheckboxLabeled("NBO.FoodOverfHealthDetails".Translate(), 
+						ref b1, "NBO.FoodOverfHealthDetails_Tip".Translate());
 					enabledB[v1] = b1;
 					if (b1)
 					{
@@ -183,11 +211,20 @@
 							"NBO.FoodEatingOffset",
 						};
 						LsGap(ls);
-						f1 = statsB[v1 = new IntVec2(C.Food, 3)];
-						AddNumSetting(ls, ref f1, logSlider: false, txt_max: 1f, name: "NBO.FoodOverfNonHumanMult", tip: "NBO.FoodOverfNonHumanMult_Tip", showAsPerc: true);
+						f1 = statsB[v1 = C.V(C.Food, 3)];
+						AddNumSetting(ls, ref f1, logSlider: false, txt_max: 1f, 
+							name: "NBO.FoodOverfNonHumanMult", tip: "NBO.FoodOverfNonHumanMult_Tip", showAsPerc: true);
 						statsB[v1] = f1;
-						f1 = statsB[v1 = new IntVec2(C.Food, 4)];
-						AddNumSetting(ls, ref f1, logSlider: false, txt_max: 1f, name: "NBO.FoodOverfGourmandMult", tip: "NBO.FoodOverfGourmandMult_Tip", showAsPerc: true);
+						f1 = statsB[v1 = C.V(C.Food, 4)];
+						AddNumSetting(ls, ref f1, logSlider: false, txt_max: 1f, 
+							name: "NBO.FoodOverfGourmandMult", tip: "NBO.FoodOverfGourmandMult_Tip", showAsPerc: true);
+						statsB[v1] = f1;
+						f1 = statsB[v1 = C.V(C.Food, 5)];
+						AddNumSetting(ls, ref f1, 
+							slider_min: 0f, slider_max: Mathf.Log10(foodHealthStats[0][C.FoodStatLength - 2]) + 1f, 
+							txt_min: 1f, txt_max: float.PositiveInfinity, 
+							name: "NBO.FoodOverfShowHediffLvl", tip: "NBO.FoodOverfShowHediffLvl_Tip", 
+							showAsPerc: true);
 						statsB[v1] = f1;
 						for (int j = 1; j < C.FoodStatLength - 1; j++)
 						{
@@ -217,28 +254,30 @@
 				}
 			}
 			// Rest Settings
-			AddSimpleSetting(ls, C.Rest, "Rest", !enableGlobal_Session);
+			AddSimpleSetting(ls, C.Rest, "Rest");
 			if (enabledA[C.Rest])
 			{
-				b1 = enabledB[v1 = new IntVec2(C.Rest, 1)];
+				b1 = enabledB[v1 = C.V(C.Rest, 1)];
 				f1 = statsB[v1];
-				ls.CheckboxLabeled(string.Concat((string)"NBO.RestOverfFastDrain".Translate(f1.ToStringPercent()), 
-						b1 && !patches_Session[C.RestDrain] ? restartReqStr : string.Empty),
-					ref b1, (string)"NBO.RestOverfFastDrain_Tip".Translate(f1.ToStringPercent()));
+				//ls.CheckboxLabeled(string.Concat((string)"NBO.RestOverfFastDrain".Translate(f1.ToStringPercent()), 
+				//		b1 && !patches_Session[C.RestDrain] ? restartReqStr : string.Empty),
+				ls.CheckboxLabeled("NBO.RestOverfFastDrain".Translate(f1.ToStringPercent()),
+					ref b1, "NBO.RestOverfFastDrain_Tip".Translate(f1.ToStringPercent()));
 				enabledB[v1] = b1;
-				restartRequired |= b1 && !patches_Session[C.RestDrain];
+				//restartRequired |= b1 && !patches_Session[C.RestDrain];
 				if (b1)
 				{
 					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.RestOverfFastDrain_Tip", true);
 					statsB[v1] = f1;
 				}
-				b1 = enabledB[v1 = new IntVec2(C.Rest, 2)];
+				b1 = enabledB[v1 = C.V(C.Rest, 2)];
 				f1 = statsB[v1];
-				ls.CheckboxLabeled(string.Concat((string)"NBO.RestOverfSlowGain".Translate(f1.ToStringPercent()),
-						b1 && !patches_Session[C.RestGain] ? restartReqStr : string.Empty),
-					ref b1, (string)"NBO.RestOverfSlowGain_Tip".Translate(f1.ToStringPercent()));
+				//ls.CheckboxLabeled(string.Concat((string)"NBO.RestOverfSlowGain".Translate(f1.ToStringPercent()),
+				//		b1 && !patches_Session[C.RestGain] ? restartReqStr : string.Empty),
+				ls.CheckboxLabeled("NBO.RestOverfSlowGain".Translate(f1.ToStringPercent()),
+					ref b1, "NBO.RestOverfSlowGain_Tip".Translate(f1.ToStringPercent()));
 				enabledB[v1] = b1;
-				restartRequired |= b1 && !patches_Session[C.RestGain];
+				//restartRequired |= b1 && !patches_Session[C.RestGain];
 				if (b1)
 				{
 					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.RestOverfSlowGain_Tip", true);
@@ -246,28 +285,30 @@
 				}
 			}
 			// Joy Settings
-			AddSimpleSetting(ls, C.Joy, "Joy", !patches_Session[C.JoyPatch]);
+			AddSimpleSetting(ls, C.Joy, "Joy");
 			if (enabledA[C.Joy])
 			{
-				b1 = enabledB[v1 = new IntVec2(C.Joy, 1)];
+				b1 = enabledB[v1 = C.V(C.Joy, 1)];
 				f1 = statsB[v1];
-				ls.CheckboxLabeled(string.Concat((string)"NBO.JoyOverfFastDrain".Translate(f1.ToStringPercent()),
-						b1 && !patches_Session[C.JoyDrain] ? restartReqStr : string.Empty),
-					ref b1, (string)"NBO.JoyOverfFastDrain_Tip".Translate(f1.ToStringPercent()));
+				//ls.CheckboxLabeled(string.Concat((string)"NBO.JoyOverfFastDrain".Translate(f1.ToStringPercent()),
+				//		b1 && !patches_Session[C.JoyDrain] ? restartReqStr : string.Empty),
+				ls.CheckboxLabeled("NBO.JoyOverfFastDrain".Translate(f1.ToStringPercent()),
+					ref b1, "NBO.JoyOverfFastDrain_Tip".Translate(f1.ToStringPercent()));
 				enabledB[v1] = b1;
-				restartRequired |= b1 && !patches_Session[C.JoyDrain];
+				//restartRequired |= b1 && !patches_Session[C.JoyDrain];
 				if (b1)
 				{
 					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.JoyOverfFastDrain_Tip", true);
 					statsB[v1] = f1;
 				}
-				b1 = enabledB[v1 = new IntVec2(C.Joy, 2)];
+				b1 = enabledB[v1 = C.V(C.Joy, 2)];
 				f1 = statsB[v1];
-				ls.CheckboxLabeled(string.Concat((string)"NBO.JoyOverfSlowGain".Translate(f1.ToStringPercent()),
-						b1 && !patches_Session[C.JoyGain] ? restartReqStr : string.Empty),
-					ref b1, (string)"NBO.JoyOverfSlowGain_Tip".Translate(f1.ToStringPercent()));
+				//ls.CheckboxLabeled(string.Concat((string)"NBO.JoyOverfSlowGain".Translate(f1.ToStringPercent()),
+				//		b1 && !patches_Session[C.JoyGain] ? restartReqStr : string.Empty),
+				ls.CheckboxLabeled("NBO.JoyOverfSlowGain".Translate(f1.ToStringPercent()),
+					ref b1, "NBO.JoyOverfSlowGain_Tip".Translate(f1.ToStringPercent()));
 				enabledB[v1] = b1;
-				restartRequired |= b1 && !patches_Session[C.JoyGain];
+				//restartRequired |= b1 && !patches_Session[C.JoyGain];
 				if (b1)
 				{
 					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.JoyOverfSlowGain_Tip", true);
@@ -275,51 +316,53 @@
 				}
 			}
 			// Mood Settings
-			AddSimpleSetting(ls, C.Mood, "Mood", !patches_Session[C.MoodPatch]);
+			AddSimpleSetting(ls, C.Mood, "Mood");
 			// Beauty Settings
-			AddSimpleSetting(ls, C.Beauty, "Beauty", !patches_Session[C.BeautyPatch]);
+			AddSimpleSetting(ls, C.Beauty, "Beauty");
 			// Comfort Settings
-			AddSimpleSetting(ls, C.Comfort, "Comfort", !patches_Session[C.ComfortPatch]);
+			AddSimpleSetting(ls, C.Comfort, "Comfort");
 			// Chemical Settings
-			AddSimpleSetting(ls, C.Chemical, "Chemical", !enableGlobal_Session);
+			AddSimpleSetting(ls, C.Chemical, "Chemical");
 			// Chemical_Any Settings
-			AddSimpleSetting(ls, C.ChemicalAny, "ChemicalAny", !enableGlobal_Session);
+			AddSimpleSetting(ls, C.ChemicalAny, "ChemicalAny");
 			// Outdoors Settings
-			AddSimpleSetting(ls, C.Outdoors, "Outdoors", !patches_Session[C.OutdoorsPatch]);
-#if !v1_2
-			// Indoors Settings
-			AddSimpleSetting(ls, C.Indoors, "Indoors", !patches_Session[C.IndoorsPatch]);
+			AddSimpleSetting(ls, C.Outdoors, "Outdoors");
+#if (v1_3 || v1_4 || v1_5)
+            // Indoors Settings
+            AddSimpleSetting(ls, C.Indoors, "Indoors");
 			// Suppression Settings
-			AddSimpleSetting(ls, C.Suppression, "Suppression", !enableGlobal_Session);
+			AddSimpleSetting(ls, C.Suppression, "Suppression");
 #endif
 			// RoomSize Settings
-			AddSimpleSetting(ls, C.RoomSize, "RoomSize", !enableGlobal_Session);
-#if !v1_2 && !v1_3
-			// Deathrest Settings
-			AddSimpleSetting(ls, C.Deathrest, "Deathrest", !enableGlobal_Session);
+			AddSimpleSetting(ls, C.RoomSize, "RoomSize");
+#if (v1_4 || v1_5)
+            // Deathrest Settings
+            AddSimpleSetting(ls, C.Deathrest, "Deathrest");
 			// KillThirst Settings
-			AddSimpleSetting(ls, C.KillThirst, "KillThirst", !patches_Session[C.KillThirstPatch]);
+			AddSimpleSetting(ls, C.KillThirst, "KillThirst");
 			if (enabledA[C.KillThirst])
 			{
-				b1 = enabledB[v1 = new IntVec2(C.KillThirst, 1)];
+				b1 = enabledB[v1 = C.V(C.KillThirst, 1)];
 				f1 = statsB[v1];
-				ls.CheckboxLabeled(string.Concat((string)"NBO.KillThirstOverfFastDrain".Translate(f1.ToStringPercent()),
-						b1 && !patches_Session[C.KillThirstDrain] ? restartReqStr : string.Empty),
-					ref b1, (string)"NBO.KillThirstOverfFastDrain_Tip".Translate(f1.ToStringPercent()));
+				//ls.CheckboxLabeled(string.Concat((string)"NBO.KillThirstOverfFastDrain".Translate(f1.ToStringPercent()),
+				//		b1 && !patches_Session[C.KillThirstDrain] ? restartReqStr : string.Empty),
+				ls.CheckboxLabeled("NBO.KillThirstOverfFastDrain".Translate(f1.ToStringPercent()),
+					ref b1, "NBO.KillThirstOverfFastDrain_Tip".Translate(f1.ToStringPercent()));
 				enabledB[v1] = b1;
-				restartRequired |= b1 && !patches_Session[C.KillThirstDrain];
+				//restartRequired |= b1 && !patches_Session[C.KillThirstDrain];
 				if (b1)
 				{
 					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.KillThirstOverfFastDrain_Tip", true);
 					statsB[v1] = f1;
 				}
-				b1 = enabledB[v1 = new IntVec2(C.KillThirst, 2)];
+				b1 = enabledB[v1 = C.V(C.KillThirst, 2)];
 				f1 = statsB[v1];
-				ls.CheckboxLabeled(string.Concat((string)"NBO.KillThirstOverfSlowGain".Translate(f1.ToStringPercent()),
-						b1 && !patches_Session[C.KillThirstPatch] ? restartReqStr : string.Empty),
-					ref b1, (string)"NBO.KillThirstOverfSlowGain_Tip".Translate(f1.ToStringPercent()));
+				//ls.CheckboxLabeled(string.Concat((string)"NBO.KillThirstOverfSlowGain".Translate(f1.ToStringPercent()),
+				//		b1 && !patches_Session[C.KillThirstPatch] ? restartReqStr : string.Empty),
+				ls.CheckboxLabeled("NBO.KillThirstOverfSlowGain".Translate(f1.ToStringPercent()),
+					ref b1, "NBO.KillThirstOverfSlowGain_Tip".Translate(f1.ToStringPercent()));
 				enabledB[v1] = b1;
-				restartRequired |= b1 && !patches_Session[C.KillThirstPatch];
+				//restartRequired |= b1 && !patches_Session[C.KillThirstPatch];
 				if (b1)
 				{
 					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.KillThirstOverfSlowGain_Tip", true);
@@ -327,25 +370,25 @@
 				}
 			}
 			// MechEnergy Settings
-			AddSimpleSetting(ls, C.MechEnergy, "MechEnergy", !enableGlobal_Session);
+			AddSimpleSetting(ls, C.MechEnergy, "MechEnergy");
 			// Learning Settings
-			AddSimpleSetting(ls, C.Learning, "Learning", !enableGlobal_Session);
+			AddSimpleSetting(ls, C.Learning, "Learning");
 			// Play Settings
-			AddSimpleSetting(ls, C.Play, "Play", !enableGlobal_Session);
+			AddSimpleSetting(ls, C.Play, "Play");
 #endif
 			LsGap(ls);
-			bool showHidden = showHiddenSettings ?? (new int[] { C.Default, C.RoomSize, C.Authority, C.Sadism }).Any(x => enabledA[x]);
+			bool showHidden = showHiddenSettings ?? (new int[] { C.DefaultNeed, C.RoomSize, C.Authority, C.Sadism }).Any(x => enabledA[x]);
 			ls.CheckboxLabeled(sb1.Clear().Trans("NBO.ShowHiddenSettings"), ref showHidden, sb1.Trans("_Tip"));
 			showHiddenSettings = showHidden;
 			if (showHidden)
 			{
-				// Default Settings
-				AddSimpleSetting(ls, C.Default, "Default", !enableGlobal_Session);
+				// DefaultNeed Settings
+				AddSimpleSetting(ls, C.DefaultNeed, "Default");
 				// Authority Settings
-				AddSimpleSetting(ls, C.Authority, "Authority", !enableGlobal_Session);
-#if !v1_2
-				// Sadism Settings
-				AddSimpleSetting(ls, C.Sadism, "Sadism", !enableGlobal_Session);
+				AddSimpleSetting(ls, C.Authority, "Authority");
+#if (v1_3 || v1_4 || v1_5)
+                // Sadism Settings
+                AddSimpleSetting(ls, C.Sadism, "Sadism");
 #endif
 			}
 			LsGap(ls);
@@ -355,9 +398,7 @@
 		}
 		public override void ExposeData()
 		{
-#if DEBUG
-			Log.Message("[Need Bar Overflow]: ExposeData() called");
-#endif
+			D.Message("[Need Bar Overflow]: ExposeData() called");
 			base.ExposeData();
 			List<bool> enabledA_List = new List<bool>(enabledA);
 			List<float> statsA_List = new List<float>(statsA);
@@ -379,7 +420,7 @@
 			}
 			if (Scribe.mode == LoadSaveMode.LoadingVars || Scribe.mode == LoadSaveMode.PostLoadInit)
 			{
-				//enabled
+				// enabled
 				int listLen = (int)(enabledA_List?.Count);
 				if (listLen > 0)
 					Array.Copy(enabledA_List.ToArray(), 0, enabledA, 0, Mathf.Min(listLen, C.NeedCount));
@@ -390,7 +431,7 @@
 				else
 					foreach (IntVec2 key in C.enabledB.Keys.Except(enabledB.Keys))
 						enabledB.Add(key, C.enabledB[key]);
-				//stats
+				// stats
 				listLen = (int)(statsA_List?.Count);
 				if (listLen > 0)
 					Array.Copy(statsA_List.ToArray(), 0, statsA, 0, Mathf.Min(listLen, C.NeedCount));
@@ -401,7 +442,7 @@
 				else
 					foreach (IntVec2 key in C.statsB.Keys.Except(statsB.Keys))
 						statsB.Add(key, C.statsB[key]);
-				//foodOverflow
+				// foodOverflow
 				if (foodOverflowEffects == null || foodOverflowEffects.Count == 0)
 					foodOverflowEffects = new List<bool>(C.foodOverflowEffects);
 				else
@@ -415,20 +456,32 @@
 					foodHealthStats[i][C.FoodStatLength - 1] = C.foodHealthStats[i][C.FoodStatLength - 1];
 				}
 			}
-			// This is only applied for exposedata() calls after startup (when settings change)
-			// Applying settings at startup is handled on mod ctor instead because foodOverflow def will be null
-			ApplyFoodHediffSettings();
+			// These are only applied for exposedata() calls after startup (when settings change)
+			// Applying settings at startup is handled on mod ctor instead because foodOverflow def and settings will be null
 			if (Scribe.mode == LoadSaveMode.PostLoadInit)
 				HediffComp_FoodOverflow.pawnsWithFoodOverflow.Clear();
-		}
+			NeedBarOverflow_Patches.ApplyPatches();
+            ApplyFoodHediffSettings();
+        }
 		public void ApplyFoodHediffSettings()
 		{
 			if (N.foodOverflow == null || !patches_Session[C.FoodHediff] || !FoodOverflowAffectHealth)
+			{
+				D.Message(string.Format(
+					"[Need Bar Overflow]: ApplyFoodHediffSettings() called but quit early because of: {0},{1},{2}", 
+					N.foodOverflow == null,
+					!patches_Session[C.FoodHediff],
+					!FoodOverflowAffectHealth));
 				return;
-#if DEBUG
-			Log.Message("[Need Bar Overflow]: ApplyFoodHediffSettings() called");
+			}
+			D.Message("[Need Bar Overflow]: ApplyFoodHediffSettings() called");
+#if (v1_2 || v1_3)
+			// PawnCapacityDefOf.Eating no longer exists since 1.4
+			PawnCapacityDef eatingCapacityDef = PawnCapacityDefOf.Eating;
+#else
+            PawnCapacityDef eatingCapacityDef = DefDatabase<PawnCapacityDef>.GetNamed("Eating");
 #endif
-			List<bool> effectsEnabled = foodOverflowEffects;
+            List<bool> effectsEnabled = foodOverflowEffects;
 			List<List<float>> healthStats = foodHealthStats;
 			for (int i = 0; i < C.FoodStatCount; i++)
 			{
@@ -450,7 +503,7 @@
 					currStage.naturalHealingFactor = -1f;
 				currStage.capMods.Clear();
 				float movingOffset = -healthStats[C.FoodMove][i];
-				if (effectsEnabled[C.FoodMove - 1] && movingOffset != 0)
+				if (effectsEnabled[C.FoodMove - 1] && movingOffset != 0f)
 				{
 					PawnCapacityModifier capMod = new PawnCapacityModifier
 					{
@@ -459,21 +512,27 @@
 					};
 					currStage.capMods.Add(capMod);
 				}
-				float vomitFrequency = healthStats[C.FoodVomit][i];
-				if (effectsEnabled[C.FoodVomit - 1] && vomitFrequency > 0)
+				float prevVomitMtbDays = currStage.vomitMtbDays;
+				D.Message(string.Format("[Need Bar Overflow]: vomitMtbDays was {0}", prevVomitMtbDays));
+                float vomitFrequency = healthStats[C.FoodVomit][i];
+				if (effectsEnabled[C.FoodVomit - 1] && vomitFrequency > 0f)
 					currStage.vomitMtbDays = 1f / vomitFrequency;
 				else
-					currStage.vomitMtbDays = -1f;
-				float eatingOffset = -healthStats[C.FoodEating][i];
-				if (effectsEnabled[C.FoodEating - 1] && eatingOffset != 0)
+                    currStage.vomitMtbDays = -1f;
+				if (prevVomitMtbDays == currStage.vomitMtbDays)
+					D.Message("[Need Bar Overflow]: vomitMtbDays did not change");
+                else
+                    D.Message(string.Format("[Need Bar Overflow]: vomitMtbDays updated to {0}", currStage.vomitMtbDays));
+                float eatingOffset = -healthStats[C.FoodEating][i];
+                if (eatingCapacityDef != null && effectsEnabled[C.FoodEating - 1] && eatingOffset != 0f)
 				{
-					PawnCapacityModifier capMod = new PawnCapacityModifier
-					{
-						capacity = PawnCapacityDefOf.Eating,
-						offset = eatingOffset
-					};
-					currStage.capMods.Add(capMod);
-				}
+                    PawnCapacityModifier capMod = new PawnCapacityModifier
+                    {
+                        capacity = eatingCapacityDef,
+                        offset = eatingOffset
+                    };
+                    currStage.capMods.Add(capMod);
+                }
 			}
 		}
 	}
