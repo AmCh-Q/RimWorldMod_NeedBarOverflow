@@ -6,8 +6,9 @@
     using System.Collections.Generic;
     using System.Reflection;
     using System.Reflection.Emit;
-	using System.Linq;
-	using UnityEngine;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using UnityEngine;
     using Verse;
     using C = NeedBarOverflow_Consts;
     using S = NeedBarOverflow_Settings;
@@ -37,9 +38,11 @@
 			f_needPawn = AccessTools.Field(typeof(Need), "pawn"),
 			f_curLevelInt = AccessTools.Field(typeof(Need), "curLevelInt");
 		public static HediffDef foodOverflow;
-		public NeedBarOverflow(ModContentPack content) : base(content)
+		private static Func<Thing,bool> VFEAncients_HasPower;
+
+        public NeedBarOverflow(ModContentPack content) : base(content)
 		{
-			D.Message("[Need Bar Overflow]: NeedBarOverflow constructor called");
+			D.Message("NeedBarOverflow constructor called");
 			s = GetSettings<S>();
 			NeedBarOverflow_Patches.s = s;
 			LongEventHandler.QueueLongEvent(delegate
@@ -48,6 +51,30 @@
 				HediffComp_FoodOverflow.gourmand = TraitDef.Named("Gourmand");
                 NeedBarOverflow_Patches.ApplyPatches();
                 s.ApplyFoodHediffSettings();
+                s.ApplyFoodDisablingSettings<ThingDef>(C.ThingDef);
+                s.ApplyFoodDisablingSettings<HediffDef>(C.HediffDef);
+
+                // VFE-Ancients Compatibility
+                if (ModLister.HasActiveModWithName("Vanilla Factions Expanded - Ancients"))
+				{
+                    Type PowerWorker_Hunger = AccessTools.TypeByName("VFEAncients.PowerWorker_Hunger");
+					if (PowerWorker_Hunger != null)
+                    {
+                        MethodInfo m_VFEAncients_HasPower = AccessTools.Method(
+							"VFEAncients.HarmonyPatches.Helpers:HasPower",
+                            new[] { typeof(Thing) },
+                            new[] { PowerWorker_Hunger }
+							);
+                        if (m_VFEAncients_HasPower != null)
+                            VFEAncients_HasPower = (Func<Thing, bool>)Delegate.CreateDelegate(
+								Expression.GetFuncType(new[] { typeof(Thing), typeof(bool) }), 
+								null, m_VFEAncients_HasPower, false);
+                    }
+                    if (VFEAncients_HasPower != null)
+                        D.Message("Loaded VFEAncients Compatibility Patch Successfully");
+                    else
+                        D.Message("Loading VFEAncients Compatibility Patch Failed");
+                }
             }, "NeedBarOverflow.Mod.ctor", false, null);
 		}
 		public static void GenUI_Prefix(ref float pct) => pct = Mathf.Clamp01(pct);
@@ -257,32 +284,95 @@
 				return m / (s.statsB[v] * overflowAmount + 1f);
 			return m;
 		}
+		private static bool Check_Pawn_Race(Pawn p)
+        {
+            string defName = p?.kindDef?.race?.defName;
+            if (defName.NullOrEmpty())
+                return true;
+            if (s.foodDisablingDefs_set[C.ThingDef].Contains(defName.ToLowerInvariant()))
+                return false;
+			return true;
+        }
+		private static bool Check_Pawn_Health(Pawn p)
+        {
+            List<Hediff> hediffs = p?.health?.hediffSet.hediffs;
+			if (hediffs.NullOrEmpty())
+				return true;
+            foreach (Hediff hediff in hediffs)
+			{
+				string defName = hediff?.def?.defName;
+				if (defName.NullOrEmpty())
+					return true;
+				if (s.foodDisablingDefs_set[C.HediffDef].Contains(defName.ToLowerInvariant()))
+					return false;
+			}
+			return true;
+		}
 		public static float Adjust_MaxLevel(float m, Need n)
 		{
 			int i = C.needTypes.GetValueOrDefault(n.GetType(), C.DefaultNeed);
 			if (!s.enabledA[i])
 				return m;
-			if (i == C.Food)
-				return Mathf.Max(m * s.statsA[i], m + s.statsB[C.V(C.Food, 1)]);
-			return m * s.statsA[i];
+            switch (i)
+            {
+                case C.Food:
+					if (s.enabledB_Override.Any(s => s) ||
+                        VFEAncients_HasPower != null)
+                    {
+                        Pawn p = (Pawn)f_needPawn.GetValue(n);
+                        if ((s.enabledB_Override[C.ThingDef] && !Check_Pawn_Race(p)) ||
+                            (s.enabledB_Override[C.HediffDef] && !Check_Pawn_Health(p)) ||
+							(VFEAncients_HasPower != null && VFEAncients_HasPower.Invoke(p)))
+                            return m;
+                    }
+                    return Mathf.Max(m * s.statsA[i], m + s.statsB[C.V(C.Food, 1)]);
+                default:
+                    return m * s.statsA[i];
+            }
 		}
-		public static IEnumerable<CodeInstruction> CurLevel_Transpiler(IEnumerable<CodeInstruction> instructions)
+		public static IEnumerable<CodeInstruction> CurLevel_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			List<CodeInstruction> instructionList = instructions.ToList();
 			int state = 0;
-			MethodInfo adjust = ((Func<float, Need, float>)Adjust_MaxLevel).Method;
+            Label skipAdjustLabel = ilg.DefineLabel();
+            Label needAdjustLabel = ilg.DefineLabel();
+            MethodInfo adjustMax = ((Func<float, Need, float>)Adjust_MaxLevel).Method;
 			for (int i = 0; i < instructionList.Count; i++)
 			{
 				CodeInstruction codeInstruction = instructionList[i];
-				yield return codeInstruction;
-				if (codeInstruction.Calls(p_MaxLevel.GetGetMethod()))
-				{
-					state++;
-					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Call, adjust);
-				}
-			}
-			D.CheckTranspiler(state, 1);
+                // If state == 1, then we've just done the patching, insert one ending jump label
+                if (state == 1)
+                {
+                    state++;
+                    yield return codeInstruction.WithLabels(skipAdjustLabel);
+					continue;
+                }
+                // If state > 1 we have done the patching, pass instruction normally
+                // or if the instruction is not to get the original max value, pass it normally
+                if (state > 1 || !codeInstruction.Calls(p_MaxLevel.GetGetMethod()))
+                {
+                    yield return codeInstruction;
+					continue;
+                }
+                state++;
+                // First check if f_curLevelInt is less than the new value (from Ldarg_1)
+                yield return new CodeInstruction(OpCodes.Ldfld, f_curLevelInt);
+                yield return new CodeInstruction(OpCodes.Ldarg_1);
+                yield return new CodeInstruction(OpCodes.Blt_S, needAdjustLabel);
+
+                // If it is not, that means the new value did not increase
+                // Then set max value to infinity and skip the adjust process
+                yield return new CodeInstruction(OpCodes.Ldc_R4, float.PositiveInfinity);
+                yield return new CodeInstruction(OpCodes.Br_S, skipAdjustLabel);
+
+                // If it is, then go adjust the max value
+                // Adjust the max value by calling Adjust_MaxLevel(originalMaxValue, need)
+                yield return new CodeInstruction(OpCodes.Ldarg_0).WithLabels(needAdjustLabel);
+                yield return codeInstruction;
+				yield return new CodeInstruction(OpCodes.Ldarg_0);
+				yield return new CodeInstruction(OpCodes.Call, adjustMax);
+            }
+			D.CheckTranspiler(state, 2);
 		}
 		public static IEnumerable<CodeInstruction> CurLevelPercentage_Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
@@ -410,9 +500,9 @@
 					codeInstruction.Calls(p_CurLevel.GetSetMethod()))
 				{
 					state++;
-					// If curLevel <= maxLevel, skip
-					// otherwise do rest of checks in Food_NeedInterval_Inject and apply hediff
-					yield return new CodeInstruction(OpCodes.Dup);
+                    // If value <= maxLevel, skip and set it to curLevel directly
+                    // otherwise do rest of checks in Food_NeedInterval_Inject and apply hediff
+                    yield return new CodeInstruction(OpCodes.Dup); // get a copy of value
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Callvirt, p_MaxLevel.GetGetMethod());
 					yield return new CodeInstruction(OpCodes.Ble_S, jumpLabel);
@@ -702,7 +792,7 @@
 	{
 		public HediffCompProperties_FoodOverflow()
 		{
-			D.Message("[Need Bar Overflow]: HediffCompProperties_FoodOverflow constructor called");
+			D.Message("HediffCompProperties_FoodOverflow constructor called");
 			compClass = typeof(HediffComp_FoodOverflow);
 		}
 	}
@@ -717,7 +807,7 @@
 		public HediffCompProperties_FoodOverflow Props => (HediffCompProperties_FoodOverflow)props;
 		public HediffComp_FoodOverflow()
 		{
-			D.Message("[Need Bar Overflow]: HediffComp_FoodOverflow constructor called");
+			D.Message("HediffComp_FoodOverflow constructor called");
 			if (s == null)
 				s = NeedBarOverflow.s;
 		}

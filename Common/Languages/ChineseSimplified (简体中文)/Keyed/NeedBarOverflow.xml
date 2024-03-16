@@ -16,6 +16,12 @@
   <NBO.FoodOverfDisableEating>吃饱(>{0})后禁止继续进食</NBO.FoodOverfDisableEating>
   <NBO.FoodOverfDisableEating_Tip>如果小人的饮食值大于{0}，将无法命令小人进食食物（小人仍然可以服用没有营养的药物）。</NBO.FoodOverfDisableEating_Tip>
   <NBO.Disabled_FoodFull>吃饱了</NBO.Disabled_FoodFull>
+
+  <NBO.NoFoodOverfRace>禁止部分种族饮食值溢出</NBO.NoFoodOverfRace>
+  <NBO.NoFoodOverfRace_Tip>以下defNames列表对应的种族将无法溢出饮食值。列表用英文逗号分割，不区分大小写。</NBO.NoFoodOverfRace_Tip>
+  <NBO.NoFoodOverfHediff>禁止部分健康状态下饮食值溢出</NBO.NoFoodOverfHediff>
+  <NBO.NoFoodOverfHediff_Tip>当小人拥有以下defNames列表对应的健康状况/身体部件时将无法溢出饮食值。列表用英文逗号分割，不区分大小写。</NBO.NoFoodOverfHediff_Tip>
+
   <NBO.FoodOverfAffectHunger>吃过饱后饿的更快</NBO.FoodOverfAffectHunger>
   <NBO.FoodOverfAffectHunger_Tip>如果小人的饮食值大于100%，他的饮食值将更快下降。</NBO.FoodOverfAffectHunger_Tip>
   <NBO.FoodOverfAffectHealing>吃过饱后伤愈更快</NBO.FoodOverfAffectHealing>

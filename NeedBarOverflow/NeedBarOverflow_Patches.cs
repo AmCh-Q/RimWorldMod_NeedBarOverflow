@@ -58,7 +58,7 @@
 			}
 			if (original == null)
 			{
-				D.Error(string.Format("[Need Bar Overflow]: PatchMethod patching {0}:{1} - No matching original function found.", type, name));
+				D.Error(string.Format("PatchMethod patching {0}:{1} - No matching original function found.", type, name));
 				return null;
 			}
 			return PatchMethod(original, prefix, postfix, transpiler);
@@ -71,7 +71,7 @@
 			HarmonyMethod transMethod = (transpiler == null) ? null : new HarmonyMethod(transpiler.Method);
 			if (original == null)
 			{
-				D.Error("[Need Bar Overflow]: PatchMethod - original method is null.");
+				D.Error("PatchMethod - original method is null.");
 				return null;
 			}
 			return harmony.Patch(original, prefix: preMethod, postfix: postMethod, transpiler: transMethod);
@@ -82,7 +82,7 @@
 		{
 			if (!enabled || s.patches_Session[sessionEnableIdx])
 				return false;
-			D.Message(string.Format("[Need Bar Overflow]: Enabling patch #{0}", sessionEnableIdx));
+			D.Message(string.Format("Enabling patch #{0}", sessionEnableIdx));
 			s.patches_Session[sessionEnableIdx] = true;
 			return true;
 		}
@@ -91,20 +91,20 @@
 			if (s == null || !s.AnyPatchEnabled)
 			{
 				if (s == null)
-					D.Message("[Need Bar Overflow]: NeedBarOverflow_Patches ApplyPatches() quit becasue s is null");
+					D.Message("NeedBarOverflow_Patches ApplyPatches() quit becasue s is null");
 				else
-					D.Message("[Need Bar Overflow]: NeedBarOverflow_Patches ApplyPatches() quit becasue s.AnyPatchEnabled is false");
+					D.Message("NeedBarOverflow_Patches ApplyPatches() quit becasue s.AnyPatchEnabled is false");
 				return;
 			}
-			D.Message("[Need Bar Overflow]: NeedBarOverflow_Patches ApplyPatches() called");
+			D.Message("NeedBarOverflow_Patches ApplyPatches() called");
 			//General Patches
 			if (!s.enableGlobal_Session)
             {
 				s.enableGlobal_Session = true;
-				D.Message("[Need Bar Overflow]: Enabling Global patches");
+				D.Message("Enabling Global patches");
 				foreach (string funcName in new string[] { nameof(GenUI.BottomPart), nameof(GenUI.LeftPart), nameof(GenUI.RightPart), nameof(GenUI.TopPart) })
 					PatchMethod(typeof(GenUI), funcName, prefix: (ActionRef<float>)N.GenUI_Prefix);
-				PatchMethod(typeof(Need), nameof(Need.CurLevel), mType: MethodType.Setter, transpiler: (Func_Transpiler)N.CurLevel_Transpiler);
+				PatchMethod(typeof(Need), nameof(Need.CurLevel), mType: MethodType.Setter, transpiler: (Func_TranspilerILG)N.CurLevel_Transpiler);
 				PatchMethod(typeof(GenUI), nameof(GenUI.DrawStatusLevel), transpiler: (Func_Transpiler)N.CurLevelPercentage_Transpiler);
 				PatchMethod(typeof(Need), nameof(Need.DrawOnGUI), transpiler: (Func_TranspilerILG)N.DrawOnGUI_Transpiler);
 			}

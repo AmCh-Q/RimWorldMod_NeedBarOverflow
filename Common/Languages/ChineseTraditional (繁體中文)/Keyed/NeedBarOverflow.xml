@@ -16,6 +16,12 @@
   <NBO.FoodOverfDisableEating>吃飽(>{0})后禁止繼續進食</NBO.FoodOverfDisableEating>
   <NBO.FoodOverfDisableEating_Tip>如果小人的食物值大於{0}，將無法命令小人進食食物（小人仍然可以服用沒有營養的藥物）。</NBO.FoodOverfDisableEating_Tip>
   <NBO.Disabled_FoodFull>吃飽了</NBO.Disabled_FoodFull>
+
+  <NBO.NoFoodOverfRace>禁止部分種族食物值溢出</NBO.NoFoodOverfRace>
+  <NBO.NoFoodOverfRace_Tip>以下defNames列表對應的種族將無法溢出飲食值。列表用英文逗號分隔，不區分大小寫。</NBO.NoFoodOverfRace_Tip>
+  <NBO.NoFoodOverfHediff>禁止部分健康狀態下食物值溢出</NBO.NoFoodOverfHediff>
+  <NBO.NoFoodOverfHediff_Tip>當小人擁有以下defNames列表對應的健康狀況/身體部件時將無法溢出飲食值。列表用英文逗號分隔，不區分大小寫。</NBO.NoFoodOverfHediff_Tip>
+
   <NBO.FoodOverfAffectHunger>吃過飽后餓的更快</NBO.FoodOverfAffectHunger>
   <NBO.FoodOverfAffectHunger_Tip>如果小人的食物值大於100%，他的食物值將更快下降。</NBO.FoodOverfAffectHunger_Tip>
   <NBO.FoodOverfAffectHealing>吃過飽后傷愈更快</NBO.FoodOverfAffectHealing>

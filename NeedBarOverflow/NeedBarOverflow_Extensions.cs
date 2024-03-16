@@ -26,9 +26,9 @@ namespace NeedBarOverflow
 	internal static class NeedBarOverflow_Debug
 	{
 #if DEBUG
-		internal static void Message(string s) => Log.Message(s);
-		internal static void Warning(string s) => Log.Warning(s);
-		internal static void Error(string s) => Log.Error(s);
+		internal static void Message(string s) => Log.Message("[Need Bar Overflow]: " + s);
+		internal static void Warning(string s) => Log.Warning("[Need Bar Overflow]: " + s);
+		internal static void Error(string s) => Log.Error("[Need Bar Overflow]: " + s);
 		internal static void CheckTranspiler(int state, int expectedState, string transpilerName = "Unknown")
         {
 			if (state < expectedState)

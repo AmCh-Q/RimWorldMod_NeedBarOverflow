@@ -16,6 +16,12 @@
   <NBO.FoodOverfDisableEating>Disallow Eating Above {0} Full</NBO.FoodOverfDisableEating>
   <NBO.FoodOverfDisableEating_Tip>If a pawn's food level is above {0}, the player cannot order the pawn to consume any more food. The pawn can still use drugs of 0 nutrition.</NBO.FoodOverfDisableEating_Tip>
   <NBO.Disabled_FoodFull>Full</NBO.Disabled_FoodFull>
+
+  <NBO.NoFoodOverfRace>Disable Food Overflow for some races</NBO.NoFoodOverfRace>
+  <NBO.NoFoodOverfRace_Tip>Races with defNames listed below cannot overflow their food bars. The list is comma-separated and case-insensitive.</NBO.NoFoodOverfRace_Tip>
+  <NBO.NoFoodOverfHediff>Disable Food Overflow with some health conditions</NBO.NoFoodOverfHediff>
+  <NBO.NoFoodOverfHediff_Tip>Pawns with health conditions with defNames listed below cannot overflow their food bars. The list is comma-separated and case-insensitive.</NBO.NoFoodOverfHediff_Tip>
+
   <NBO.FoodOverfAffectHunger>Food Drain Faster When Full</NBO.FoodOverfAffectHunger>
   <NBO.FoodOverfAffectHunger_Tip>If a pawn's food level is above 100%, their food need may drop faster.</NBO.FoodOverfAffectHunger_Tip>
   <NBO.FoodOverfAffectHealing>Heal Faster When Full</NBO.FoodOverfAffectHealing>
