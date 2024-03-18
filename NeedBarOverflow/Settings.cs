@@ -1,17 +1,17 @@
-﻿namespace NeedBarOverflow
-{
-	using System;
-	using System.Text;
-	using System.Collections.Generic;
-	using System.Linq;
-	using UnityEngine;
-	using RimWorld;
-	using Verse;
-	using C = NeedBarOverflow_Consts;
-	using D = NeedBarOverflow_Debug;
-	using N = NeedBarOverflow;
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using RimWorld;
+using Verse;
 
-    public class NeedBarOverflow_Settings : ModSettings
+namespace NeedBarOverflow
+{
+    using C = Constants;
+    using D = Debug;
+    using N = NeedBarOverflow;
+    public class Settings : ModSettings
 	{
 		private static bool? showHiddenSettings = null;
 		private Vector2 settingsScrollPos;
@@ -29,7 +29,7 @@
 		public bool[] enabledB_Override = new bool[C.DefCount];
 
         public static int[] patchParamInt = new int[2];
-		public NeedBarOverflow_Settings()
+		public Settings()
 		{
 			D.Message("NeedBarOverflow_Settings constructor called");
 			Array.Copy(C.enabledA, enabledA, C.NeedCount);
@@ -52,14 +52,14 @@
 			string name = null, string tip = null, bool showAsPerc = false)
 		{
 			string numString = (showAsPerc && !float.IsInfinity(num))
-				? num.Round().ToStringPercent()
-				: num.Round().ToString((num < 1) ? "N2" : (num < 10) ? "N1" : "0");
+				? num.CustomRound().ToStringPercent()
+				: num.CustomRound().ToString((num < 1) ? "N2" : (num < 10) ? "N1" : "0");
             string txt_min_str = (showAsPerc && !float.IsInfinity(txt_min))
-                ? txt_min.Round().ToStringPercent()
-                : txt_min.Round().ToString((num < 1) ? "N2" : (txt_min < 10) ? "N1" : "0");
+                ? txt_min.CustomRound().ToStringPercent()
+                : txt_min.CustomRound().ToString((num < 1) ? "N2" : (txt_min < 10) ? "N1" : "0");
             string txt_max_str = (showAsPerc && !float.IsInfinity(txt_max))
-                ? txt_max.Round().ToStringPercent()
-                : txt_max.Round().ToString((num < 1) ? "N2" : (txt_max < 10) ? "N1" : "0");
+                ? txt_max.CustomRound().ToStringPercent()
+                : txt_max.CustomRound().ToString((num < 1) ? "N2" : (txt_max < 10) ? "N1" : "0");
             if (!name.NullOrEmpty())
 			{
 				string labeltxt = name.Translate(numString);
@@ -79,7 +79,7 @@
 			}
 			float mul = showAsPerc ? 100f : 1f;
 			float val = num * mul;
-			string buffer = val.Round().ToString((val < 1) ? "N2" : (val < 10) ? "N1" : "0");
+			string buffer = val.CustomRound().ToString((val < 1) ? "N2" : (val < 10) ? "N1" : "0");
 			Rect rectNum = new Rect(ls.ColumnWidth * 0.88f, ls.CurHeight, ls.ColumnWidth * 0.12f, Text.LineHeight);
 			Rect rectSlider = new Rect(0, ls.CurHeight + Text.LineHeight * 0.2f, ls.ColumnWidth * 0.85f, Text.LineHeight);
 			Widgets.TextFieldNumeric(rectNum, ref val, ref buffer, txt_min * mul, txt_max * mul);
@@ -118,27 +118,27 @@
 				else if (num_pow == slider_max)
 					num = txt_max;
 				else
-					num = Mathf.Pow(10f, (float)num_pow).Round();
+					num = Mathf.Pow(10f, (float)num_pow).CustomRound();
 			}
 			else
             {
 #if (v1_2 || v1_3)
 				// Obsolete as of 1.4
-                num = Widgets.HorizontalSlider(rectSlider, num, txt_min, txt_max).Round();
+                num = Widgets.HorizontalSlider(rectSlider, num, txt_min, txt_max).CustomRound();
 #elif (v1_4)
                 // Temporary for 1.4
                 num = Widgets.HorizontalSlider_NewTemp(
 					rectSlider, num, txt_min, txt_max, 
 					leftAlignedLabel: txt_min_str, 
 					rightAlignedLabel: txt_max_str
-                    ).Round();
+                    ).CustomRound();
 #else
                 // For 1.5
                 num = Widgets.HorizontalSlider(
                     rectSlider, num, txt_min, txt_max,
                     leftAlignedLabel: txt_min_str,
                     rightAlignedLabel: txt_max_str
-                    ).Round();
+                    ).CustomRound();
 #endif
             }
             ls.Gap(ls.verticalSpacing * 1.5f + Text.LineHeight);
@@ -160,7 +160,7 @@
 			ls.Gap(ls.verticalSpacing * -0.5f);
 			if (enabledA[category])
 				AddNumSetting(ls, ref statsA[category], true, 0f, 2.002f, 1f, float.PositiveInfinity, 
-					sb.Clear().Cats("NBO.", nameString, "OverfPerc"), sb.Cats("_Tip"), true);
+					sb.Clear().Concat("NBO.", nameString, "OverfPerc"), sb.Concat("_Tip"), true);
 		}
 		public void DoWindowContents(Rect inRect)
 		{
@@ -475,7 +475,7 @@
             // Applying settings at startup is handled on mod ctor instead because foodOverflow def and settings will be null
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
 				HediffComp_FoodOverflow.pawnsWithFoodOverflow.Clear();
-			NeedBarOverflow_Patches.ApplyPatches();
+			PatchApplier.ApplyPatches();
             ApplyFoodHediffSettings();
 			ApplyFoodDisablingSettings<ThingDef>(C.ThingDef);
             ApplyFoodDisablingSettings<HediffDef>(C.HediffDef);
@@ -580,7 +580,6 @@
                 return;
             }
             HashSet<string> defNamesLower = new HashSet<string>();
-            StringBuilder sb = new StringBuilder();
             foreach (T def in DefDatabase<T>.AllDefsListForReading)
             {
 				if ((def?.defName).NullOrEmpty())
@@ -588,22 +587,18 @@
                 defNamesLower.Add(def.defName.ToLowerInvariant());
             }
             D.Message(string.Format("foodDisablingDefs: {0} {1} Checked", defNamesLower.Count(), typeof(T).Name));
-			bool failedSomeDefs = false;
+			List<string> notFoundNames = new List<string>();
             foreach (string disablingName in foodDisablingDefs_str[idx].ToLowerInvariant().Split(','))
 			{
 				if (defNamesLower.Contains(disablingName))
                     foodDisablingDefs_set[idx].Add(disablingName);
 				else
-                {
-					failedSomeDefs = true;
-                    sb.Cats(disablingName);
-                    sb.Cats(",");
-                }
+                    notFoundNames.Add(disablingName);
             }
-            D.Message(string.Format(
-            "Loaded {0} {1} successfully{2}",
-                foodDisablingDefs_set[idx].Count(), typeof(T).Name,
-                failedSomeDefs ? sb.Insert(0, ", and the following defNames were not found hence not loaded: ").ToString() : ""));
+			D.Message(string.Concat(
+				"Loaded ", foodDisablingDefs_set[idx].Count().ToString(), " ", typeof(T).Name, " successfully",
+                notFoundNames.Count() > 0 ? ", and the following defNames were not found hence not loaded: " : ".",
+                notFoundNames.Count() > 0 ? string.Join(",", notFoundNames) : string.Empty));
             enabledB_Override[idx] = foodDisablingDefs_set[idx].Count() > 0;
         }
     }

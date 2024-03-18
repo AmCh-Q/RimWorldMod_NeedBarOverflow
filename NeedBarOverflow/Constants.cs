@@ -6,7 +6,7 @@
 	using RimWorld;
 	using Verse;
 
-	public static class NeedBarOverflow_Consts
+	public static class Constants
 	{
 		// Count/length of different sets
 		public const int NeedCount = 20, PatchCount = 19, FoodStatCount = 6, FoodStatLength = 10;

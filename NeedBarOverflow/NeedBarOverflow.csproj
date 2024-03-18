@@ -66,11 +66,33 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="NeedBarOverflow_Extensions.cs" />
-    <Compile Include="NeedBarOverflow_Patches.cs" />
-    <Compile Include="NeedBarOverflow_Settings.cs" />
-    <Compile Include="NeedBarOverflow_Consts.cs" />
-    <Compile Include="NeedBarOverflow_Mod.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="HediffComp_FoodOverflow.cs" />
+    <Compile Include="HediffCompProperties_FoodOverflow.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="PatchApplier.cs" />
+    <Compile Include="Patches\AddHumanlikeOrders.cs" />
+    <Compile Include="Patches\AverageBeautyPerceptible.cs" />
+    <Compile Include="Patches\Clamp0.cs" />
+    <Compile Include="Patches\Clamp01.cs" />
+    <Compile Include="Patches\CurLevelPercentage.cs" />
+    <Compile Include="Patches\CurLevel.cs" />
+    <Compile Include="Patches\Common.cs" />
+    <Compile Include="Patches\DrawOnGUI.cs" />
+    <Compile Include="Patches\DrawSuppressionBar.cs" />
+    <Compile Include="Patches\Food_NeedInterval.cs" />
+    <Compile Include="Patches\GainJoy.cs" />
+    <Compile Include="Patches\GenUI.cs" />
+    <Compile Include="Patches\Learn.cs" />
+    <Compile Include="Patches\NeedInterval.cs" />
+    <Compile Include="Patches\Need_Food_Helper.cs" />
+    <Compile Include="Patches\Notify_KilledPawn.cs" />
+    <Compile Include="Patches\Play.cs" />
+    <Compile Include="Patches\StartInspirationMTBDays.cs" />
+    <Compile Include="Patches\WillIngestFromInventoryNow.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
