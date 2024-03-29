@@ -14,7 +14,7 @@
   <NBO.FoodOverfVal>食物值溢出加成：{0}</NBO.FoodOverfVal>
   <NBO.FoodOverfVal_Tip>小人最多可以额外吃{0}点食物值。實際取此條和上一條之間的較高者生效。</NBO.FoodOverfVal_Tip>
   <NBO.FoodOverfDisableEating>吃飽(>{0})后禁止繼續進食</NBO.FoodOverfDisableEating>
-  <NBO.FoodOverfDisableEating_Tip>如果小人的食物值大於{0}，將無法命令小人進食食物（小人仍然可以服用沒有營養的藥物）。</NBO.FoodOverfDisableEating_Tip>
+  <NBO.FoodOverfDisableEating_Tip>如果小人的食物值大於{0}，將無法命令小人進食食物（小人仍然可以服用沒有營養的藥物，崩潰的小人仍然可以暴飲暴食）。</NBO.FoodOverfDisableEating_Tip>
   <NBO.Disabled_FoodFull>吃飽了</NBO.Disabled_FoodFull>
 
   <NBO.NoFoodOverfRace>禁止部分種族食物值溢出</NBO.NoFoodOverfRace>
