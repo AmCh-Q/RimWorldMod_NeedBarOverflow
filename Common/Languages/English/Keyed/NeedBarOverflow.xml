@@ -14,7 +14,7 @@
   <NBO.FoodOverfVal>Food Overflow Bonus: {0}</NBO.FoodOverfVal>
   <NBO.FoodOverfVal_Tip>A pawn can consume {0} extra units of food. The higher resulting value of this and the Food Overflow Multiplier will apply.\n</NBO.FoodOverfVal_Tip>
   <NBO.FoodOverfDisableEating>Disallow Eating Above {0} Full</NBO.FoodOverfDisableEating>
-  <NBO.FoodOverfDisableEating_Tip>If a pawn's food level is above {0}, the player cannot order the pawn to consume any more food. The pawn can still use drugs of 0 nutrition.</NBO.FoodOverfDisableEating_Tip>
+  <NBO.FoodOverfDisableEating_Tip>If a pawn's food level is above {0}, the player cannot order the pawn to consume any more food. The pawn can still use drugs of 0 nutrition, and pawns under mental break can still eat in a food binge.</NBO.FoodOverfDisableEating_Tip>
   <NBO.Disabled_FoodFull>Full</NBO.Disabled_FoodFull>
 
   <NBO.NoFoodOverfRace>Disable Food Overflow for some races</NBO.NoFoodOverfRace>

@@ -12,7 +12,8 @@ namespace NeedBarOverflow
 				sb.Append(strs[i]);
 			return sb.ToString();
 		}
-		internal static string Trans(this StringBuilder sb, params string[] strs) => sb.Concat(strs).Translate().ToString();
+		internal static string Trans(this StringBuilder sb, params string[] strs) 
+			=> sb.Concat(strs).Translate().ToString();
 		internal static float CustomRound(this float d)
 		{
 			if (Mathf.Abs(d) <= 0.005f || float.IsNaN(d))

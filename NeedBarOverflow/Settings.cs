@@ -8,16 +8,12 @@ using Verse;
 
 namespace NeedBarOverflow
 {
-    using C = Constants;
-    using D = Debug;
-    using N = NeedBarOverflow;
-    public class Settings : ModSettings
+	using C = Consts;
+	public class Settings : ModSettings
 	{
 		private static bool? showHiddenSettings = null;
 		private Vector2 settingsScrollPos;
 		private float height = 100000f;
-		public bool enableGlobal_Session = false;
-		public bool[] patches_Session = new bool[C.PatchCount];
 		public bool[] enabledA = new bool[C.NeedCount];
 		public Dictionary<IntVec2, bool> enabledB;
 		public float[] statsA = new float[C.NeedCount];
@@ -28,62 +24,77 @@ namespace NeedBarOverflow
 		public List<HashSet<string>> foodDisablingDefs_set;
 		public bool[] enabledB_Override = new bool[C.DefCount];
 
-        public static int[] patchParamInt = new int[2];
+		public static int[] patchParamInt = new int[2];
 		public Settings()
 		{
-			D.Message("NeedBarOverflow_Settings constructor called");
+			global::NeedBarOverflow.Debug.Message("NeedBarOverflow_Settings constructor called");
 			Array.Copy(C.enabledA, enabledA, C.NeedCount);
 			enabledB = new Dictionary<IntVec2, bool>(C.enabledB);
 			Array.Copy(C.statsA, statsA, C.NeedCount);
 			statsB = new Dictionary<IntVec2, float>(C.statsB);
 			foodOverflowEffects = new List<bool>(C.foodOverflowEffects);
 			foodHealthStats = new List<List<float>>(C.FoodStatCount);
-            for (int i = 0; i < C.FoodStatCount; i++)
-                foodHealthStats.Add(new List<float>(C.foodHealthStats[i]));
+			for (int i = 0; i < C.FoodStatCount; i++)
+				foodHealthStats.Add(new List<float>(C.foodHealthStats[i]));
 			foodDisablingDefs_str = new List<string>(C.foodDisablingDefs_str);
-            foodDisablingDefs_set = new List<HashSet<string>>();
-            for (int i = 0; i < C.DefCount; i++)
-                foodDisablingDefs_set.Add(new HashSet<string>());
-        }
+			foodDisablingDefs_set = new List<HashSet<string>>();
+			for (int i = 0; i < C.DefCount; i++)
+				foodDisablingDefs_set.Add(new HashSet<string>());
+		}
 		public bool FoodOverflowAffectHealth { get => foodOverflowEffects.Any(x => x); }
 		public bool AnyPatchEnabled { get => enabledA.Any(x => x); }
-		private void AddNumSetting(Listing_Standard ls, ref float num, bool logSlider = true,
-			float slider_min = -2.002f, float slider_max = 2.002f, float txt_min = 0f, float txt_max = float.PositiveInfinity,
+		private void AddNumSetting(Listing_Standard ls, 
+			ref float num, bool logSlider = true,
+			float slider_min = -2.002f, float slider_max = 2.002f, 
+			float txt_min = 0f, float txt_max = float.PositiveInfinity,
 			string name = null, string tip = null, bool showAsPerc = false)
 		{
-			string numString = (showAsPerc && !float.IsInfinity(num))
+			string numString 
+				= (showAsPerc && !float.IsInfinity(num))
 				? num.CustomRound().ToStringPercent()
-				: num.CustomRound().ToString((num < 1) ? "N2" : (num < 10) ? "N1" : "0");
-            string txt_min_str = (showAsPerc && !float.IsInfinity(txt_min))
-                ? txt_min.CustomRound().ToStringPercent()
-                : txt_min.CustomRound().ToString((num < 1) ? "N2" : (txt_min < 10) ? "N1" : "0");
-            string txt_max_str = (showAsPerc && !float.IsInfinity(txt_max))
-                ? txt_max.CustomRound().ToStringPercent()
-                : txt_max.CustomRound().ToString((num < 1) ? "N2" : (txt_max < 10) ? "N1" : "0");
-            if (!name.NullOrEmpty())
+				: num.CustomRound().ToString(
+					(num < 1) ? "N2" : (num < 10) ? "N1" : "0");
+			string txt_min_str 
+				= (showAsPerc && !float.IsInfinity(txt_min))
+				? txt_min.CustomRound().ToStringPercent()
+				: txt_min.CustomRound().ToString(
+					(num < 1) ? "N2" : (txt_min < 10) ? "N1" : "0");
+			string txt_max_str 
+				= (showAsPerc && !float.IsInfinity(txt_max))
+				? txt_max.CustomRound().ToStringPercent()
+				: txt_max.CustomRound().ToString(
+					(num < 1) ? "N2" : (txt_max < 10) ? "N1" : "0");
+			if (!name.NullOrEmpty())
 			{
 				string labeltxt = name.Translate(numString);
 				if (!tip.NullOrEmpty())
-					TooltipHandler.TipRegion(
-						new Rect(0, ls.CurHeight, ls.ColumnWidth, Text.LineHeight * 1.2f + Text.CalcHeight(labeltxt, ls.ColumnWidth)), 
+					TooltipHandler.TipRegion(new Rect(
+						0, ls.CurHeight, ls.ColumnWidth, 
+						Text.LineHeight * 1.2f + Text.CalcHeight(labeltxt, ls.ColumnWidth)), 
 						tip.Translate(numString));
 				ls.Label(labeltxt);
 			}
 			else
 			{
 				if (!tip.NullOrEmpty())
-					TooltipHandler.TipRegion(
-						new Rect(0, ls.CurHeight, ls.ColumnWidth, Text.LineHeight * 1.2f), 
+					TooltipHandler.TipRegion(new Rect(
+						0, ls.CurHeight, ls.ColumnWidth, 
+						Text.LineHeight * 1.2f), 
 						tip.Translate(numString));
 				ls.Gap(ls.verticalSpacing * 1.5f);
 			}
 			float mul = showAsPerc ? 100f : 1f;
 			float val = num * mul;
-			string buffer = val.CustomRound().ToString((val < 1) ? "N2" : (val < 10) ? "N1" : "0");
-			Rect rectNum = new Rect(ls.ColumnWidth * 0.88f, ls.CurHeight, ls.ColumnWidth * 0.12f, Text.LineHeight);
-			Rect rectSlider = new Rect(0, ls.CurHeight + Text.LineHeight * 0.2f, ls.ColumnWidth * 0.85f, Text.LineHeight);
+			string buffer = val.CustomRound().ToString(
+				(val < 1) ? "N2" : (val < 10) ? "N1" : "0");
+			Rect rectNum = new Rect(
+				ls.ColumnWidth * 0.88f, ls.CurHeight, 
+				ls.ColumnWidth * 0.12f, Text.LineHeight);
+			Rect rectSlider = new Rect(
+				0, ls.CurHeight + Text.LineHeight * 0.2f, 
+				ls.ColumnWidth * 0.85f, Text.LineHeight);
 			Widgets.TextFieldNumeric(rectNum, ref val, ref buffer, txt_min * mul, txt_max * mul);
-			if (Mathf.Abs(val - num * mul) >= 0.01)
+			if (Mathf.Abs(val - num * mul) >= 0.01f)
 				num = val / mul;
 			num = Mathf.Clamp(num, txt_min, txt_max);
 			if (logSlider)
@@ -97,23 +108,27 @@ namespace NeedBarOverflow
 					num_pow = Mathf.Log10(num);
 #if (v1_2 || v1_3)
 				// Obsolete as of 1.4
-                num_pow = Widgets.HorizontalSlider(rectSlider, (float)num_pow, slider_min, slider_max);
+				num_pow = Widgets.HorizontalSlider(
+					rectSlider, (float)num_pow, 
+					slider_min, slider_max);
 #elif (v1_4)
-                // Temporary for 1.4
-                num_pow = Widgets.HorizontalSlider_NewTemp(
+				// Temporary for 1.4
+				// The nuget package alerts an error for this
+				// But if this is the only "error" it compiles correctly...
+				num_pow = Widgets.HorizontalSlider_NewTemp(
 					rectSlider, (float)num_pow, 
 					slider_min, slider_max, 
 					leftAlignedLabel: txt_min_str, 
 					rightAlignedLabel: txt_max_str);
 #else
-                // For 1.5
-                num_pow = Widgets.HorizontalSlider(
-                    rectSlider, (float)num_pow,
-                    slider_min, slider_max,
-                    leftAlignedLabel: txt_min_str,
-                    rightAlignedLabel: txt_max_str);
+				// For 1.5
+				num_pow = Widgets.HorizontalSlider(
+					rectSlider, (float)num_pow,
+					slider_min, slider_max,
+					leftAlignedLabel: txt_min_str,
+					rightAlignedLabel: txt_max_str);
 #endif
-                if (num_pow == slider_min)
+				if (num_pow == slider_min)
 					num = txt_min;
 				else if (num_pow == slider_max)
 					num = txt_max;
@@ -121,27 +136,32 @@ namespace NeedBarOverflow
 					num = Mathf.Pow(10f, (float)num_pow).CustomRound();
 			}
 			else
-            {
+			{
 #if (v1_2 || v1_3)
 				// Obsolete as of 1.4
-                num = Widgets.HorizontalSlider(rectSlider, num, txt_min, txt_max).CustomRound();
+				num = Widgets.HorizontalSlider(
+					rectSlider, num, 
+					txt_min, txt_max
+					).CustomRound();
 #elif (v1_4)
-                // Temporary for 1.4
-                num = Widgets.HorizontalSlider_NewTemp(
+				// Temporary for 1.4
+				// The nuget package alerts an error for this
+				// But if this is the only "error" it compiles correctly...
+				num = Widgets.HorizontalSlider_NewTemp(
 					rectSlider, num, txt_min, txt_max, 
 					leftAlignedLabel: txt_min_str, 
 					rightAlignedLabel: txt_max_str
-                    ).CustomRound();
+					).CustomRound();
 #else
-                // For 1.5
-                num = Widgets.HorizontalSlider(
-                    rectSlider, num, txt_min, txt_max,
-                    leftAlignedLabel: txt_min_str,
-                    rightAlignedLabel: txt_max_str
-                    ).CustomRound();
+				// For 1.5
+				num = Widgets.HorizontalSlider(
+					rectSlider, num, txt_min, txt_max,
+					leftAlignedLabel: txt_min_str,
+					rightAlignedLabel: txt_max_str
+					).CustomRound();
 #endif
-            }
-            ls.Gap(ls.verticalSpacing * 1.5f + Text.LineHeight);
+			}
+			ls.Gap(ls.verticalSpacing * 1.5f + Text.LineHeight);
 		}
 		private void LsGap(Listing_Standard ls)
 		{
@@ -151,11 +171,12 @@ namespace NeedBarOverflow
 			else
 				height = ls.CurHeight;
 		}
-		private void AddSimpleSetting(Listing_Standard ls, int category, string nameString)
+		private void AddSimpleSetting(
+			Listing_Standard ls, int category, string nameString)
 		{
 			LsGap(ls); 
 			StringBuilder sb = new StringBuilder();
-            ls.CheckboxLabeled(sb.Clear().Trans("NBO.", nameString, "OverfEnabled"),
+			ls.CheckboxLabeled(sb.Clear().Trans("NBO.", nameString, "OverfEnabled"),
 				ref enabledA[category], sb.Trans("_Tip"));
 			ls.Gap(ls.verticalSpacing * -0.5f);
 			if (enabledA[category])
@@ -181,7 +202,9 @@ namespace NeedBarOverflow
 			if (enabledA[C.Food])
 			{
 				f1 = statsB[v1 = C.V(C.Food, 1)];
-				AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, "NBO.FoodOverfVal", "NBO.FoodOverfVal_Tip", false);
+				AddNumSetting(ls, ref f1, true, 
+					-2.002f, 2.002f, 0f, float.PositiveInfinity, 
+					"NBO.FoodOverfVal", "NBO.FoodOverfVal_Tip", false);
 				statsB[v1] = f1;
 				b1 = enabledB[v1];
 				f1 = statsB[v2 = C.V(C.Food, 2)];
@@ -190,19 +213,21 @@ namespace NeedBarOverflow
 				enabledB[v1] = b1;
 				if (b1)
 				{
-					AddNumSetting(ls, ref f1, true, Mathf.Log10(0.5f), 1f, 0.5f, 10f, null, "NBO.FoodOverfDisableEating_Tip", true);
+					AddNumSetting(ls, ref f1, true, 
+						Mathf.Log10(0.5f), 1f, 0.5f, 10f, 
+						null, "NBO.FoodOverfDisableEating_Tip", true);
 					statsB[v2] = f1;
-                }
-                for (int i = 0; i < C.DefCount; i++)
-                {
-                    b1 = enabledB[v1 = C.V(C.Food, C.DefOffset + i)];
-                    ls.CheckboxLabeled(string.Format("NBO.NoFoodOverf{0}", C.defTypeNames[i]).Translate(),
-                        ref b1, string.Format("NBO.NoFoodOverf{0}_Tip", C.defTypeNames[i]).Translate());
-                    enabledB[v1] = b1;
-                    if (b1)
-                        foodDisablingDefs_str[i] = ls.TextEntry(foodDisablingDefs_str[i], 2).Replace(" ", "");
-                }
-                b1 = enabledB[v1 = C.V(C.Food, 2)];
+				}
+				for (int i = 0; i < C.DefCount; i++)
+				{
+					b1 = enabledB[v1 = C.V(C.Food, C.DefOffset + i)];
+					ls.CheckboxLabeled(string.Format("NBO.NoFoodOverf{0}", C.defTypeNames[i]).Translate(),
+						ref b1, string.Format("NBO.NoFoodOverf{0}_Tip", C.defTypeNames[i]).Translate());
+					enabledB[v1] = b1;
+					if (b1)
+						foodDisablingDefs_str[i] = ls.TextEntry(foodDisablingDefs_str[i], 2).Replace(" ", "");
+				}
+				b1 = enabledB[v1 = C.V(C.Food, 2)];
 				ls.CheckboxLabeled("NBO.FoodOverfHealthDetails".Translate(), 
 					ref b1, "NBO.FoodOverfHealthDetails_Tip".Translate());
 				enabledB[v1] = b1;
@@ -223,11 +248,11 @@ namespace NeedBarOverflow
 						ls.CheckboxLabeled(checkLabel.Translate(),
 							ref tmp_e, (checkLabel + "_Tip").Translate());
 						foodOverflowEffects[j] = tmp_e;
-                    }
-                }
-                if (b1 && FoodOverflowAffectHealth)
-                {
-                    string[] foodOverflowNumLabels =
+					}
+				}
+				if (b1 && FoodOverflowAffectHealth)
+				{
+					string[] foodOverflowNumLabels =
 					{
 						"NBO.FoodOverfLevel",
 						"NBO.FoodHungerFactor",
@@ -238,19 +263,19 @@ namespace NeedBarOverflow
 					};
 					LsGap(ls);
 					f1 = statsB[v1 = C.V(C.Food, 3)];
-					AddNumSetting(ls, ref f1, logSlider: false, txt_max: 1f, 
-						name: "NBO.FoodOverfNonHumanMult", tip: "NBO.FoodOverfNonHumanMult_Tip", showAsPerc: true);
+					AddNumSetting(ls, ref f1, logSlider: false, txt_max: 1f, showAsPerc: true, 
+						name: "NBO.FoodOverfNonHumanMult", tip: "NBO.FoodOverfNonHumanMult_Tip");
 					statsB[v1] = f1;
 					f1 = statsB[v1 = C.V(C.Food, 4)];
-					AddNumSetting(ls, ref f1, logSlider: false, txt_max: 1f, 
-						name: "NBO.FoodOverfGourmandMult", tip: "NBO.FoodOverfGourmandMult_Tip", showAsPerc: true);
+					AddNumSetting(ls, ref f1, logSlider: false, txt_max: 1f, showAsPerc: true, 
+						name: "NBO.FoodOverfGourmandMult", tip: "NBO.FoodOverfGourmandMult_Tip");
 					statsB[v1] = f1;
 					f1 = statsB[v1 = C.V(C.Food, 5)];
 					AddNumSetting(ls, ref f1, 
-						slider_min: 0f, slider_max: Mathf.Log10(foodHealthStats[0][C.FoodStatLength - 2]) + 1f, 
-						txt_min: 1f, txt_max: float.PositiveInfinity, 
-						name: "NBO.FoodOverfShowHediffLvl", tip: "NBO.FoodOverfShowHediffLvl_Tip", 
-						showAsPerc: true);
+						slider_min: 0f, 
+						slider_max: Mathf.Log10(foodHealthStats[0][C.FoodStatLength - 2]) + 1f, 
+						txt_min: 1f, txt_max: float.PositiveInfinity, showAsPerc: true, 
+						name: "NBO.FoodOverfShowHediffLvl", tip: "NBO.FoodOverfShowHediffLvl_Tip");
 					statsB[v1] = f1;
 					for (int j = 1; j < C.FoodStatLength - 1; j++)
 					{
@@ -276,8 +301,8 @@ namespace NeedBarOverflow
 							foodHealthStats[k][j] = f1;
 						}
 					}
-                }
-            }
+				}
+			}
 			// Rest Settings
 			AddSimpleSetting(ls, C.Rest, "Rest");
 			if (enabledA[C.Rest])
@@ -289,7 +314,9 @@ namespace NeedBarOverflow
 				enabledB[v1] = b1;
 				if (b1)
 				{
-					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.RestOverfFastDrain_Tip", true);
+					AddNumSetting(ls, ref f1, true, 
+						-2.002f, 2.002f, 0f, float.PositiveInfinity, 
+						null, "NBO.RestOverfFastDrain_Tip", true);
 					statsB[v1] = f1;
 				}
 				b1 = enabledB[v1 = C.V(C.Rest, 2)];
@@ -299,7 +326,9 @@ namespace NeedBarOverflow
 				enabledB[v1] = b1;
 				if (b1)
 				{
-					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.RestOverfSlowGain_Tip", true);
+					AddNumSetting(ls, ref f1, true, 
+						-2.002f, 2.002f, 0f, float.PositiveInfinity, 
+						null, "NBO.RestOverfSlowGain_Tip", true);
 					statsB[v1] = f1;
 				}
 			}
@@ -314,7 +343,9 @@ namespace NeedBarOverflow
 				enabledB[v1] = b1;
 				if (b1)
 				{
-					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.JoyOverfFastDrain_Tip", true);
+					AddNumSetting(ls, ref f1, true, 
+						-2.002f, 2.002f, 0f, float.PositiveInfinity, 
+						null, "NBO.JoyOverfFastDrain_Tip", true);
 					statsB[v1] = f1;
 				}
 				b1 = enabledB[v1 = C.V(C.Joy, 2)];
@@ -324,7 +355,9 @@ namespace NeedBarOverflow
 				enabledB[v1] = b1;
 				if (b1)
 				{
-					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.JoyOverfSlowGain_Tip", true);
+					AddNumSetting(ls, ref f1, true, 
+						-2.002f, 2.002f, 0f, float.PositiveInfinity, 
+						null, "NBO.JoyOverfSlowGain_Tip", true);
 					statsB[v1] = f1;
 				}
 			}
@@ -341,16 +374,16 @@ namespace NeedBarOverflow
 			// Outdoors Settings
 			AddSimpleSetting(ls, C.Outdoors, "Outdoors");
 #if (v1_3 || v1_4 || v1_5)
-            // Indoors Settings
-            AddSimpleSetting(ls, C.Indoors, "Indoors");
+			// Indoors Settings
+			AddSimpleSetting(ls, C.Indoors, "Indoors");
 			// Suppression Settings
 			AddSimpleSetting(ls, C.Suppression, "Suppression");
 #endif
 			// RoomSize Settings
 			AddSimpleSetting(ls, C.RoomSize, "RoomSize");
 #if (v1_4 || v1_5)
-            // Deathrest Settings
-            AddSimpleSetting(ls, C.Deathrest, "Deathrest");
+			// Deathrest Settings
+			AddSimpleSetting(ls, C.Deathrest, "Deathrest");
 			// KillThirst Settings
 			AddSimpleSetting(ls, C.KillThirst, "KillThirst");
 			if (enabledA[C.KillThirst])
@@ -362,7 +395,9 @@ namespace NeedBarOverflow
 				enabledB[v1] = b1;
 				if (b1)
 				{
-					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.KillThirstOverfFastDrain_Tip", true);
+					AddNumSetting(ls, ref f1, true, 
+						-2.002f, 2.002f, 0f, float.PositiveInfinity, 
+						null, "NBO.KillThirstOverfFastDrain_Tip", true);
 					statsB[v1] = f1;
 				}
 				b1 = enabledB[v1 = C.V(C.KillThirst, 2)];
@@ -372,7 +407,9 @@ namespace NeedBarOverflow
 				enabledB[v1] = b1;
 				if (b1)
 				{
-					AddNumSetting(ls, ref f1, true, -2.002f, 2.002f, 0f, float.PositiveInfinity, null, "NBO.KillThirstOverfSlowGain_Tip", true);
+					AddNumSetting(ls, ref f1, true, 
+						-2.002f, 2.002f, 0f, float.PositiveInfinity, 
+						null, "NBO.KillThirstOverfSlowGain_Tip", true);
 					statsB[v1] = f1;
 				}
 			}
@@ -384,9 +421,10 @@ namespace NeedBarOverflow
 			AddSimpleSetting(ls, C.Play, "Play");
 #endif
 			LsGap(ls);
-			bool showHidden = showHiddenSettings ?? (new int[] { C.DefaultNeed, C.RoomSize, C.Authority, C.Sadism }).Any(x => enabledA[x]);
+			bool showHidden = showHiddenSettings ?? 
+				(new int[] { C.DefaultNeed, C.RoomSize, C.Authority, C.Sadism }).Any(x => enabledA[x]);
 			StringBuilder sb = new StringBuilder();
-            ls.CheckboxLabeled(sb.Trans("NBO.ShowHiddenSettings"), ref showHidden, sb.Trans("_Tip"));
+			ls.CheckboxLabeled(sb.Trans("NBO.ShowHiddenSettings"), ref showHidden, sb.Trans("_Tip"));
 			showHiddenSettings = showHidden;
 			if (showHidden)
 			{
@@ -395,8 +433,8 @@ namespace NeedBarOverflow
 				// Authority Settings
 				AddSimpleSetting(ls, C.Authority, "Authority");
 #if (v1_3 || v1_4 || v1_5)
-                // Sadism Settings
-                AddSimpleSetting(ls, C.Sadism, "Sadism");
+				// Sadism Settings
+				AddSimpleSetting(ls, C.Sadism, "Sadism");
 #endif
 			}
 			LsGap(ls);
@@ -406,7 +444,7 @@ namespace NeedBarOverflow
 		}
 		public override void ExposeData()
 		{
-			D.Message("ExposeData() called");
+			global::NeedBarOverflow.Debug.Message("ExposeData() called");
 			base.ExposeData();
 			List<bool> enabledA_List = new List<bool>(enabledA);
 			List<float> statsA_List = new List<float>(statsA);
@@ -416,7 +454,7 @@ namespace NeedBarOverflow
 			Scribe_Collections.Look(ref statsB, "statsB", keyLookMode: LookMode.Value, valueLookMode: LookMode.Value);
 			Scribe_Collections.Look(ref foodOverflowEffects, "foodOverflowEffects", lookMode: LookMode.Value);
 			Scribe_Collections.Look(ref foodDisablingDefs_str, "foodDisablingDefs", lookMode: LookMode.Value);
-            if (foodHealthStats == null)
+			if (foodHealthStats == null)
 				foodHealthStats = new List<List<float>>(C.FoodStatCount);
 			for (int i = 0; i < C.FoodStatCount; i++)
 			{
@@ -426,8 +464,10 @@ namespace NeedBarOverflow
 				Scribe_Collections.Look(ref tmp, string.Format("foodHealthStats_{0}", i), lookMode: LookMode.Value);
 				if (!tmp.NullOrEmpty())
 					foodHealthStats[i] = tmp;
-            }
-            if (Scribe.mode == LoadSaveMode.LoadingVars || Scribe.mode == LoadSaveMode.PostLoadInit)
+			}
+			// If the loaded lists are null/empty/incomplete
+			// We pull data from Consts to fill them up
+			if (Scribe.mode == LoadSaveMode.PostLoadInit)
 			{
 				// enabled
 				int listLen = (int)(enabledA_List?.Count);
@@ -463,42 +503,38 @@ namespace NeedBarOverflow
 						foodHealthStats[i].Add(C.foodHealthStats[i][j]);
 					foodHealthStats[i][0] = C.foodHealthStats[i][0];
 					foodHealthStats[i][C.FoodStatLength - 1] = C.foodHealthStats[i][C.FoodStatLength - 1];
-                }
+				}
 				// foodOverflowDisable
 				if (foodDisablingDefs_str.NullOrEmpty())
 					foodDisablingDefs_str = new List<string>(C.foodDisablingDefs_str);
 				else
 					for (int i = foodDisablingDefs_str.Count; i < C.DefCount - 1; i++)
 						foodDisablingDefs_str.Add(C.foodDisablingDefs_str[i]);
-            }
-            // These are only applied for exposedata() calls after startup (when settings change)
-            // Applying settings at startup is handled on mod ctor instead because foodOverflow def and settings will be null
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-				HediffComp_FoodOverflow.pawnsWithFoodOverflow.Clear();
-			PatchApplier.ApplyPatches();
-            ApplyFoodHediffSettings();
-			ApplyFoodDisablingSettings<ThingDef>(C.ThingDef);
-            ApplyFoodDisablingSettings<HediffDef>(C.HediffDef);
-        }
+			}
+			// These are only applied for exposedata() calls after startup (when settings change)
+			// Applying settings at startup is handled on mod ctor instead because foodOverflow def and settings will be null
+			if (Refs.initialized && 
+				(Scribe.mode == LoadSaveMode.PostLoadInit || 
+				Scribe.mode == LoadSaveMode.Saving))
+			{
+				Patches.PatchApplier.ApplyPatches();
+				ApplyFoodHediffSettings();
+				ApplyFoodDisablingSettings<ThingDef>(C.ThingDef);
+				ApplyFoodDisablingSettings<HediffDef>(C.HediffDef);
+			}
+		}
 		public void ApplyFoodHediffSettings()
 		{
-			if (N.foodOverflow == null || !patches_Session[C.FoodHediff] || !FoodOverflowAffectHealth)
-			{
-				D.Message(string.Format(
-					"ApplyFoodHediffSettings() called but quit early because of: {0},{1},{2}", 
-					N.foodOverflow == null,
-					!patches_Session[C.FoodHediff],
-					!FoodOverflowAffectHealth));
+			if (!FoodOverflowAffectHealth)
 				return;
-			}
-			D.Message("ApplyFoodHediffSettings() called");
+			global::NeedBarOverflow.Debug.Message("ApplyFoodHediffSettings()");
 #if (v1_2 || v1_3)
 			// PawnCapacityDefOf.Eating no longer exists since 1.4
 			PawnCapacityDef eatingCapacityDef = PawnCapacityDefOf.Eating;
 #else
-            PawnCapacityDef eatingCapacityDef = DefDatabase<PawnCapacityDef>.GetNamed("Eating");
+			PawnCapacityDef eatingCapacityDef = Refs.Eating;
 #endif
-            List<bool> effectsEnabled = foodOverflowEffects;
+			List<bool> effectsEnabled = foodOverflowEffects;
 			List<List<float>> healthStats = foodHealthStats;
 			for (int i = 0; i < C.FoodStatCount; i++)
 			{
@@ -507,7 +543,7 @@ namespace NeedBarOverflow
 			}
 			for (int i = 1; i < C.FoodStatLength - 1; i++)
 			{
-				HediffStage currStage = N.foodOverflow.stages[i - 1];
+				HediffStage currStage = Refs.FoodOverflow.stages[i - 1];
 				currStage.minSeverity = healthStats[C.FoodLevel][i] - 1f;
 				if (effectsEnabled[C.FoodDrain - 1])
 					currStage.hungerRateFactor = healthStats[C.FoodDrain][i];
@@ -530,76 +566,72 @@ namespace NeedBarOverflow
 					currStage.capMods.Add(capMod);
 				}
 				float prevVomitMtbDays = currStage.vomitMtbDays;
-				D.Message(string.Format("vomitMtbDays was {0}", prevVomitMtbDays));
-                float vomitFrequency = healthStats[C.FoodVomit][i];
+				float vomitFrequency = healthStats[C.FoodVomit][i];
 				if (effectsEnabled[C.FoodVomit - 1] && vomitFrequency > 0f)
 					currStage.vomitMtbDays = 1f / vomitFrequency;
 				else
-                    currStage.vomitMtbDays = -1f;
-				if (prevVomitMtbDays == currStage.vomitMtbDays)
-					D.Message("vomitMtbDays did not change");
-                else
-                    D.Message(string.Format("vomitMtbDays updated to {0}", currStage.vomitMtbDays));
-                float eatingOffset = -healthStats[C.FoodEating][i];
-                if (eatingCapacityDef != null && effectsEnabled[C.FoodEating - 1] && eatingOffset != 0f)
+					currStage.vomitMtbDays = -1f;
+				float eatingOffset = -healthStats[C.FoodEating][i];
+				if (effectsEnabled[C.FoodEating - 1] && 
+					eatingOffset != 0f)
 				{
-                    PawnCapacityModifier capMod = new PawnCapacityModifier
-                    {
-                        capacity = eatingCapacityDef,
-                        offset = eatingOffset
-                    };
-                    currStage.capMods.Add(capMod);
-                }
+					PawnCapacityModifier capMod = new PawnCapacityModifier
+					{
+						capacity = eatingCapacityDef,
+						offset = eatingOffset
+					};
+					currStage.capMods.Add(capMod);
+				}
 			}
 		}
 		public void ApplyFoodDisablingSettings<T>(int idx) where T : Def
-        {
+		{
 			if (DefDatabase<T>.AllDefsListForReading.NullOrEmpty())
 			{
-                D.Message(string.Format(
-                    "ApplyFoodDisablingSettings<{0}> called but quit early because DefDatabase<{0}> is empty",
-                    typeof(T).Name));
-                return;
-            }
+				global::NeedBarOverflow.Debug.Warning(string.Format(
+					"DefDatabase<{0}> is empty",
+					typeof(T).Name));
+				return;
+			}
 			foodDisablingDefs_set[idx].Clear();
 			if (!enabledB[C.V(C.Food, C.DefOffset + idx)])
-            {
-                D.Message(string.Format(
-                    "ApplyFoodDisablingSettings<{0}> called but quit early because it is disabled",
-                    typeof(T).Name));
-                enabledB_Override[idx] = false;
-                return;
-            }
-            if (!enabledB[C.V(C.Food, C.DefOffset + idx)] ||
-                foodDisablingDefs_str[idx].NullOrEmpty())
-            {
-                D.Message(string.Format(
-                    "ApplyFoodDisablingSettings<{0}> called but quit early because no def of class {0} was set",
-                    typeof(T).Name));
-                enabledB_Override[idx] = false;
-                return;
-            }
-            HashSet<string> defNamesLower = new HashSet<string>();
-            foreach (T def in DefDatabase<T>.AllDefsListForReading)
-            {
+			{
+				global::NeedBarOverflow.Debug.Message(string.Format(
+					"ApplyFoodDisablingSettings<{0}>: Disabled",
+					typeof(T).Name));
+				enabledB_Override[idx] = false;
+				return;
+			}
+			if (!enabledB[C.V(C.Food, C.DefOffset + idx)] ||
+				foodDisablingDefs_str[idx].NullOrEmpty())
+			{
+				global::NeedBarOverflow.Debug.Message(string.Format(
+					"ApplyFoodDisablingSettings<{0}>: No def of class {0} was set",
+					typeof(T).Name));
+				enabledB_Override[idx] = false;
+				return;
+			}
+			HashSet<string> defNamesLower = new HashSet<string>();
+			foreach (T def in DefDatabase<T>.AllDefsListForReading)
+			{
 				if ((def?.defName).NullOrEmpty())
 					continue;
-                defNamesLower.Add(def.defName.ToLowerInvariant());
-            }
-            D.Message(string.Format("foodDisablingDefs: {0} {1} Checked", defNamesLower.Count(), typeof(T).Name));
+				defNamesLower.Add(def.defName.ToLowerInvariant());
+			}
+			global::NeedBarOverflow.Debug.Message(string.Format("foodDisablingDefs: {0} {1} Checked", defNamesLower.Count(), typeof(T).Name));
 			List<string> notFoundNames = new List<string>();
-            foreach (string disablingName in foodDisablingDefs_str[idx].ToLowerInvariant().Split(','))
+			foreach (string disablingName in foodDisablingDefs_str[idx].ToLowerInvariant().Split(','))
 			{
 				if (defNamesLower.Contains(disablingName))
-                    foodDisablingDefs_set[idx].Add(disablingName);
+					foodDisablingDefs_set[idx].Add(disablingName);
 				else
-                    notFoundNames.Add(disablingName);
-            }
-			D.Message(string.Concat(
+					notFoundNames.Add(disablingName);
+			}
+			global::NeedBarOverflow.Debug.Message(string.Concat(
 				"Loaded ", foodDisablingDefs_set[idx].Count().ToString(), " ", typeof(T).Name, " successfully",
-                notFoundNames.Count() > 0 ? ", and the following defNames were not found hence not loaded: " : ".",
-                notFoundNames.Count() > 0 ? string.Join(",", notFoundNames) : string.Empty));
-            enabledB_Override[idx] = foodDisablingDefs_set[idx].Count() > 0;
-        }
-    }
+				notFoundNames.Count() > 0 ? ", and the following defNames were not found hence not loaded: " : ".",
+				notFoundNames.Count() > 0 ? string.Join(",", notFoundNames) : string.Empty));
+			enabledB_Override[idx] = foodDisablingDefs_set[idx].Count() > 0;
+		}
+	}
 }

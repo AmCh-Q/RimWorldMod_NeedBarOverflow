@@ -66,42 +66,59 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CSharpPatches\Shared\AdjustGain.cs" />
     <Compile Include="Debug.cs" />
-    <Compile Include="HediffComp_FoodOverflow.cs" />
-    <Compile Include="HediffCompProperties_FoodOverflow.cs" />
+    <Compile Include="CSharpPatches\ColonistBarColonistDrawer_.cs" />
+    <Compile Include="CSharpPatches\GenUI_\DrawStatusLevel.cs" />
+    <Compile Include="CSharpPatches\Gizmo_GrowthTier_.cs" />
+    <Compile Include="CSharpPatches\InspectPaneFiller_\DrawMechEnergy.cs" />
+    <Compile Include="CSharpPatches\InspectPaneFiller_\DrawMood.cs" />
+    <Compile Include="CSharpPatches\InspirationHandler_.cs" />
+    <Compile Include="CSharpPatches\Need_Beauty_.cs" />
+    <Compile Include="CSharpPatches\Need_Comfort_.cs" />
+    <Compile Include="CSharpPatches\Need_Food_\NutritionWanted.cs" />
+    <Compile Include="CSharpPatches\Need_Joy_\GainJoy.cs" />
+    <Compile Include="CSharpPatches\Need_Joy_\NeedInterval_Drain.cs" />
+    <Compile Include="CSharpPatches\Need_KillThirst_\NeedInterval_Drain.cs" />
+    <Compile Include="CSharpPatches\Need_Mood_.cs" />
+    <Compile Include="CSharpPatches\Need_Indoors_.cs" />
+    <Compile Include="CSharpPatches\Need_Outdoors_.cs" />
+    <Compile Include="CSharpPatches\Need_Rest_.cs" />
+    <Compile Include="CSharpPatches\Shared\RemoveLastMin.cs" />
+    <Compile Include="Refs.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="PatchApplier.cs" />
-    <Compile Include="Patches\AddHumanlikeOrders.cs" />
-    <Compile Include="Patches\AverageBeautyPerceptible.cs" />
-    <Compile Include="Patches\Clamp0.cs" />
-    <Compile Include="Patches\Clamp01.cs" />
-    <Compile Include="Patches\CurLevelPercentage.cs" />
-    <Compile Include="Patches\CurLevel.cs" />
-    <Compile Include="Patches\Common.cs" />
-    <Compile Include="Patches\DrawOnGUI.cs" />
-    <Compile Include="Patches\DrawSuppressionBar.cs" />
-    <Compile Include="Patches\Food_NeedInterval.cs" />
-    <Compile Include="Patches\GainJoy.cs" />
-    <Compile Include="Patches\GenUI.cs" />
-    <Compile Include="Patches\Learn.cs" />
-    <Compile Include="Patches\NeedInterval.cs" />
-    <Compile Include="Patches\Need_Food_Helper.cs" />
-    <Compile Include="Patches\Notify_KilledPawn.cs" />
-    <Compile Include="Patches\Play.cs" />
-    <Compile Include="Patches\StartInspirationMTBDays.cs" />
-    <Compile Include="Patches\WillIngestFromInventoryNow.cs" />
+    <Compile Include="CSharpPatches\FloatMenuMakerMap_.cs" />
+    <Compile Include="CSharpPatches\BeautyUtility_.cs" />
+    <Compile Include="CSharpPatches\Shared\Add0LowerBound.cs" />
+    <Compile Include="CSharpPatches\Shared\ModifyClamp01.cs" />
+    <Compile Include="CSharpPatches\Shared\ClampCurLevelPercentage.cs" />
+    <Compile Include="CSharpPatches\Need_\CurLevel.cs" />
+    <Compile Include="CSharpPatches\TraitSet_.cs" />
+    <Compile Include="CSharpPatches\Shared\Utility.cs" />
+    <Compile Include="CSharpPatches\Need_\DrawOnGUI.cs" />
+    <Compile Include="CSharpPatches\Need_Suppression_.cs" />
+    <Compile Include="CSharpPatches\Need_Food_\NeedInterval.cs" />
+    <Compile Include="CSharpPatches\Need_Joy_\GainJoy_Gain.cs" />
+    <Compile Include="CSharpPatches\GenUI_\BottomPart.cs" />
+    <Compile Include="CSharpPatches\Need_Learning_.cs" />
+    <Compile Include="CSharpPatches\Shared\AdjustDrain.cs" />
+    <Compile Include="CSharpPatches\Need_Food_\Utility.cs" />
+    <Compile Include="CSharpPatches\Need_KillThirst_\Notify_KilledPawn.cs" />
+    <Compile Include="CSharpPatches\Need_Play_.cs" />
+    <Compile Include="CSharpPatches\FoodUtility_.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Consts.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
-      <Version>1.4.3901</Version>
+      <Version>1.5.4048-beta</Version>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
       <ExcludeAssets>runtime</ExcludeAssets>
-      <Version>2.3.1.1</Version>
+      <Version>2.3.2</Version>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
