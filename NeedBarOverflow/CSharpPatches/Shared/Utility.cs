@@ -49,7 +49,7 @@ namespace NeedBarOverflow.Patches
 			if (patched.HasValue)
 				return;
 			Debug.Message("Patching Method "
-                + original.DeclaringType.Name 
+				+ original.DeclaringType.Name 
 				+ ":" + original.Name);
 			HarmonyPatchType lastPatch = HarmonyPatchType.All;
 			int numPatches = 0;
@@ -80,13 +80,13 @@ namespace NeedBarOverflow.Patches
 				h_finalizer = new HarmonyMethod(finalizer.Method);
 				numPatches++;
 				lastPatch = HarmonyPatchType.Finalizer;
-            }
-            harmony.Patch(original,
-                prefix: h_prefix,
-                postfix: h_postfix,
-                transpiler: h_transpiler,
-                finalizer: h_finalizer);
-            if (updateState)
+			}
+			harmony.Patch(original,
+				prefix: h_prefix,
+				postfix: h_postfix,
+				transpiler: h_transpiler,
+				finalizer: h_finalizer);
+			if (updateState)
 			{
 				if (numPatches == 0)
 					throw new ArgumentException();
@@ -104,7 +104,7 @@ namespace NeedBarOverflow.Patches
 			if (!patched.HasValue)
 				return;
 			Debug.Message("Unpatching Method "
-                + original.DeclaringType.Name 
+				+ original.DeclaringType.Name 
 				+ ":" + original.Name);
 			harmony.Unpatch(original, (HarmonyPatchType)patched, harmony.Id);
 			if (updateState)

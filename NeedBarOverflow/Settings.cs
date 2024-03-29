@@ -144,10 +144,10 @@ namespace NeedBarOverflow
 					txt_min, txt_max
 					).CustomRound();
 #elif (v1_4)
-                // Temporary for 1.4
-                // The nuget package alerts an error for this
-                // But if this is the only "error" it compiles correctly...
-                num = Widgets.HorizontalSlider_NewTemp(
+				// Temporary for 1.4
+				// The nuget package alerts an error for this
+				// But if this is the only "error" it compiles correctly...
+				num = Widgets.HorizontalSlider_NewTemp(
 					rectSlider, num, txt_min, txt_max, 
 					leftAlignedLabel: txt_min_str, 
 					rightAlignedLabel: txt_max_str

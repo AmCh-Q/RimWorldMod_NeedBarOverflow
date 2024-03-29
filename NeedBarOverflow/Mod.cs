@@ -10,7 +10,7 @@ namespace NeedBarOverflow
 	{
 		public NeedBarOverflow(ModContentPack content) : base(content)
 		{
-            Debug.Message("NeedBarOverflow constructor called");
+			Debug.Message("NeedBarOverflow constructor called");
 			s = GetSettings<Settings>();
 			LongEventHandler.QueueLongEvent(delegate
 			{

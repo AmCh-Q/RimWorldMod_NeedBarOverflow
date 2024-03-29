@@ -22,22 +22,22 @@ namespace NeedBarOverflow.Patches.Need_Rest_
 				return;
 			if (patchedDrain || patchedGain)
 				Toggle(false);
-            if (PatchApplier.Enabled(Consts.Rest, 1) ||
-                PatchApplier.Enabled(Consts.Rest, 2))
-                Toggle(true);
+			if (PatchApplier.Enabled(Consts.Rest, 1) ||
+				PatchApplier.Enabled(Consts.Rest, 2))
+				Toggle(true);
 		}
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
-            {
-                Patch(ref patched, original: original,
-                    transpiler: transpiler);
-            }
+			{
+				Patch(ref patched, original: original,
+					transpiler: transpiler);
+			}
 			else
-            {
+			{
 				patchedDrain = patchedGain = false;
-                Unpatch(ref patched, original: original);
-            }
+				Unpatch(ref patched, original: original);
+			}
 		}
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)

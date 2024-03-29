@@ -48,18 +48,18 @@ namespace NeedBarOverflow.Patches.Need_Food_
 		}
 		public static void ClearHediff()
 		{
-            foreach (Pawn pawn in pawnsWithFoodOverflow.Keys)
-            {
+			foreach (Pawn pawn in pawnsWithFoodOverflow.Keys)
+			{
 #if (v1_2 || v1_3 || v1_4)
-                Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
-                if (hediff != null)
-                    pawn.health.RemoveHediff(hediff);
+				Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
+				if (hediff != null)
+					pawn.health.RemoveHediff(hediff);
 #else
 				if (pawn.health.hediffSet.TryGetHediff(Refs.FoodOverflow, out Hediff hediff))
-                    pawn.health.RemoveHediff(hediff);
+					pawn.health.RemoveHediff(hediff);
 #endif
-            }
-            pawnsWithFoodOverflow.Clear();
+			}
+			pawnsWithFoodOverflow.Clear();
 		}
 		public static void UpdateHediff(Pawn pawn)
 		{
@@ -72,56 +72,56 @@ namespace NeedBarOverflow.Patches.Need_Food_
 		private static readonly FieldInfo f_visible 
 			= typeof(Hediff).GetField("visible", bindingflags);
 #endif
-        private static void UpdateHediff(
+		private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
-        {
-            Settings s = PatchApplier.s;
-            Pawn_HealthTracker health = pawn.health;
-            Hediff hediff;
-            if (newValue <= need.MaxLevel)
-            {
+		{
+			Settings s = PatchApplier.s;
+			Pawn_HealthTracker health = pawn.health;
+			Hediff hediff;
+			if (newValue <= need.MaxLevel)
+			{
 #if (v1_2 || v1_3 || v1_4)
-                if (pawnsWithFoodOverflow.Remove(pawn))
+				if (pawnsWithFoodOverflow.Remove(pawn))
 				{
 					hediff = health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
-                    if (hediff != null)
-                        health.RemoveHediff(hediff);
-                }
+					if (hediff != null)
+						health.RemoveHediff(hediff);
+				}
 #else
 				if (pawnsWithFoodOverflow.Remove(pawn) &&
-                    health.hediffSet.TryGetHediff(Refs.FoodOverflow, out hediff))
-                    health.RemoveHediff(hediff);
+					health.hediffSet.TryGetHediff(Refs.FoodOverflow, out hediff))
+					health.RemoveHediff(hediff);
 #endif
-                return;
-            }
+				return;
+			}
 #if (v1_2 || v1_3 || v1_4)
-            hediff = health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
+			hediff = health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
 			if (hediff == null)
 				hediff = health.AddHediff(Refs.FoodOverflow);
 #else
-            hediff = health.GetOrAddHediff(Refs.FoodOverflow);
+			hediff = health.GetOrAddHediff(Refs.FoodOverflow);
 #endif
-            if (!pawnsWithFoodOverflow.TryGetValue(pawn, out float effectMultiplier) ||
-                effectMultiplier < 0f)
-            {
-                if (!pawn.RaceProps.Humanlike)
-                    effectMultiplier = s.statsB[C.V(C.Food, 3)];
-                else if ((bool)(pawn.story?.traits?.HasTrait(Refs.Gourmand)))
-                    effectMultiplier = s.statsB[C.V(C.Food, 4)];
-                else
-                    effectMultiplier = 1f;
-                pawnsWithFoodOverflow[pawn] = effectMultiplier;
-            }
-            hediff.Severity = (need.CurLevelPercentage - 1) * effectMultiplier;
-            if (!hediff.Visible && hediff.Severity > (s.statsB[C.V(C.Food, 5)] - 1f))
-            {
+			if (!pawnsWithFoodOverflow.TryGetValue(pawn, out float effectMultiplier) ||
+				effectMultiplier < 0f)
+			{
+				if (!pawn.RaceProps.Humanlike)
+					effectMultiplier = s.statsB[C.V(C.Food, 3)];
+				else if ((bool)(pawn.story?.traits?.HasTrait(Refs.Gourmand)))
+					effectMultiplier = s.statsB[C.V(C.Food, 4)];
+				else
+					effectMultiplier = 1f;
+				pawnsWithFoodOverflow[pawn] = effectMultiplier;
+			}
+			hediff.Severity = (need.CurLevelPercentage - 1) * effectMultiplier;
+			if (!hediff.Visible && hediff.Severity > (s.statsB[C.V(C.Food, 5)] - 1f))
+			{
 #if (v1_2 || v1_3 || v1_4)
 				f_visible.SetValue(hediff, true);
 #else
-                hediff.SetVisible();
+				hediff.SetVisible();
 #endif
-            }
-        }
+			}
+		}
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{
