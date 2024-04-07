@@ -1,5 +1,4 @@
-﻿#if (v1_4 || v1_5)
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using RimWorld;
 
@@ -25,4 +24,3 @@ namespace NeedBarOverflow.Patches.Gizmo_GrowthTier_
 		}
 	}
 }
-#endif

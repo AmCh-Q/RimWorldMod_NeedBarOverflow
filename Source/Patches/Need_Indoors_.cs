@@ -1,5 +1,4 @@
-﻿#if (v1_3 || v1_4 || v1_5)
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using RimWorld;
 
@@ -25,4 +24,3 @@ namespace NeedBarOverflow.Patches.Need_Indoors_
 		}
 	}
 }
-#endif

@@ -5,7 +5,6 @@ using System.Reflection.Emit;
 using UnityEngine;
 using HarmonyLib;
 using RimWorld;
-using Verse;
 
 namespace NeedBarOverflow.Patches
 {
