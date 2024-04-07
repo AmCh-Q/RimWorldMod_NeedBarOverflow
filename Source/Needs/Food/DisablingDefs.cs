@@ -5,7 +5,7 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public partial class Food : IExposable
+	public partial class Setting_Food : IExposable
 	{
 		private static class DisablingDefs
 		{
@@ -34,7 +34,7 @@ namespace NeedBarOverflow.Needs
 						disablingDefs[key] = new HashSet<Def>();
 					if (Enabled)
 					{
-						if (!disablingDefs_str.TryGetValue(key, out var value))
+						if (!disablingDefs_str.TryGetValue(key, out string value))
 							value = dfltDisablingDefNames[key];
 						if (!value.NullOrEmpty() && !value.EndsWith(suffix))
 							ParseDisabledDefs(key, value);

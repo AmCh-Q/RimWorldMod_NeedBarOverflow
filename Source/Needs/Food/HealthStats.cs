@@ -7,7 +7,7 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public partial class Food : IExposable
+	public partial class Setting_Food : IExposable
 	{
 		private static class HealthStats
 		{
@@ -82,20 +82,20 @@ namespace NeedBarOverflow.Needs
 
 			public static void ExposeHealthStats()
 			{
-				Dictionary<string, string> dict = new Dictionary<string, string>();
+				Dictionary<string, string> healthStat_strs = new Dictionary<string, string>();
 				if (Scribe.mode == LoadSaveMode.Saving)
 				{
 					foreach (string key in dfltHealthStats.Keys)
-						dict[key] = string.Join(Strings.Space, healthStats[key].Select((float x) => x.CustomToString(showAsPerc: false, translate: false)));
+						healthStat_strs[key] = string.Join(Strings.Space, healthStats[key].Select((float x) => x.CustomToString(showAsPerc: false, translate: false)));
 				}
-				Scribe_Collections.Look(ref dict, Strings.healthStats, LookMode.Value, LookMode.Value);
+				Scribe_Collections.Look(ref healthStat_strs, Strings.healthStats, LookMode.Value, LookMode.Value);
 				if (Scribe.mode == LoadSaveMode.LoadingVars)
 				{
 					foreach (string key in dfltHealthStats.Keys)
 					{
 						if (!healthStats.ContainsKey(key))
 							healthStats[key] = new float[10];
-						if (!dict.TryGetValue(key, out var value))
+						if (!healthStat_strs.TryGetValue(key, out string value))
 							value = dfltHealthStats[key];
 						if (!value.NullOrEmpty())
 						{

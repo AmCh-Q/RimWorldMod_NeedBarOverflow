@@ -14,7 +14,7 @@
 			Need_.CurLevel							.Toggle();
 			Need_.DrawOnGUI							.Toggle();
 			BeautyUtility_.AverageBeautyPerceptible	.Toggle();
-			//Food
+			//Setting_Food
 			Need_Food_.NutritionWanted				.Toggle();
 			FloatMenuMakerMap_.AddHumanlikeOrders	.Toggle();
 			FoodUtility_.WillIngestFromInventoryNow	.Toggle();

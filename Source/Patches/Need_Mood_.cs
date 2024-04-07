@@ -15,7 +15,7 @@ namespace NeedBarOverflow.Patches.Need_Mood_
 			.Getter(nameof(Need_Mood.CurInstantLevel));
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Mood)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Mood)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
@@ -25,7 +25,7 @@ namespace NeedBarOverflow.Patches.Need_Mood_
 				Unpatch(ref patched, original: original);
 		}
 		private static float MaxValue()
-		  => Common.overflow[typeof(Need_Mood)];
+		  => Setting_Common.overflow[typeof(Need_Mood)];
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 			=> ModifyClamp01.Transpiler(instructions, MaxValue);

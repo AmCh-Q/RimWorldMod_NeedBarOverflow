@@ -6,9 +6,9 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public partial class Food : IExposable
+	public partial class Setting_Food : IExposable
 	{
-		public static bool Enabled => Common.overflow[typeof(Need_Food)] > 0f;
+		public static bool Enabled => Setting_Common.overflow[typeof(Need_Food)] > 0f;
 
 		public static bool AffectHealth
 		{

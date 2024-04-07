@@ -23,7 +23,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 		private static readonly Dictionary<Pawn, float>
 			pawnsWithFoodOverflow = new Dictionary<Pawn, float>();
 		public static void Toggle()
-			=> Toggle(Food.AffectHealth);
+			=> Toggle(Setting_Food.AffectHealth);
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
@@ -105,15 +105,15 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				effectMultiplier < 0f)
 			{
 				if (!pawn.RaceProps.Humanlike)
-					effectMultiplier = Food.EffectStat(Strings.NonHumanMult);
+					effectMultiplier = Setting_Food.EffectStat(Strings.NonHumanMult);
 				else if ((bool)(pawn.story?.traits?.HasTrait(Refs.Gourmand)))
-					effectMultiplier = Food.EffectStat(Strings.GourmandMult);
+					effectMultiplier = Setting_Food.EffectStat(Strings.GourmandMult);
 				else
 					effectMultiplier = 1f;
 				pawnsWithFoodOverflow[pawn] = effectMultiplier;
 			}
 			hediff.Severity = (need.CurLevelPercentage - 1) * effectMultiplier;
-			if (!hediff.Visible && hediff.Severity > (Food.EffectStat(Strings.ShowHediffLvl) - 1f))
+			if (!hediff.Visible && hediff.Severity > (Setting_Food.EffectStat(Strings.ShowHediffLvl) - 1f))
 			{
 #if (v1_2 || v1_3 || v1_4)
 				f_visible.SetValue(hediff, true);

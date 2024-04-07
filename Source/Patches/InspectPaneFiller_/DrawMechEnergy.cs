@@ -14,7 +14,7 @@ namespace NeedBarOverflow.Patches.InspectPaneFiller_
 			= typeof(InspectPaneFiller)
 			.Method("DrawMechEnergy");
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_MechEnergy)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_MechEnergy)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

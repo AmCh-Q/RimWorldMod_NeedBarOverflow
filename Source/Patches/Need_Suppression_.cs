@@ -18,7 +18,7 @@ namespace NeedBarOverflow.Patches.Need_Suppression_
 			.Method(nameof(Need_Suppression.DrawSuppressionBar));
 		private static readonly TransILG transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Suppression)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Suppression)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

@@ -21,7 +21,7 @@ namespace NeedBarOverflow.Patches.Need_
 		private static readonly Func<bool> prefix = Prefix;
 		private static readonly TransILG transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.AnyEnabled);
+			=> Toggle(Setting_Common.AnyEnabled);
 		public static void Toggle(bool enable)
 		{
 			if (enable)

@@ -12,7 +12,7 @@ namespace NeedBarOverflow
 		public const int NeedCount = 20;
 
 		// Index of each need, need to be < NeedCount
-		public const int Food = 0, Rest = 1, Joy = 2, Mood = 3, Outdoors = 4, Indoors = 5,
+		public const int Setting_Food = 0, Rest = 1, Joy = 2, Mood = 3, Outdoors = 4, Indoors = 5,
 			Comfort = 6, Beauty = 7, Chemical = 8, ChemicalAny = 9, DefaultNeed = 10,
 			Authority = 11, RoomSize = 12, Sadism = 13, Suppression = 14, Deathrest = 15,
 			KillThirst = 16, Learning = 17, MechEnergy = 18, Play = 19;
@@ -20,7 +20,7 @@ namespace NeedBarOverflow
 		// Matching each Need Type to its index
 		public static IReadOnlyDictionary<Type, int> needTypes = new Dictionary<Type, int>(NeedCount - 1)
 		{
-			{ typeof(Need_Food), Food },
+			{ typeof(Need_Food), Setting_Food },
 			{ typeof(Need_Rest), Rest },
 			{ typeof(Need_Joy), Joy },
 			{ typeof(Need_Mood), Mood },
@@ -47,7 +47,7 @@ namespace NeedBarOverflow
 		};
 
 		// In the order below:
-		//	Food, Rest, Joy, Mood, OutDoors, Indoors, Comfort, Beauty, Chemical, Chemical_Any, DefaultNeed, Authority, RoomSize, Sadism, Suppression
+		//	Setting_Food, Rest, Joy, Mood, OutDoors, Indoors, Comfort, Beauty, Chemical, Chemical_Any, DefaultNeed, Authority, RoomSize, Sadism, Suppression
 		// Whether the following needs are enabled
 		public static readonly bool[] enabledA = new bool[NeedCount]
 		{ true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
@@ -59,10 +59,10 @@ namespace NeedBarOverflow
 		// Special settings included for some needs
 		public static IReadOnlyDictionary<IntVec2, bool> enabledB = new Dictionary<IntVec2, bool>()
 		{
-			{ V(Food, 1), true },			// FoodOverfDisableEating: disallow right-click "consume" action when food level too high
-			{ V(Food, 2), false },			// FoodOverfHealthDetails: whether to show health effect settings in settings page
-			{ V(Food, 10), true},			// NoFoodOverfRace: whether pawns of certain races cannot overflow their food meter
-			{ V(Food, 11), true},			// NoFoodOverfHediff: whether pawns with certain Hediffs cannot overflow their food meter
+			{ V(Setting_Food, 1), true },			// FoodOverfDisableEating: disallow right-click "consume" action when food level too high
+			{ V(Setting_Food, 2), false },			// FoodOverfHealthDetails: whether to show health effect settings in settings page
+			{ V(Setting_Food, 10), true},			// NoFoodOverfRace: whether pawns of certain races cannot overflow their food meter
+			{ V(Setting_Food, 11), true},			// NoFoodOverfHediff: whether pawns with certain Hediffs cannot overflow their food meter
 			{ V(Rest, 1), false },			// RestOverfFastDrain
 			{ V(Rest, 2), false },			// RestOverfSlowGain
 			{ V(Joy, 1), false },			// JoyOverfFastDrain
@@ -72,11 +72,11 @@ namespace NeedBarOverflow
 		};
 		public static IReadOnlyDictionary<IntVec2, float> statsB = new Dictionary<IntVec2, float>()
 		{
-			{ V(Food, 1), 1.5f },	// foodOverflowBonus: addtional unit of food (in-game nutritional value) a pawn can take regardless of percentage caps
-			{ V(Food, 2), 1f },		// FoodOverfDisableEating: when food > this percentage, disallow right-click "consume" action
-			{ V(Food, 3), 0.25f },	// FoodOverfNonHumanMult: when nonhuman pawns are affected by food overflow related health effects, the effect is multiplied
-			{ V(Food, 4), 0.25f },	// FoodOverfGourmandMult: when gourmand pawns are affected by food overflow related health effects, the effect is multiplied
-			{ V(Food, 5), 1.4f },	// FoodOverfShowHediffLvl: when pawns are affected by food overflow related health effects, the effect is not visible until this level
+			{ V(Setting_Food, 1), 1.5f },	// foodOverflowBonus: addtional unit of food (in-game nutritional value) a pawn can take regardless of percentage caps
+			{ V(Setting_Food, 2), 1f },		// FoodOverfDisableEating: when food > this percentage, disallow right-click "consume" action
+			{ V(Setting_Food, 3), 0.25f },	// FoodOverfNonHumanMult: when nonhuman pawns are affected by food overflow related health effects, the effect is multiplied
+			{ V(Setting_Food, 4), 0.25f },	// FoodOverfGourmandMult: when gourmand pawns are affected by food overflow related health effects, the effect is multiplied
+			{ V(Setting_Food, 5), 1.4f },	// FoodOverfShowHediffLvl: when pawns are affected by food overflow related health effects, the effect is not visible until this level
 			{ V(Rest, 1), 0.5f },	// RestOverfFastDrain multiplier: higher number * more overflow -> rest need falls faster
 			{ V(Rest, 2), 0.5f },	// RestOverfSlowGain multiplier: higher number * more overflow -> less effective gain rest
 			{ V(Joy, 1), 0.5f },	// JoyOverfFastDrain multiplier: higher number * more overflow -> joy need falls faster
@@ -98,7 +98,7 @@ namespace NeedBarOverflow
 			= new List<List<float>>(FoodStatCount)
 		{
 			// Minimum value, level 1-8, maximum value
-			new List<float>(FoodStatLength) { 0f, 1f, 1.2f, 1.4f, 1.6f, 1.8f, 2f, 3f, 5f, float.PositiveInfinity }, // Food overflow percentage levels
+			new List<float>(FoodStatLength) { 0f, 1f, 1.2f, 1.4f, 1.6f, 1.8f, 2f, 3f, 5f, float.PositiveInfinity }, // Setting_Food overflow percentage levels
 			new List<float>(FoodStatLength) { 1f, 1f, 1.05f, 1.1f, 1.2f, 1.3f, 1.5f, 2f, 5f, float.PositiveInfinity }, // FoodHungerFactor: how fast food drains
 			new List<float>(FoodStatLength) { 1f, 1.1f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 10f }, // FoodHealingFactor: multiplier for healing
 			new List<float>(FoodStatLength) { 0f, 0.01f, 0.02f, 0.05f, 0.1f, 0.15f, 0.2f, 0.25f, 0.3f, 10f }, // FoodMovingOffset: Move speed Reduction

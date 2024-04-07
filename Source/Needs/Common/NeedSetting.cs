@@ -10,7 +10,7 @@ namespace NeedBarOverflow.Needs
 	{
 		public static bool Enabled => MaxValue() > 0f;
 		public static float MaxValue()
-			=> Common.overflow[typeof(T)];
+			=> Setting_Common.overflow[typeof(T)];
 		public static bool EffectEnabled(string statName)
 			=> Enabled && OverflowStats.overflowStats[statName] > 0f;
 		public static float EffectStat(string statName)

@@ -18,7 +18,7 @@ namespace NeedBarOverflow.Patches.InspirationHandler_
 			.Getter("StartInspirationMTBDays");
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Mood)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Mood)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

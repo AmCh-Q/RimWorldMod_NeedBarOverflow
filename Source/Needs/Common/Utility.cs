@@ -142,7 +142,7 @@ namespace NeedBarOverflow.Needs
 		public static bool AddSimpleSetting(Listing_Standard ls, Type needType)
 		{
 			LsGap(ls);
-			float num = Common.overflow[needType];
+			float num = Setting_Common.overflow[needType];
 			bool checkOn = num > 0f;
 			num = (checkOn ? num : (0f - num));
 			SettingLabel settingLabel = new SettingLabel(needType.Name, Strings.OverfEnabled);
@@ -153,7 +153,7 @@ namespace NeedBarOverflow.Needs
 				settingLabel = new SettingLabel(needType.Name, Strings.OverfPerc);
 				AddNumSetting(ls, ref num, settingLabel, logSlider: true, 0f, 2.002f, 1f, float.PositiveInfinity, showAsPerc: true);
 			}
-			Common.overflow[needType] = (checkOn ? num : (0f - num));
+			Setting_Common.overflow[needType] = (checkOn ? num : (0f - num));
 			return checkOn;
 		}
 	}

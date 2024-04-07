@@ -20,7 +20,7 @@ namespace NeedBarOverflow.Patches.TraitSet_
 			};
 		private static readonly Action<Pawn, Trait> postfix = Postfix;
 		public static void Toggle()
-			=> Toggle(Food.AffectHealth);
+			=> Toggle(Setting_Food.AffectHealth);
 		public static void Toggle(bool enabled)
 		{
 			foreach (MethodBase original in originals)

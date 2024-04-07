@@ -13,7 +13,7 @@ namespace NeedBarOverflow.Patches.ColonistBarColonistDrawer_
 			= typeof(ColonistBarColonistDrawer)
 			.Method(nameof(ColonistBarColonistDrawer.DrawColonist));
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Mood)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Mood)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

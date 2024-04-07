@@ -18,7 +18,7 @@ namespace NeedBarOverflow.Patches.Need_Learning_
 			.Method(nameof(Need_Learning.Learn));
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Learning)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Learning)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

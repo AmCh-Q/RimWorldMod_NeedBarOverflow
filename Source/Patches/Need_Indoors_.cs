@@ -13,7 +13,7 @@ namespace NeedBarOverflow.Patches.Need_Indoors_
 			= typeof(Need_Indoors)
 			.Method(nameof(Need_Indoors.NeedInterval));
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Indoors)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Indoors)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

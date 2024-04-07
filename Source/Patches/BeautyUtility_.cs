@@ -25,7 +25,7 @@ namespace NeedBarOverflow.Patches.BeautyUtility_
 			cache = new Dictionary<IntVec4, float>();
 		private static int lastCheckTick = -1;
 		public static void Toggle()
-			=> Toggle(Common.AnyEnabled &&
+			=> Toggle(Setting_Common.AnyEnabled &&
 				!ModLister.HasActiveModWithName("Performance Optimizer"));
 		public static void Toggle(bool enable)
 		{

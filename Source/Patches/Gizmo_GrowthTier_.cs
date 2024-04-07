@@ -13,7 +13,7 @@ namespace NeedBarOverflow.Patches.Gizmo_GrowthTier_
 			= typeof(Gizmo_GrowthTier)
 			.Method("DrawLearning");
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Learning)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Learning)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

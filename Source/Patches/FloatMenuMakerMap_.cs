@@ -22,7 +22,7 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 			Action<Vector3, Pawn, List<FloatMenuOption>> 
 				postfix = Postfix;
 		public static void Toggle()
-			=> Toggle(Food.EffectEnabled(Strings.DisableEating));
+			=> Toggle(Setting_Food.EffectEnabled(Strings.DisableEating));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

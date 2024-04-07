@@ -21,13 +21,13 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			Need_Food need = pawn?.needs?.food;
 			return need == null
 				// Pawn's food meter is set below the limit percentage
-				|| need.CurLevel < Food.EffectStat(Strings.DisableEating) * need.MaxLevel
+				|| need.CurLevel < Setting_Food.EffectStat(Strings.DisableEating) * need.MaxLevel
 				|| need.CurCategory > HungerCategory.Fed // Pawn is hungry
 				|| !CanOverflowFood(pawn);
 		}
 		private static bool CheckPawnRace(Pawn p)
 		{
-			HashSet<Def> disablingDefs = Food.DisablingDef(typeof(ThingDef));
+			HashSet<Def> disablingDefs = Setting_Food.DisablingDef(typeof(ThingDef));
 			if (disablingDefs.Count == 0)
 				return true;
 			ThingDef thingDef = p.kindDef?.race;
@@ -37,7 +37,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 		}
 		private static bool CheckPawnHealth(Pawn p)
 		{
-			HashSet<Def> disablingDefs = Food.DisablingDef(typeof(HediffDef));
+			HashSet<Def> disablingDefs = Setting_Food.DisablingDef(typeof(HediffDef));
 			if (disablingDefs.Count == 0)
 				return true;
 			List<Hediff> hediffs = p.health?.hediffSet?.hediffs;

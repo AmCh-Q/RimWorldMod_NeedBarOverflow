@@ -30,7 +30,7 @@ namespace NeedBarOverflow
 
 
 			if (Utility.AddSimpleSetting(listing_Standard, typeof(Need_Food)))
-				Food.AddSettings(listing_Standard);
+				Setting_Food.AddSettings(listing_Standard);
 			if (Utility.AddSimpleSetting(listing_Standard, typeof(Need_Rest)))
 				NeedSetting<Need_Rest>.AddSettings(listing_Standard);
 			if (Utility.AddSimpleSetting(listing_Standard, typeof(Need_Joy)))
@@ -75,14 +75,14 @@ namespace NeedBarOverflow
 		{
 			Debug.Message("ExposeData() called");
 			base.ExposeData();
-			Common common = new Common();
-			Food food = new Food();
+			Setting_Common common = new Setting_Common();
+			Setting_Food food = new Setting_Food();
 			NeedSetting<Need_Rest> rest = new NeedSetting<Need_Rest>();
 			NeedSetting<Need_Joy> joy = new NeedSetting<Need_Joy>();
 #if (!v1_2 && !v1_3)
 			NeedSetting<Need_KillThirst> killThirst = new NeedSetting<Need_KillThirst>();
 #endif
-			Scribe_Deep.Look(ref common, nameof(Common));
+			Scribe_Deep.Look(ref common, nameof(Setting_Common));
 			Scribe_Deep.Look(ref food, nameof(Need_Food));
 			Scribe_Deep.Look(ref rest, nameof(Need_Rest));
 			Scribe_Deep.Look(ref joy, nameof(Need_Joy));

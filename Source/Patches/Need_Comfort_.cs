@@ -15,7 +15,7 @@ namespace NeedBarOverflow.Patches.Need_Comfort_
 			.Getter(nameof(Need_Comfort.CurInstantLevel));
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Comfort)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Comfort)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
@@ -26,7 +26,7 @@ namespace NeedBarOverflow.Patches.Need_Comfort_
 		}
 
 		private static float MaxValue()
-		  => Common.overflow[typeof(Need_Comfort)];
+		  => Setting_Common.overflow[typeof(Need_Comfort)];
 
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)

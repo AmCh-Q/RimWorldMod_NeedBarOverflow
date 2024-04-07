@@ -20,7 +20,7 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 			.Method(nameof(Need_Joy.GainJoy));
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Joy)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Joy)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

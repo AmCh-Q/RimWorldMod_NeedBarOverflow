@@ -7,7 +7,7 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public class Common : IExposable
+	public class Setting_Common : IExposable
 	{
 		private static readonly IReadOnlyDictionary<Type, float> dfltOverflow = new Dictionary<Type, float>
 		{

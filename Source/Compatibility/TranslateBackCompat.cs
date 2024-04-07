@@ -14,11 +14,14 @@ namespace NeedBarOverflow
 			this string str, params NamedArgument[] args)
 			=> MyTranslate(str).Formatted(args);
 
-		internal static string MyTranslate(this string str)
+		internal static string MyTranslate(this string key)
 		{
-			if (backUpKeys.TryGetValue(str, out var value))
-				return str.TranslateWithBackup(value);
-			return str.Translate();
+			if (key.TryTranslate(out TaggedString result))
+				return result;
+			if (backUpKeys.TryGetValue(key, out string backup) &&
+                backup.TryTranslate(out result))
+				return result;
+			return key.Translate();
 		}
 	}
 }

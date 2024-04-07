@@ -15,7 +15,7 @@ namespace NeedBarOverflow.Patches.Need_Beauty_
 			.Method("LevelFromBeauty");
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_Beauty)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_Beauty)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
@@ -25,7 +25,7 @@ namespace NeedBarOverflow.Patches.Need_Beauty_
 				Unpatch(ref patched, original: original);
 		}
 		private static float MaxValue()
-			=> Common.overflow[typeof(Need_Beauty)];
+			=> Setting_Common.overflow[typeof(Need_Beauty)];
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 			=> ModifyClamp01.Transpiler(instructions, MaxValue);

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <RootNamespace>NeedBarOverflow</RootNamespace>
+    <AssemblyName>Need Bar Overflow</AssemblyName>
+    <ProjectGuid>{E876DF7F-406B-4BD1-ADF0-61E9114D7B18}</ProjectGuid>
+    <OutputPath>..\1.3\Assemblies\</OutputPath>
+    <BaseIntermediateOutputPath>obj\1.3\</BaseIntermediateOutputPath>
+    <MSBUildProjectExtensionsPath>obj\1.3\</MSBUildProjectExtensionsPath>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <PackageLicenseFile>..\LICENSE</PackageLicenseFile>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>DEBUG;v1_3</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>v1_3</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <ItemGroup>
+    <Compile Include="Compatibility\TranslateBackCompat.cs" />
+    <Compile Include="Main\Strings.cs" />
+    <Compile Include="Needs\Common\Common.cs" />
+    <Compile Include="Needs\Common\NeedSetting.cs" />
+    <Compile Include="Needs\Common\SettingLabel.cs" />
+    <Compile Include="Needs\Common\Utility.cs" />
+    <Compile Include="Needs\Food\DisablingDefs.cs" />
+    <Compile Include="Needs\Food\Food.cs" />
+    <Compile Include="Needs\Food\HealthStats.cs" />
+    <Compile Include="Needs\Food\OverflowStats.cs" />
+    <Compile Include="Patches\Shared\Add1UpperBound.cs" />
+    <Compile Include="Patches\Shared\AdjustGain.cs" />
+    <Compile Include="Main\Debug.cs" />
+    <Compile Include="Patches\ColonistBarColonistDrawer_.cs" />
+    <Compile Include="Patches\GenUI_\DrawStatusLevel.cs" />
+    <Compile Include="Patches\InspectPaneFiller_\DrawMood.cs" />
+    <Compile Include="Patches\InspirationHandler_.cs" />
+    <Compile Include="Patches\Need_Beauty_.cs" />
+    <Compile Include="Patches\Need_Comfort_.cs" />
+    <Compile Include="Patches\Need_Food_\NutritionWanted.cs" />
+    <Compile Include="Patches\Need_Joy_\GainJoy.cs" />
+    <Compile Include="Patches\Need_Joy_\NeedInterval_Drain.cs" />
+    <Compile Include="Patches\Need_Mood_.cs" />
+    <Compile Include="Patches\Need_Indoors_.cs" />
+    <Compile Include="Patches\Need_Outdoors_.cs" />
+    <Compile Include="Patches\Need_Rest_.cs" />
+    <Compile Include="Patches\Shared\RemoveLastMin.cs" />
+    <Compile Include="Main\Refs.cs" />
+    <Compile Include="Main\Helpers.cs" />
+    <Compile Include="Main\PatchApplier.cs" />
+    <Compile Include="Patches\FloatMenuMakerMap_.cs" />
+    <Compile Include="Patches\BeautyUtility_.cs" />
+    <Compile Include="Patches\Shared\Add0LowerBound.cs" />
+    <Compile Include="Patches\Shared\ModifyClamp01.cs" />
+    <Compile Include="Patches\Need_\CurLevel.cs" />
+    <Compile Include="Patches\TraitSet_.cs" />
+    <Compile Include="Patches\Shared\Utility.cs" />
+    <Compile Include="Patches\Need_\DrawOnGUI.cs" />
+    <Compile Include="Patches\Need_Suppression_.cs" />
+    <Compile Include="Patches\Need_Food_\NeedInterval.cs" />
+    <Compile Include="Patches\Need_Joy_\GainJoy_Gain.cs" />
+    <Compile Include="Patches\GenUI_\BottomPart.cs" />
+    <Compile Include="Patches\Shared\AdjustDrain.cs" />
+    <Compile Include="Patches\Need_Food_\Utility.cs" />
+    <Compile Include="Patches\FoodUtility_.cs" />
+    <Compile Include="Main\Settings.cs" />
+    <Compile Include="Main\Consts.cs" />
+    <Compile Include="Main\Mod.cs" />
+    <Compile Include="Properties\AssemblyInfo_1.3.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.3.*" />
+    <PackageReference Include="Lib.Harmony" Version="2.2.*" ExcludeAssets="runtime" />
+    <None Include="..\LICENSE" Pack="true" PackagePath=".." />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -5,7 +5,7 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public partial class Food : IExposable
+	public partial class Setting_Food : IExposable
 	{
 		private static class OverflowStats
 		{

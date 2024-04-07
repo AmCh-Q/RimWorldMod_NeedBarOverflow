@@ -20,7 +20,7 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 			.Method(nameof(Need_KillThirst.Notify_KilledPawn));
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(Common.Enabled(typeof(Need_KillThirst)));
+			=> Toggle(Setting_Common.Enabled(typeof(Need_KillThirst)));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

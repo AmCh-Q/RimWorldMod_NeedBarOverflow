@@ -13,7 +13,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			= typeof(Need_Food)
 			.Getter(nameof(Need_Food.NutritionWanted));
 		public static void Toggle()
-			=> Toggle(Food.Enabled);
+			=> Toggle(Setting_Food.Enabled);
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
