@@ -1,8 +1,8 @@
 ﻿namespace NeedBarOverflow.Patches
 {
 	public static class PatchApplier
-    {
-        public static Settings s;
+	{
+		public static Settings s;
 		public static void ApplyPatches()
 		{
 			if (s == null)

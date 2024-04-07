@@ -7,8 +7,8 @@ using Verse;
 namespace NeedBarOverflow.Patches.TraitSet_
 {
 	using static Utility;
-    using Needs;
-    public static class GainTrait
+	using Needs;
+	public static class GainTrait
 	{
 		public static HarmonyPatchType? patched = null;
 		public static readonly MethodBase[] originals 
@@ -21,7 +21,7 @@ namespace NeedBarOverflow.Patches.TraitSet_
 		private static readonly Action<Pawn, Trait> postfix = Postfix;
 		public static void Toggle()
 			=> Toggle(Food.AffectHealth);
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			foreach (MethodBase original in originals)
 			{

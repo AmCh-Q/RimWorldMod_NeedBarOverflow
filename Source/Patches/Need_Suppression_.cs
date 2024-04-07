@@ -9,8 +9,8 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.Need_Suppression_
 {
 	using static Utility;
-    using Needs;
-    public static class DrawSuppressionBar
+	using Needs;
+	public static class DrawSuppressionBar
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -19,7 +19,7 @@ namespace NeedBarOverflow.Patches.Need_Suppression_
 		private static readonly TransILG transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Common.Enabled(typeof(Need_Suppression)));
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,

@@ -9,8 +9,8 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.Need_Play_
 {
 	using static Utility;
-    using Needs;
-    public static class Play
+	using Needs;
+	public static class Play
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -19,7 +19,7 @@ namespace NeedBarOverflow.Patches.Need_Play_
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Common.Enabled(typeof(Need_Play)));
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,

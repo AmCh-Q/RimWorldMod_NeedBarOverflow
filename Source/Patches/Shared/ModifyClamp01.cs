@@ -14,7 +14,7 @@ namespace NeedBarOverflow.Patches
 	{
 		public static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions, Func<float> MaxValue)
-        {
+		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
 			int state = 0;
 			for (int i = 0; i < instructionList.Count; i++)
@@ -25,16 +25,16 @@ namespace NeedBarOverflow.Patches
 					yield return codeInstruction;
 					continue;
 				}
-                // In this case, we've reached the portion of code to patch
-                // This patch may be repeated
+				// In this case, we've reached the portion of code to patch
+				// This patch may be repeated
 
-                // stackTop, before ops: the value to be clamped
-                // vanilla, after ops: value clamped to 0-1
-                // patched, after ops: value clamped to 0-MaxValue
-                state++;
-                yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
-                yield return new CodeInstruction(OpCodes.Call, MaxValue.Method);
-                yield return new CodeInstruction(OpCodes.Call, m_Clamp);
+				// stackTop, before ops: the value to be clamped
+				// vanilla, after ops: value clamped to 0-1
+				// patched, after ops: value clamped to 0-MaxValue
+				state++;
+				yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
+				yield return new CodeInstruction(OpCodes.Call, MaxValue.Method);
+				yield return new CodeInstruction(OpCodes.Call, m_Clamp);
 			}
 			Debug.CheckTranspiler(state, state > 0);
 		}

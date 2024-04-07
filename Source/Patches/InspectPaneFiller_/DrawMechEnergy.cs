@@ -6,8 +6,8 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.InspectPaneFiller_
 {
 	using static Utility;
-    using Needs;
-    public static class DrawMechEnergy
+	using Needs;
+	public static class DrawMechEnergy
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -15,7 +15,7 @@ namespace NeedBarOverflow.Patches.InspectPaneFiller_
 			.Method("DrawMechEnergy");
 		public static void Toggle()
 			=> Toggle(Common.Enabled(typeof(Need_MechEnergy)));
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,

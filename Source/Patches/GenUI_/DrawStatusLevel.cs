@@ -13,8 +13,8 @@ namespace NeedBarOverflow.Patches.GenUI_
 			= typeof(GenUI)
 			.Method(nameof(GenUI.DrawStatusLevel));
 		public static void Toggle()
-            => Toggle(Common.AnyEnabled);
-        public static void Toggle(bool enable)
+			=> Toggle(Common.AnyEnabled);
+		public static void Toggle(bool enable)
 		{
 			if (enable)
 				Patch(ref patched, original: original,

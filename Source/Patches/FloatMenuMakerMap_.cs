@@ -10,9 +10,9 @@ using HarmonyLib;
 namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 {
 	using static Utility;
-    using Needs;
-    // Disable right click option to consume food if pawn is too full on food
-    public static class AddHumanlikeOrders
+	using Needs;
+	// Disable right click option to consume food if pawn is too full on food
+	public static class AddHumanlikeOrders
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original

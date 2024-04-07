@@ -6,9 +6,9 @@ using Verse;
 namespace NeedBarOverflow.Patches.FoodUtility_
 {
 	using static Utility;
-    using Needs;
-    // Disable option to consume food if pawn is too full on food
-    public static class WillIngestFromInventoryNow
+	using Needs;
+	// Disable option to consume food if pawn is too full on food
+	public static class WillIngestFromInventoryNow
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original

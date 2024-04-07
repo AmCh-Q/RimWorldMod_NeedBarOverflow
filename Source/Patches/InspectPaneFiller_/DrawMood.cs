@@ -5,8 +5,8 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.InspectPaneFiller_
 {
 	using static Utility;
-    using Needs;
-    public static class DrawMood
+	using Needs;
+	public static class DrawMood
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -14,7 +14,7 @@ namespace NeedBarOverflow.Patches.InspectPaneFiller_
 			.Method("DrawMood");
 		public static void Toggle()
 			=> Toggle(Common.Enabled(typeof(Need_Mood)));
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,

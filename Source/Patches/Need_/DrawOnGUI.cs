@@ -22,7 +22,7 @@ namespace NeedBarOverflow.Patches.Need_
 		private static readonly TransILG transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Common.AnyEnabled);
-        public static void Toggle(bool enable)
+		public static void Toggle(bool enable)
 		{
 			if (enable)
 				Patch(ref patched, original: original,

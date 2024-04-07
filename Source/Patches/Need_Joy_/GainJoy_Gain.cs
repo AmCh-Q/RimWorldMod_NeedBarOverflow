@@ -5,8 +5,8 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.Need_Joy_
 {
 	using static Utility;
-    using Needs;
-    public static class GainJoy_Gain
+	using Needs;
+	public static class GainJoy_Gain
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -15,7 +15,7 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 		private static readonly ActionRef_r2<Need_Joy, float> prefix = Prefix;
 		public static void Toggle()
 			=> Toggle(NeedSetting<Need_Joy>.EffectEnabled(Strings.SlowGain));
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,
@@ -25,6 +25,6 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 		}
 		private static void Prefix(Need_Joy __instance, ref float amount) 
 			=> amount = AdjustGain.Adjust(amount,
-                NeedSetting<Need_Joy>.EffectStat(Strings.SlowGain), __instance.CurInstantLevelPercentage);
-    }
+				NeedSetting<Need_Joy>.EffectStat(Strings.SlowGain), __instance.CurInstantLevelPercentage);
+	}
 }

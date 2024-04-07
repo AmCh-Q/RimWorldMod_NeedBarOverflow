@@ -9,11 +9,11 @@ namespace NeedBarOverflow.Patches.BeautyUtility_
 {
 	using static Utility;
 	using Needs;
-    // BeautyUtility.AverageBeautyPerceptible gets called whenever the instant beauty value is needed
-    // But it is slow due to needing to search many cells
-    // We cache the value for every 6 ticks (10 updates per second) to improve performance
-    // This patch is automatically disabled if Performance Optimizer mod is active
-    public static class AverageBeautyPerceptible
+	// BeautyUtility.AverageBeautyPerceptible gets called whenever the instant beauty value is needed
+	// But it is slow due to needing to search many cells
+	// We cache the value for every 6 ticks (10 updates per second) to improve performance
+	// This patch is automatically disabled if Performance Optimizer mod is active
+	public static class AverageBeautyPerceptible
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original

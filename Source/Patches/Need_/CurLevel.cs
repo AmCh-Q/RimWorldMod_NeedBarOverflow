@@ -25,7 +25,7 @@ namespace NeedBarOverflow.Patches.Need_
 		private static readonly TransILG transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Common.AnyEnabled);
-        public static void Toggle(bool enable)
+		public static void Toggle(bool enable)
 		{
 			if (enable)
 				Patch(ref patched, original: original,
@@ -34,17 +34,17 @@ namespace NeedBarOverflow.Patches.Need_
 				Unpatch(ref patched, original: original);
 		}
 		private static float Adjusted_MaxLevel(Need n)
-        {
-            float m = n.MaxLevel;
-            Type type = n.GetType();
-            float num = Common.overflow.TryGetValue(type, Common.overflow[typeof(Need)]);
-            if (num <= 1f)
-                return m;
-            if (type != typeof(Need_Food))
-                return m * num;
-            if (Need_Food_.Utility.CanOverflowFood((Pawn)f_needPawn.GetValue(n)))
-                return Mathf.Max(m * num, m + Food.EffectStat("OverflowBonus"));
-            return m;
+		{
+			float m = n.MaxLevel;
+			Type type = n.GetType();
+			float num = Common.overflow.TryGetValue(type, Common.overflow[typeof(Need)]);
+			if (num <= 1f)
+				return m;
+			if (type != typeof(Need_Food))
+				return m * num;
+			if (Need_Food_.Utility.CanOverflowFood((Pawn)f_needPawn.GetValue(n)))
+				return Mathf.Max(m * num, m + Food.EffectStat("OverflowBonus"));
+			return m;
 		}
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)

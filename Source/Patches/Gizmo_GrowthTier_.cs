@@ -5,8 +5,8 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.Gizmo_GrowthTier_
 {
 	using static Utility;
-    using Needs;
-    public static class DrawLearning
+	using Needs;
+	public static class DrawLearning
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original

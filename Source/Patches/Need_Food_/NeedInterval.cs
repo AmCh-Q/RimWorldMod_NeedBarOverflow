@@ -11,9 +11,9 @@ using Verse;
 namespace NeedBarOverflow.Patches.Need_Food_
 {
 	using static Patches.Utility;
-    using Needs;
+	using Needs;
 
-    public static class NeedInterval
+	public static class NeedInterval
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -24,7 +24,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			pawnsWithFoodOverflow = new Dictionary<Pawn, float>();
 		public static void Toggle()
 			=> Toggle(Food.AffectHealth);
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,
@@ -103,8 +103,8 @@ namespace NeedBarOverflow.Patches.Need_Food_
 #endif
 			if (!pawnsWithFoodOverflow.TryGetValue(pawn, out float effectMultiplier) ||
 				effectMultiplier < 0f)
-            {
-                if (!pawn.RaceProps.Humanlike)
+			{
+				if (!pawn.RaceProps.Humanlike)
 					effectMultiplier = Food.EffectStat(Strings.NonHumanMult);
 				else if ((bool)(pawn.story?.traits?.HasTrait(Refs.Gourmand)))
 					effectMultiplier = Food.EffectStat(Strings.GourmandMult);

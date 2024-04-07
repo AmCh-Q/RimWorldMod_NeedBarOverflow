@@ -9,10 +9,10 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.Need_Joy_
 {
 	using static Utility;
-    using Needs;
-    using System;
+	using Needs;
+	using System;
 
-    public static class GainJoy
+	public static class GainJoy
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -21,7 +21,7 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Common.Enabled(typeof(Need_Joy)));
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,
@@ -47,11 +47,11 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 					instructionList[i + 4].Calls(m_Min))					// Vanilla would calculate Min(amount, 1f - CurLevel)
 				{
 					state = 1;
-                    // Load the setting max joy instead of 1f
-                    // So that Vanilla will calculate Min(amount, MaxJoy - CurLevel) instead
-                    yield return new CodeInstruction(OpCodes.Call, ((Func<float>)NeedSetting<Need_Joy>.MaxValue).Method);
-                    // Skip the load Constant
-                    continue;
+					// Load the setting max joy instead of 1f
+					// So that Vanilla will calculate Min(amount, MaxJoy - CurLevel) instead
+					yield return new CodeInstruction(OpCodes.Call, ((Func<float>)NeedSetting<Need_Joy>.MaxValue).Method);
+					// Skip the load Constant
+					continue;
 				}
 				yield return codeInstruction;
 			}

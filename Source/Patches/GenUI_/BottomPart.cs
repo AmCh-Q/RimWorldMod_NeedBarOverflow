@@ -20,7 +20,7 @@ namespace NeedBarOverflow.Patches.GenUI_
 		private static readonly ActionRef<float> prefix = Prefix;
 		public static void Toggle()
 			=> Toggle(Common.AnyEnabled);
-        public static void Toggle(bool enable)
+		public static void Toggle(bool enable)
 		{
 			foreach (MethodBase original in originals)
 			{

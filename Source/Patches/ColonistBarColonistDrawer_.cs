@@ -5,8 +5,8 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.ColonistBarColonistDrawer_
 {
 	using static Utility;
-    using Needs;
-    public static class DrawColonist
+	using Needs;
+	public static class DrawColonist
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original

@@ -5,8 +5,8 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.Need_Food_
 {
 	using static Patches.Utility;
-    using Needs;
-    public static class NutritionWanted
+	using Needs;
+	public static class NutritionWanted
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -14,7 +14,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			.Getter(nameof(Need_Food.NutritionWanted));
 		public static void Toggle()
 			=> Toggle(Food.Enabled);
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,

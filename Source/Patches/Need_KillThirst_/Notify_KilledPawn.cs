@@ -9,10 +9,10 @@ using RimWorld;
 namespace NeedBarOverflow.Patches.Need_KillThirst_
 {
 	using static Utility;
-    using Needs;
-    using System;
+	using Needs;
+	using System;
 
-    public static class Notify_KilledPawn
+	public static class Notify_KilledPawn
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
@@ -21,17 +21,17 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Common.Enabled(typeof(Need_KillThirst)));
-        public static void Toggle(bool enabled)
+		public static void Toggle(bool enabled)
 		{
 			if (enabled)
 				Patch(ref patched, original: original,
 				transpiler: transpiler);
 			else
 				Unpatch(ref patched, original: original);
-        }
-        private static float GainMultiplier() 
+		}
+		private static float GainMultiplier() 
 			=> NeedSetting<Need_KillThirst>.EffectStat(Strings.SlowGain);
-        private static IEnumerable<CodeInstruction> Transpiler(
+		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
@@ -49,11 +49,11 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevel);
 					yield return codeInstruction;
-                    yield return new CodeInstruction(OpCodes.Call, ((Func<float>)GainMultiplier).Method);
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevelPercentage);
-                    yield return new CodeInstruction(OpCodes.Call, AdjustGain.adjust);
-                    yield return new CodeInstruction(OpCodes.Add);
+					yield return new CodeInstruction(OpCodes.Call, ((Func<float>)GainMultiplier).Method);
+					yield return new CodeInstruction(OpCodes.Ldarg_0);
+					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevelPercentage);
+					yield return new CodeInstruction(OpCodes.Call, AdjustGain.adjust);
+					yield return new CodeInstruction(OpCodes.Add);
 				}
 				else
 					yield return codeInstruction;

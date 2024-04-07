@@ -11,9 +11,9 @@ namespace NeedBarOverflow
 			Debug.Message("NeedBarOverflow constructor called");
 			s = GetSettings<Settings>();
 			LongEventHandler.QueueLongEvent(delegate
-            {
-                Debug.Message("NeedBarOverflow LongEvent called");
-                Refs.Init();
+			{
+				Debug.Message("NeedBarOverflow LongEvent called");
+				Refs.Init();
 				ApplyPatches();
 			}, "NeedBarOverflow.Mod.ctor", false, null);
 		}
