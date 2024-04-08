@@ -1,5 +1,4 @@
 .vs
 bin
 obj
-1.*
-*.dll
+**/*.dll

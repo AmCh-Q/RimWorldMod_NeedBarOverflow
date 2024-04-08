@@ -5,7 +5,7 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public partial class Setting_Food : IExposable
+	public sealed partial class Setting_Food : IExposable
 	{
 		private static class DisablingDefs
 		{
@@ -23,7 +23,7 @@ namespace NeedBarOverflow.Needs
 			private static Dictionary<Type, string> disablingDefs_str 
 				= new Dictionary<Type, string>(dfltDisablingDefNames);
 
-			public static void ExposeDisablingDefs()
+			public static void ExposeData()
 			{
 				Scribe_Collections.Look(ref disablingDefs_str, Strings.disablingDefs, LookMode.Value, LookMode.Value);
 				foreach (Type key in dfltDisablingDefNames.Keys)

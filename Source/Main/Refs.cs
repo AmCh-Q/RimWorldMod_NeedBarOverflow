@@ -22,13 +22,18 @@ namespace NeedBarOverflow
 			VFEAncients();
 			initialized = true;
 		}
-		private static void InitDef<T>(ref T def, string defName) where T : Def
+		private static void InitDef<T>(
+			ref T def, string defName, 
+			bool force = true) where T : Def
 		{
 			if (def == null)
 			{
 				def = DefDatabase<T>.GetNamed(defName);
-				if (def != null)
-					Debug.Message("Loaded " + typeof(T).Name + " " + defName);
+				if (def == null && force)
+					Debug.Warning(string.Concat(
+						"Reference ", typeof(T).Name, 
+						Strings.Space, defName, 
+						" expected but failed to load."));
 			}
 		}
 		private static void VFEAncients()

@@ -6,30 +6,25 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public partial class Setting_Food : IExposable
+	public sealed partial class Setting_Food : Setting<Need_Food>, IExposable
 	{
-		public static bool Enabled => Setting_Common.overflow[typeof(Need_Food)] > 0f;
-
-		public static bool AffectHealth
-		{
-			get => Enabled && 
-				HealthStats.healthStats.Any(x => x.Value[0] >= 0f);
-		}
+		public static bool AffectHealth 
+			=> Enabled && HealthStats.healthStats.Any(x => x.Value[0] >= 0f);
 
 		public static bool EffectEnabled(string statName)
-			=> Enabled && OverflowStats.overflowStats[statName] > 0f;
+			=> Enabled && OverflowStats.EffectStat(statName) > 0f;
 
 		public static float EffectStat(string statName)
-			=> OverflowStats.overflowStats[statName];
+			=> OverflowStats.EffectStat(statName);
 
 		public static HashSet<Def> DisablingDef(Type type)
 			=> DisablingDefs.disablingDefs[type];
 
 		public void ExposeData()
 		{
-			OverflowStats.ExposeOverflowStats();
-			DisablingDefs.ExposeDisablingDefs();
-			HealthStats.ExposeHealthStats();
+			new OverflowStats().ExposeData();
+			DisablingDefs.ExposeData();
+			HealthStats.ExposeData();
 		}
 
 		public static void AddSettings(Listing_Standard ls)

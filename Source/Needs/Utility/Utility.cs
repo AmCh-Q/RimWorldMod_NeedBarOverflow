@@ -142,19 +142,20 @@ namespace NeedBarOverflow.Needs
 		public static bool AddSimpleSetting(Listing_Standard ls, Type needType)
 		{
 			LsGap(ls);
-			float num = Setting_Common.overflow[needType];
-			bool checkOn = num > 0f;
-			num = (checkOn ? num : (0f - num));
-			SettingLabel settingLabel = new SettingLabel(needType.Name, Strings.OverfEnabled);
-			ls.CheckboxLabeled(settingLabel.TranslatedLabel(), ref checkOn, settingLabel.TranslatedTip());
+			float f1 = Setting_Common.overflow[needType];
+			bool b1 = f1 > 0f;
+			f1 = (b1 ? f1 : (0f - f1));
+			SettingLabel sl = new SettingLabel(needType.Name, Strings.OverfEnabled);
+			ls.CheckboxLabeled(sl.TranslatedLabel(), ref b1, sl.TranslatedTip());
 			ls.Gap(ls.verticalSpacing * -0.5f);
-			if (checkOn)
+			if (b1)
 			{
-				settingLabel = new SettingLabel(needType.Name, Strings.OverfPerc);
-				AddNumSetting(ls, ref num, settingLabel, logSlider: true, 0f, 2.002f, 1f, float.PositiveInfinity, showAsPerc: true);
+				sl = new SettingLabel(needType.Name, Strings.OverfPerc);
+				AddNumSetting(ls, ref f1, sl, true, 
+					0f, 2.002f, 1f, float.PositiveInfinity, true);
 			}
-			Setting_Common.overflow[needType] = (checkOn ? num : (0f - num));
-			return checkOn;
+			Setting_Common.overflow[needType] = b1 ? f1 : -f1;
+			return b1;
 		}
 	}
 }

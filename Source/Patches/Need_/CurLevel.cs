@@ -37,8 +37,8 @@ namespace NeedBarOverflow.Patches.Need_
 		{
 			float m = n.MaxLevel;
 			Type type = n.GetType();
-			float num = Setting_Common.overflow.TryGetValue(type, Setting_Common.overflow[typeof(Need)]);
-			if (num <= 1f)
+			float num = Setting_Common.Overflow(type);
+            if (num <= 1f)
 				return m;
 			if (type != typeof(Need_Food))
 				return m * num;

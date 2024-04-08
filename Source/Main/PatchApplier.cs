@@ -22,7 +22,7 @@
 			TraitSet_.GainTrait						.Toggle();
 			//Rest
 			Need_Rest_.NeedInterval.Toggle();
-			//Joy
+			//Scribe_Joy
 			Need_Joy_.GainJoy			.Toggle();
 			Need_Joy_.NeedInterval_Drain.Toggle();
 			Need_Joy_.GainJoy_Gain		.Toggle();

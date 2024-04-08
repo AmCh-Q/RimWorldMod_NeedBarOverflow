@@ -30,22 +30,18 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <ItemGroup>
+    <Compile Include="Compatibility\Savefilebackcompat.cs" />
     <Compile Include="Compatibility\TranslateBackCompat.cs" />
-    <Compile Include="Main\Strings.cs" />
-    <Compile Include="Needs\Common\Common.cs" />
-    <Compile Include="Needs\Common\NeedSetting.cs" />
-    <Compile Include="Needs\Common\SettingLabel.cs" />
-    <Compile Include="Needs\Common\Utility.cs" />
+    <Compile Include="Main\Consts.cs" />
+    <Compile Include="Needs\Abstract\OverflowStats.cs" />
+    <Compile Include="Needs\Setting_Common.cs" />
+    <Compile Include="Needs\Abstract\Setting.cs" />
+    <Compile Include="Needs\Utility\SettingLabel.cs" />
+    <Compile Include="Needs\Utility\Utility.cs" />
     <Compile Include="Needs\Food\DisablingDefs.cs" />
-    <Compile Include="Needs\Food\Food.cs" />
+    <Compile Include="Needs\Food\Setting_Food.cs" />
     <Compile Include="Needs\Food\HealthStats.cs" />
     <Compile Include="Needs\Food\OverflowStats.cs" />
-    <Compile Include="Needs\Joy\Joy.cs" />
-    <Compile Include="Needs\Joy\OverflowStats.cs" />
-    <Compile Include="Needs\KillThirst\OverflowStats.cs" />
-    <Compile Include="Needs\KillThirst\KillThirst.cs" />
-    <Compile Include="Needs\Rest\OverflowStats.cs" />
-    <Compile Include="Needs\Rest\Rest.cs" />
     <Compile Include="Patches\Shared\AdjustGain.cs" />
     <Compile Include="Main\Debug.cs" />
     <Compile Include="Patches\ColonistBarColonistDrawer_.cs" />
@@ -88,7 +84,6 @@
     <Compile Include="Patches\Need_Play_.cs" />
     <Compile Include="Patches\FoodUtility_.cs" />
     <Compile Include="Main\Settings.cs" />
-    <Compile Include="Main\Consts.cs" />
     <Compile Include="Main\Mod.cs" />
     <Compile Include="Properties\AssemblyInfo_1.5.cs" />
   </ItemGroup>

@@ -26,7 +26,7 @@ namespace NeedBarOverflow.Patches.Need_Comfort_
 		}
 
 		private static float MaxValue()
-		  => Setting_Common.overflow[typeof(Need_Comfort)];
+		  => Setting<Need_Comfort>.MaxValue;
 
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)

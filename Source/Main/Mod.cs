@@ -9,15 +9,17 @@ namespace NeedBarOverflow
 		public NeedBarOverflow(ModContentPack content) : base(content)
 		{
 			Debug.Message("NeedBarOverflow constructor called");
-			s = GetSettings<Settings>();
-			LongEventHandler.QueueLongEvent(delegate
+            Settings.migrateSettings = 
+				Savefilebackcompat.ModifySettingFileClass(content);
+            s = GetSettings<Settings>();
+            LongEventHandler.QueueLongEvent(delegate
 			{
 				Debug.Message("NeedBarOverflow LongEvent called");
 				Refs.Init();
 				ApplyPatches();
 			}, "NeedBarOverflow.Mod.ctor", false, null);
 		}
-		public override string SettingsCategory() => "NBO.Name".Translate();
+		public override string SettingsCategory() => Strings.Name.Translate();
 		public override void DoSettingsWindowContents(Rect inRect)
 		{
 			base.DoSettingsWindowContents(inRect);

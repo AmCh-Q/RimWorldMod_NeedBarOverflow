@@ -11,7 +11,9 @@ namespace NeedBarOverflow
 				return 0;
 			else if (float.IsInfinity(d))
 				return d;
-			float scale = Mathf.Max(Mathf.Pow(10, Mathf.Floor(Mathf.Log10(Mathf.Abs(d))) - 2), 0.01f);
+			float scale = Mathf.Floor(Mathf.Log10(Mathf.Abs(d)));
+			scale = Mathf.Pow(10, scale - 2f);
+            scale = Mathf.Max(scale, 0.01f);
 			return scale * Mathf.Round(d / scale);
 		}
 
@@ -21,8 +23,12 @@ namespace NeedBarOverflow
 				return "∞";
 			d = d.CustomRound();
 			if (showAsPerc)
-				return d.ToStringPercent();
-			return d.ToString((d < 1f) ? "N2" : ((d < 10f) ? "N1" : "0"));
+				return Mathf.RoundToInt(d * 100f).ToStringCached() + "%";
+			if (d >= 10f)
+				return Mathf.RoundToInt(d).ToStringCached();
+			if (d >= 1f)
+				return d.ToString("N1");
+			return d.ToString("N2");
 		}
 	}
 }

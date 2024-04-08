@@ -5,10 +5,12 @@ using Verse;
 namespace NeedBarOverflow
 {
 	using Needs;
-	public class Settings : ModSettings
+    using System.Collections.Generic;
+    using static Needs.Utility;
+    public class Settings : ModSettings
 	{
 		private static bool showHiddenSettings;
-
+		internal static bool migrateSettings = false;
 		private Vector2 settingsScrollPos;
 
 		public Settings()
@@ -19,54 +21,53 @@ namespace NeedBarOverflow
 		public void DoWindowContents(Rect inRect)
 		{
 			Rect outRect = new Rect(0f, 0f, inRect.width, inRect.height);
-			Rect rect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, Utility.height));
+			Rect rect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, height));
 			GUI.BeginGroup(inRect);
 			Widgets.BeginScrollView(outRect, ref settingsScrollPos, rect);
-			Listing_Standard listing_Standard = new Listing_Standard();
-			Utility.height = 0f;
-			listing_Standard.Begin(rect);
-			Utility.LsGap(listing_Standard);
-			listing_Standard.Label(Strings.RestartNReq.MyTranslate());
+			Listing_Standard ls = new Listing_Standard();
+			height = 0f;
+			ls.Begin(rect);
+			LsGap(ls);
+			ls.Label(Strings.RestartNReq.MyTranslate());
 
-
-			if (Utility.AddSimpleSetting(listing_Standard, typeof(Need_Food)))
-				Setting_Food.AddSettings(listing_Standard);
-			if (Utility.AddSimpleSetting(listing_Standard, typeof(Need_Rest)))
-				NeedSetting<Need_Rest>.AddSettings(listing_Standard);
-			if (Utility.AddSimpleSetting(listing_Standard, typeof(Need_Joy)))
-				NeedSetting<Need_Joy>.AddSettings(listing_Standard);
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Mood));
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Beauty));
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Comfort));
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Chemical));
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Chemical_Any));
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Outdoors));
+			if (AddSimpleSetting(ls, typeof(Need_Food)))
+				Setting_Food.AddSettings(ls);
+			if (AddSimpleSetting(ls, typeof(Need_Rest)))
+                OverflowStats<Need_Rest>.AddSettings(ls);
+			if (AddSimpleSetting(ls, typeof(Need_Joy)))
+                OverflowStats<Need_Joy>.AddSettings(ls);
+			AddSimpleSetting(ls, typeof(Need_Mood));
+			AddSimpleSetting(ls, typeof(Need_Beauty));
+			AddSimpleSetting(ls, typeof(Need_Comfort));
+			AddSimpleSetting(ls, typeof(Need_Chemical));
+			AddSimpleSetting(ls, typeof(Need_Chemical_Any));
+			AddSimpleSetting(ls, typeof(Need_Outdoors));
 #if (!v1_2)
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Indoors));
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Suppression));
+			AddSimpleSetting(ls, typeof(Need_Indoors));
+			AddSimpleSetting(ls, typeof(Need_Suppression));
 #endif
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_RoomSize));
+			AddSimpleSetting(ls, typeof(Need_RoomSize));
 #if (!v1_2 && !v1_3)
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Deathrest));
-			if (Utility.AddSimpleSetting(listing_Standard, typeof(Need_KillThirst)))
-				NeedSetting<Need_KillThirst>.AddSettings(listing_Standard);
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_MechEnergy));
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Learning));
-			Utility.AddSimpleSetting(listing_Standard, typeof(Need_Play));
+			AddSimpleSetting(ls, typeof(Need_Deathrest));
+			if (AddSimpleSetting(ls, typeof(Need_KillThirst)))
+                OverflowStats<Need_KillThirst>.AddSettings(ls);
+			AddSimpleSetting(ls, typeof(Need_MechEnergy));
+			AddSimpleSetting(ls, typeof(Need_Learning));
+			AddSimpleSetting(ls, typeof(Need_Play));
 #endif
-			Utility.LsGap(listing_Standard);
+			LsGap(ls);
 			SettingLabel settingLabel = new SettingLabel(string.Empty, Strings.ShowHiddenSettings);
-			listing_Standard.CheckboxLabeled(settingLabel.TranslatedLabel(), ref showHiddenSettings, settingLabel.TranslatedTip());
+			ls.CheckboxLabeled(settingLabel.TranslatedLabel(), ref showHiddenSettings, settingLabel.TranslatedTip());
 			if (showHiddenSettings)
 			{
-				Utility.AddSimpleSetting(listing_Standard, typeof(Need));
-				Utility.AddSimpleSetting(listing_Standard, typeof(Need_Authority));
+				AddSimpleSetting(ls, typeof(Need));
+				AddSimpleSetting(ls, typeof(Need_Authority));
 #if (!v1_2)
-				Utility.AddSimpleSetting(listing_Standard, typeof(Need_Sadism));
+				AddSimpleSetting(ls, typeof(Need_Sadism));
 #endif
 			}
-			Utility.LsGap(listing_Standard);
-			listing_Standard.End();
+			LsGap(ls);
+			ls.End();
 			Widgets.EndScrollView();
 			GUI.EndGroup();
 		}
@@ -77,10 +78,10 @@ namespace NeedBarOverflow
 			base.ExposeData();
 			Setting_Common common = new Setting_Common();
 			Setting_Food food = new Setting_Food();
-			NeedSetting<Need_Rest> rest = new NeedSetting<Need_Rest>();
-			NeedSetting<Need_Joy> joy = new NeedSetting<Need_Joy>();
+            OverflowStats<Need_Rest> rest = new OverflowStats<Need_Rest>();
+            OverflowStats<Need_Joy> joy = new OverflowStats<Need_Joy>();
 #if (!v1_2 && !v1_3)
-			NeedSetting<Need_KillThirst> killThirst = new NeedSetting<Need_KillThirst>();
+            OverflowStats<Need_KillThirst> killThirst = new OverflowStats<Need_KillThirst>();
 #endif
 			Scribe_Deep.Look(ref common, nameof(Setting_Common));
 			Scribe_Deep.Look(ref food, nameof(Need_Food));
@@ -89,10 +90,24 @@ namespace NeedBarOverflow
 #if (!v1_2 && !v1_3)
 			Scribe_Deep.Look(ref killThirst, nameof(Need_KillThirst));
 #endif
-			if (Refs.initialized && 
+			if (Scribe.mode == LoadSaveMode.LoadingVars &&
+				migrateSettings)
+				MigrateSettings();
+            if (Refs.initialized && 
 				(Scribe.mode == LoadSaveMode.PostLoadInit || 
 				Scribe.mode == LoadSaveMode.Saving))
 				Patches.PatchApplier.ApplyPatches();
 		}
+
+		internal static void MigrateSettings()
+        {
+            Debug.Message("MigrateSettings() called");
+			Dictionary<IntVec2, bool> enabledB = new Dictionary<IntVec2, bool>();
+            Dictionary<IntVec2, float> statsB = new Dictionary<IntVec2, float>();
+            Scribe_Collections.Look(ref enabledB, nameof(enabledB), LookMode.Value, LookMode.Value);
+            Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
+            Setting_Common.MigrateSettings();
+            migrateSettings = false;
+        }
 	}
 }

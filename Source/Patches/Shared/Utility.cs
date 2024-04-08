@@ -113,17 +113,36 @@ namespace NeedBarOverflow.Patches
 			| BindingFlags.Public | BindingFlags.NonPublic;
 		internal static MethodInfo Method(
 			this Type type, string name)
-			=> type.GetMethod(name, bindingflags).NotNull(name);
+        {
+			MethodInfo method = type.GetMethod(name, bindingflags);
+			method.NotNull(name);
+			return method;
+        }
 		internal static MethodInfo Getter(
 			this Type type, string name)
-			=> type.GetProperty(name, bindingflags)
-			.GetGetMethod(true).NotNull(name);
+		{
+			MethodInfo getter = type
+				.GetProperty(name, bindingflags)
+				.GetGetMethod(true);
+            getter.NotNull(name);
+			return getter;
+        }
 		internal static MethodInfo Setter(
 			this Type type, string name)
-			=> type.GetProperty(name, bindingflags)
-			.GetSetMethod(true).NotNull(name);
+        {
+            MethodInfo setter = type
+                .GetProperty(name, bindingflags)
+                .GetSetMethod(true);
+            setter.NotNull(name);
+            return setter;
+        }
 		internal static FieldInfo Field(
 			this Type type, string name)
-			=> type.GetField(name, bindingflags).NotNull(name);
+		{
+			FieldInfo field = type
+				.GetField(name, bindingflags);
+			field.NotNull(name);
+			return field;
+        }
 	}
 }
