@@ -14,7 +14,7 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 			.Method(nameof(Need_Joy.GainJoy));
 		private static readonly ActionRef_r2<Need_Joy, float> prefix = Prefix;
 		public static void Toggle()
-			=> Toggle(OverflowStats<Need_Joy>.EffectEnabled(StatNames.SlowGain));
+			=> Toggle(OverflowStats<Need_Joy>.EffectEnabled(StatName_DG.SlowGain));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
@@ -25,6 +25,6 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 		}
 		private static void Prefix(Need_Joy __instance, ref float amount) 
 			=> amount = AdjustGain.Adjust(amount,
-                OverflowStats<Need_Joy>.EffectStat(StatNames.SlowGain), __instance.CurInstantLevelPercentage);
+				OverflowStats<Need_Joy>.EffectStat(StatName_DG.SlowGain), __instance.CurInstantLevelPercentage);
 	}
 }

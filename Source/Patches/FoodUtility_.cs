@@ -17,7 +17,7 @@ namespace NeedBarOverflow.Patches.FoodUtility_
 		private static readonly ActionRef_r3<Pawn, Thing, bool>
 			postfix = Postfix;
 		public static void Toggle()
-			=> Toggle(Setting_Food.EffectEnabled(StatNames.DisableEating));
+			=> Toggle(Setting_Food.EffectEnabled(StatName_Food.DisableEating));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)

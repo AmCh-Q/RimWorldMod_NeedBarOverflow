@@ -9,10 +9,10 @@ namespace NeedBarOverflow
 		public NeedBarOverflow(ModContentPack content) : base(content)
 		{
 			Debug.Message("NeedBarOverflow constructor called");
-            Settings.migrateSettings = 
+			Settings.migrateSettings = 
 				Savefilebackcompat.ModifySettingFileClass(content);
-            s = GetSettings<Settings>();
-            LongEventHandler.QueueLongEvent(delegate
+			s = GetSettings<Settings>();
+			LongEventHandler.QueueLongEvent(delegate
 			{
 				Debug.Message("NeedBarOverflow LongEvent called");
 				Refs.Init();

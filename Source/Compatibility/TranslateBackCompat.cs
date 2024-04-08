@@ -19,7 +19,7 @@ namespace NeedBarOverflow
 			if (key.TryTranslate(out TaggedString result))
 				return result;
 			if (backUpKeys.TryGetValue(key, out string backup) &&
-                backup.TryTranslate(out result))
+				backup.TryTranslate(out result))
 				return result;
 			return key.Translate();
 		}

@@ -21,7 +21,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			Need_Food need = pawn?.needs?.food;
 			return need == null
 				// Pawn's food meter is set below the limit percentage
-				|| need.CurLevel < Setting_Food.EffectStat(StatNames.DisableEating) * need.MaxLevel
+				|| need.CurLevel < Setting_Food.EffectStat(StatName_Food.DisableEating) * need.MaxLevel
 				|| need.CurCategory > HungerCategory.Fed // Pawn is hungry
 				|| !CanOverflowFood(pawn);
 		}

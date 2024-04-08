@@ -13,7 +13,7 @@ namespace NeedBarOverflow
 				return d;
 			float scale = Mathf.Floor(Mathf.Log10(Mathf.Abs(d)));
 			scale = Mathf.Pow(10, scale - 2f);
-            scale = Mathf.Max(scale, 0.01f);
+			scale = Mathf.Max(scale, 0.01f);
 			return scale * Mathf.Round(d / scale);
 		}
 

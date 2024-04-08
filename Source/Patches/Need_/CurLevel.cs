@@ -37,13 +37,13 @@ namespace NeedBarOverflow.Patches.Need_
 		{
 			float m = n.MaxLevel;
 			Type type = n.GetType();
-			float num = Setting_Common.Overflow(type);
-            if (num <= 1f)
+			float mult = Setting_Common.Overflow(type);
+			if (mult <= 1f)
 				return m;
 			if (type != typeof(Need_Food))
-				return m * num;
+				return m * mult;
 			if (Need_Food_.Utility.CanOverflowFood((Pawn)f_needPawn.GetValue(n)))
-				return Mathf.Max(m * num, m + Setting_Food.EffectStat(StatNames.OverflowBonus));
+				return Mathf.Max(m * mult, m + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
 			return m;
 		}
 		private static IEnumerable<CodeInstruction> Transpiler(
@@ -63,8 +63,8 @@ namespace NeedBarOverflow.Patches.Need_
 					// Haven't patched yet, and not at very beginning or end
 					// The new value to be clamped is on top of stack
 					instructionList[i - 1].opcode == OpCodes.Ldarg_1 &&
-					// The vanilla method would load 0f
-					codeInstruction.LoadsConstant(0f) &&
+					// The vanilla method would load 0d
+					codeInstruction.LoadsConstant(0d) &&
 					// The vanilla method would load MaxLevel
 					instructionList[i + 1].opcode == OpCodes.Ldarg_0 &&
 					instructionList[i + 2].Calls(get_MaxLevel) && 

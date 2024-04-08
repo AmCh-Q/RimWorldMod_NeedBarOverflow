@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -11,10 +10,10 @@ namespace NeedBarOverflow.Needs
 		public static bool AffectHealth
 			=> HealthStats.AffectHealth;
 
-		public static bool EffectEnabled(StatNames statName)
+		public static bool EffectEnabled(StatName_Food statName)
 			=> Enabled && OverflowStats.EffectStat(statName) > 0f;
 
-		public static float EffectStat(StatNames statName)
+		public static float EffectStat(StatName_Food statName)
 			=> OverflowStats.EffectStat(statName);
 
 		public static HashSet<Def> DisablingDef(Type type)
@@ -32,6 +31,11 @@ namespace NeedBarOverflow.Needs
 			OverflowStats.AddSettings(ls);
 			DisablingDefs.AddSettings(ls);
 			HealthStats.AddSettings(ls);
+		}
+
+		public static void MigrateSettings()
+		{
+
 		}
 	}
 }

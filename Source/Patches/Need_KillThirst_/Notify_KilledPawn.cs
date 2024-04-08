@@ -29,8 +29,6 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 			else
 				Unpatch(ref patched, original: original);
 		}
-		private static float GainMultiplier() 
-			=> OverflowStats<Need_KillThirst>.EffectStat(StatNames.SlowGain);
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{
@@ -49,7 +47,9 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevel);
 					yield return codeInstruction;
-					yield return new CodeInstruction(OpCodes.Call, ((Func<float>)GainMultiplier).Method);
+					yield return new CodeInstruction(OpCodes.Ldc_I4, (int)StatName_DG.SlowGain);
+					yield return new CodeInstruction(OpCodes.Call, 
+						((Func<int,float>)OverflowStats<Need_KillThirst>.EffectStat).Method);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevelPercentage);
 					yield return new CodeInstruction(OpCodes.Call, AdjustGain.adjust);

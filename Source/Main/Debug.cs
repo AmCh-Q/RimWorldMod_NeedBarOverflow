@@ -5,9 +5,9 @@ using Verse;
 namespace NeedBarOverflow
 {
 	internal static class Debug
-    {
+	{
 		private const string prefix = "[Need Bar Overflow]: ";
-        [Conditional("DEBUG")]
+		[Conditional("DEBUG")]
 		internal static void Message(string s) 
 			=> Log.Message(prefix + s);
 		[Conditional("DEBUG")]
@@ -23,7 +23,7 @@ namespace NeedBarOverflow
 		{
 			if (!assertResult)
 				Log.Error(string.Concat(
-                    "Patch ", transpilerName,
+					"Patch ", transpilerName,
 					" had error applying (state: ", state,
 					")"));
 		}
@@ -34,17 +34,17 @@ namespace NeedBarOverflow
 		{
 			if (state < expectedState)
 				Log.Error(string.Concat(
-                    "Patch ", transpilerName,
+					"Patch ", transpilerName,
 					"is not fully applied (state: ", state,
 					" < ", expectedState, ")"));
-        }
-        [Conditional("DEBUG")]
-        internal static void NotNull<T>(
+		}
+		[Conditional("DEBUG")]
+		internal static void NotNull<T>(
 			this T obj, string name) where T : MemberInfo
 		{
 			if (obj == null)
 				Log.Error("MemberInfo "
-                    + name + " is null");
-        }
-    }
+					+ name + " is null");
+		}
+	}
 }

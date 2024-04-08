@@ -5,9 +5,9 @@ using Verse;
 namespace NeedBarOverflow
 {
 	using Needs;
-    using System.Collections.Generic;
-    using static Needs.Utility;
-    public class Settings : ModSettings
+	using System.Collections.Generic;
+	using static Needs.Utility;
+	public class Settings : ModSettings
 	{
 		private static bool showHiddenSettings;
 		internal static bool migrateSettings = false;
@@ -33,9 +33,9 @@ namespace NeedBarOverflow
 			if (AddSimpleSetting(ls, typeof(Need_Food)))
 				Setting_Food.AddSettings(ls);
 			if (AddSimpleSetting(ls, typeof(Need_Rest)))
-                OverflowStats<Need_Rest>.AddSettings(ls);
+				OverflowStats<Need_Rest>.AddSettings(ls);
 			if (AddSimpleSetting(ls, typeof(Need_Joy)))
-                OverflowStats<Need_Joy>.AddSettings(ls);
+				OverflowStats<Need_Joy>.AddSettings(ls);
 			AddSimpleSetting(ls, typeof(Need_Mood));
 			AddSimpleSetting(ls, typeof(Need_Beauty));
 			AddSimpleSetting(ls, typeof(Need_Comfort));
@@ -50,7 +50,7 @@ namespace NeedBarOverflow
 #if (!v1_2 && !v1_3)
 			AddSimpleSetting(ls, typeof(Need_Deathrest));
 			if (AddSimpleSetting(ls, typeof(Need_KillThirst)))
-                OverflowStats<Need_KillThirst>.AddSettings(ls);
+				OverflowStats<Need_KillThirst>.AddSettings(ls);
 			AddSimpleSetting(ls, typeof(Need_MechEnergy));
 			AddSimpleSetting(ls, typeof(Need_Learning));
 			AddSimpleSetting(ls, typeof(Need_Play));
@@ -78,10 +78,10 @@ namespace NeedBarOverflow
 			base.ExposeData();
 			Setting_Common common = new Setting_Common();
 			Setting_Food food = new Setting_Food();
-            OverflowStats<Need_Rest> rest = new OverflowStats<Need_Rest>();
-            OverflowStats<Need_Joy> joy = new OverflowStats<Need_Joy>();
+			OverflowStats<Need_Rest> rest = new OverflowStats<Need_Rest>();
+			OverflowStats<Need_Joy> joy = new OverflowStats<Need_Joy>();
 #if (!v1_2 && !v1_3)
-            OverflowStats<Need_KillThirst> killThirst = new OverflowStats<Need_KillThirst>();
+			OverflowStats<Need_KillThirst> killThirst = new OverflowStats<Need_KillThirst>();
 #endif
 			Scribe_Deep.Look(ref common, nameof(Setting_Common));
 			Scribe_Deep.Look(ref food, nameof(Need_Food));
@@ -93,21 +93,22 @@ namespace NeedBarOverflow
 			if (Scribe.mode == LoadSaveMode.LoadingVars &&
 				migrateSettings)
 				MigrateSettings();
-            if (Refs.initialized && 
+			if (Refs.initialized && 
 				(Scribe.mode == LoadSaveMode.PostLoadInit || 
 				Scribe.mode == LoadSaveMode.Saving))
 				Patches.PatchApplier.ApplyPatches();
 		}
 
 		internal static void MigrateSettings()
-        {
-            Debug.Message("MigrateSettings() called");
+		{
+			Debug.Message("MigrateSettings() called");
 			Dictionary<IntVec2, bool> enabledB = new Dictionary<IntVec2, bool>();
-            Dictionary<IntVec2, float> statsB = new Dictionary<IntVec2, float>();
-            Scribe_Collections.Look(ref enabledB, nameof(enabledB), LookMode.Value, LookMode.Value);
-            Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
-            Setting_Common.MigrateSettings();
-            migrateSettings = false;
-        }
+			Dictionary<IntVec2, float> statsB = new Dictionary<IntVec2, float>();
+			Scribe_Collections.Look(ref enabledB, nameof(enabledB), LookMode.Value, LookMode.Value);
+			Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
+			Setting_Common.MigrateSettings();
+			Setting_Food.MigrateSettings();
+			migrateSettings = false;
+		}
 	}
 }

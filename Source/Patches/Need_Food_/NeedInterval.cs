@@ -105,15 +105,16 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				effectMultiplier < 0f)
 			{
 				if (!pawn.RaceProps.Humanlike)
-					effectMultiplier = Setting_Food.EffectStat(StatNames.NonHumanMult);
+					effectMultiplier = Setting_Food.EffectStat(StatName_Food.NonHumanMult);
 				else if ((bool)(pawn.story?.traits?.HasTrait(Refs.Gourmand)))
-					effectMultiplier = Setting_Food.EffectStat(StatNames.GourmandMult);
+					effectMultiplier = Setting_Food.EffectStat(StatName_Food.GourmandMult);
 				else
 					effectMultiplier = 1f;
 				pawnsWithFoodOverflow[pawn] = effectMultiplier;
 			}
 			hediff.Severity = (need.CurLevelPercentage - 1) * effectMultiplier;
-			if (!hediff.Visible && hediff.Severity > (Setting_Food.EffectStat(StatNames.ShowHediffLvl) - 1f))
+			if (!hediff.Visible && hediff.Severity > 
+				(Setting_Food.EffectStat(StatName_Food.ShowHediffLvl) - 1f))
 			{
 #if (v1_2 || v1_3 || v1_4)
 				f_visible.SetValue(hediff, true);
@@ -138,8 +139,8 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				{
 					state = 1;
 					// Do checks in UpdateHediff() and apply hediff
-					yield return new CodeInstruction(OpCodes.Dup);				  // get a copy of new value
-					yield return new CodeInstruction(OpCodes.Ldarg_0);			  // get need
+					yield return new CodeInstruction(OpCodes.Dup);		// get a copy of new value
+					yield return new CodeInstruction(OpCodes.Ldarg_0);	// get need
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return new CodeInstruction(OpCodes.Ldfld, f_needPawn);	// Get need.pawn
 					yield return new CodeInstruction(OpCodes.Call, m_UpdateHediff); // UpdateHediff
