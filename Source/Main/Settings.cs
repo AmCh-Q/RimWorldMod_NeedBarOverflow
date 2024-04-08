@@ -107,7 +107,7 @@ namespace NeedBarOverflow
 			Scribe_Collections.Look(ref enabledB, nameof(enabledB), LookMode.Value, LookMode.Value);
 			Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
 			Setting_Common.MigrateSettings();
-			Setting_Food.MigrateSettings();
+			Setting_Food.MigrateSettings(enabledB, statsB);
 			migrateSettings = false;
 		}
 	}

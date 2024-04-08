@@ -33,7 +33,9 @@ namespace NeedBarOverflow.Needs
 			HealthStats.AddSettings(ls);
 		}
 
-		public static void MigrateSettings()
+		public static void MigrateSettings(
+			Dictionary<IntVec2, bool> enabledB,
+            Dictionary<IntVec2, float> statsB)
 		{
 
 		}
