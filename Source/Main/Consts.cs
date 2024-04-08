@@ -1,6 +1,16 @@
 ﻿namespace NeedBarOverflow
 {
-	public static class Strings
+    public enum StatNames
+    {
+        FastDrain = 0,
+        SlowGain = 1,
+        OverflowBonus = 0,
+        DisableEating = 1,
+        NonHumanMult = 2,
+        GourmandMult = 3,
+        ShowHediffLvl = 4,
+    }
+    public static class Strings
 	{
 		public const string
 			Space = " ",
@@ -17,27 +27,12 @@
 			OverfEnabled = nameof(OverfEnabled),
 			OverfPerc = nameof(OverfPerc),
 
-			FastDrain = nameof(FastDrain),
-			SlowGain = nameof(SlowGain),
-
-			OverflowBonus = nameof(OverflowBonus),
-			DisableEating = nameof(DisableEating),
-			NonHumanMult = nameof(NonHumanMult),
-			GourmandMult = nameof(GourmandMult),
-			ShowHediffLvl = nameof(ShowHediffLvl),
 			NoOverf_ = nameof(NoOverf_),
 
 			HealthDetails = nameof(HealthDetails),
 			HealthEnable_ = nameof(HealthEnable_),
 			HealthStat_ = nameof(HealthStat_),
 			ConsumeThing = nameof(ConsumeThing),
-			FoodFull = "NBO.Disabled_FoodFull",
-
-			Level = nameof(Level),
-			HungerFactor = nameof(HungerFactor),
-			HealingFactor = nameof(HealingFactor),
-			MovingOffset = nameof(MovingOffset),
-			EatingOffset = nameof(EatingOffset),
-			VomitFreq = nameof(VomitFreq);
+			FoodFull = "NBO.Disabled_FoodFull";
 	}
 }

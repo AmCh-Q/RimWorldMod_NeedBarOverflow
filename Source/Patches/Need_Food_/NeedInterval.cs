@@ -105,15 +105,15 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				effectMultiplier < 0f)
 			{
 				if (!pawn.RaceProps.Humanlike)
-					effectMultiplier = Setting_Food.EffectStat(Strings.NonHumanMult);
+					effectMultiplier = Setting_Food.EffectStat(StatNames.NonHumanMult);
 				else if ((bool)(pawn.story?.traits?.HasTrait(Refs.Gourmand)))
-					effectMultiplier = Setting_Food.EffectStat(Strings.GourmandMult);
+					effectMultiplier = Setting_Food.EffectStat(StatNames.GourmandMult);
 				else
 					effectMultiplier = 1f;
 				pawnsWithFoodOverflow[pawn] = effectMultiplier;
 			}
 			hediff.Severity = (need.CurLevelPercentage - 1) * effectMultiplier;
-			if (!hediff.Visible && hediff.Severity > (Setting_Food.EffectStat(Strings.ShowHediffLvl) - 1f))
+			if (!hediff.Visible && hediff.Severity > (Setting_Food.EffectStat(StatNames.ShowHediffLvl) - 1f))
 			{
 #if (v1_2 || v1_3 || v1_4)
 				f_visible.SetValue(hediff, true);

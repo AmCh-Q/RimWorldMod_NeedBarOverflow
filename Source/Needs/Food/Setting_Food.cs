@@ -8,13 +8,13 @@ namespace NeedBarOverflow.Needs
 {
 	public sealed partial class Setting_Food : Setting<Need_Food>, IExposable
 	{
-		public static bool AffectHealth 
-			=> Enabled && HealthStats.healthStats.Any(x => x.Value[0] >= 0f);
+		public static bool AffectHealth
+			=> HealthStats.AffectHealth;
 
-		public static bool EffectEnabled(string statName)
+		public static bool EffectEnabled(StatNames statName)
 			=> Enabled && OverflowStats.EffectStat(statName) > 0f;
 
-		public static float EffectStat(string statName)
+		public static float EffectStat(StatNames statName)
 			=> OverflowStats.EffectStat(statName);
 
 		public static HashSet<Def> DisablingDef(Type type)

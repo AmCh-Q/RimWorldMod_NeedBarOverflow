@@ -13,13 +13,15 @@ namespace NeedBarOverflow.Needs
             private static bool initialized = false; 
             public new static void AddSettings(Listing_Standard ls)
             {
-                SettingLabel sl = new SettingLabel(nameof(Need_Food), Strings.OverflowBonus);
-                float f1 = overflowStats[sl.name];
+                StatNames stat = StatNames.OverflowBonus;
+                SettingLabel sl = new SettingLabel(nameof(Need_Food), stat.ToString());
+                float f1 = overflowStats[stat];
                 Utility.AddNumSetting(ls, ref f1, sl);
-                overflowStats[sl.name] = f1;
+                overflowStats[stat] = f1;
 
-                sl = new SettingLabel(nameof(Need_Food), Strings.DisableEating);
-                f1 = overflowStats[sl.name];
+                stat = StatNames.DisableEating;
+                sl = new SettingLabel(nameof(Need_Food), stat.ToString());
+                f1 = overflowStats[stat];
                 bool b1 = f1 > 0f;
                 f1 = b1 ? f1 : -f1;
                 ls.CheckboxLabeled(sl.TranslatedLabel(
@@ -29,46 +31,49 @@ namespace NeedBarOverflow.Needs
                         Mathf.Log10(0.5f), 1f, 0.5f, 10f,
                         null, sl.TranslatedTip(f1.ToStringPercent()),
                         showAsPerc: true);
-                overflowStats[sl.name] = b1 ? f1 : -f1;
+                overflowStats[stat] = b1 ? f1 : -f1;
             }
             public static void AddSettingsForHealthStats(Listing_Standard ls)
             {
                 Utility.LsGap(ls);
-                SettingLabel sl = new SettingLabel(nameof(Need_Food), Strings.NonHumanMult);
-                float f1 = overflowStats[sl.name];
+                StatNames stat = StatNames.NonHumanMult;
+                SettingLabel sl = new SettingLabel(nameof(Need_Food), stat.ToString());
+                float f1 = overflowStats[stat];
                 Utility.AddNumSetting(
                     ls, ref f1, sl, false,
-                    0f, 1f, 0f, 1f, showAsPerc: true);
-                overflowStats[sl.name] = f1;
+                    0f, 1f, 0f, 1f, true);
+                overflowStats[stat] = f1;
 
-                sl = new SettingLabel(nameof(Need_Food), Strings.GourmandMult);
-                f1 = overflowStats[sl.name];
+                stat = StatNames.GourmandMult;
+                sl = new SettingLabel(nameof(Need_Food), stat.ToString());
+                f1 = overflowStats[stat];
                 Utility.AddNumSetting(
                     ls, ref f1, sl, false,
-                    0f, 1f, 0f, 1f, showAsPerc: true);
-                overflowStats[sl.name] = f1;
+                    0f, 1f, 0f, 1f, true);
+                overflowStats[stat] = f1;
 
-                sl = new SettingLabel(nameof(Need_Food), Strings.ShowHediffLvl);
-                f1 = overflowStats[sl.name];
+                stat = StatNames.ShowHediffLvl;
+                sl = new SettingLabel(nameof(Need_Food), stat.ToString());
+                f1 = overflowStats[stat];
                 Utility.AddNumSetting(
                     ls, ref f1, sl, true,
-                    0f, Mathf.Log10(HealthStats.healthStats[Strings.Level][8]),
-                    1f, HealthStats.healthStats[Strings.Level][8], showAsPerc: true);
-                overflowStats[sl.name] = f1;
+                    0f, 2.002f,
+                    1f, float.PositiveInfinity, true);
+                overflowStats[stat] = f1;
             }
             public OverflowStats()
 			{
                 if (initialized)
                     return;
-                dfltStats = new Dictionary<string, float>
+                dfltStats = new Dictionary<StatNames, float>
                 {
-                    { Strings.OverflowBonus, 1f },
-                    { Strings.DisableEating, 1f },
-                    { Strings.NonHumanMult, 0.25f },
-                    { Strings.GourmandMult, 0.25f },
-                    { Strings.ShowHediffLvl, 1.2f },
+                    { StatNames.OverflowBonus, 1f },
+                    { StatNames.DisableEating, 1f },
+                    { StatNames.NonHumanMult, 0.25f },
+                    { StatNames.GourmandMult, 0.25f },
+                    { StatNames.ShowHediffLvl, 1.2f },
                 };
-                overflowStats = new Dictionary<string, float>(dfltStats);
+                overflowStats = new Dictionary<StatNames, float>(dfltStats);
                 initialized = true;
             }
         }

@@ -43,7 +43,7 @@ namespace NeedBarOverflow.Patches.Need_
 			if (type != typeof(Need_Food))
 				return m * num;
 			if (Need_Food_.Utility.CanOverflowFood((Pawn)f_needPawn.GetValue(n)))
-				return Mathf.Max(m * num, m + Setting_Food.EffectStat("OverflowBonus"));
+				return Mathf.Max(m * num, m + Setting_Food.EffectStat(StatNames.OverflowBonus));
 			return m;
 		}
 		private static IEnumerable<CodeInstruction> Transpiler(

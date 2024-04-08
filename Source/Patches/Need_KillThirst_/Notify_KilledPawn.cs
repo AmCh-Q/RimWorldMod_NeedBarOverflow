@@ -30,7 +30,7 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 				Unpatch(ref patched, original: original);
 		}
 		private static float GainMultiplier() 
-			=> OverflowStats<Need_KillThirst>.EffectStat(Strings.SlowGain);
+			=> OverflowStats<Need_KillThirst>.EffectStat(StatNames.SlowGain);
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{

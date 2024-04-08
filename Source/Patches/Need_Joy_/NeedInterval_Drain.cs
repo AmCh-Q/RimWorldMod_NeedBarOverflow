@@ -15,7 +15,7 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 			.Method(nameof(Need_Joy.NeedInterval));
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(OverflowStats<Need_Joy>.EffectEnabled(Strings.FastDrain));
+			=> Toggle(OverflowStats<Need_Joy>.EffectEnabled(StatNames.FastDrain));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
@@ -25,7 +25,7 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 				Unpatch(ref patched, original: original);
 		}
 		private static float DrainMultiplier()
-			=> OverflowStats<Need_Joy>.EffectStat(Strings.FastDrain);
+			=> OverflowStats<Need_Joy>.EffectStat(StatNames.FastDrain);
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 			=> AdjustDrain.Transpiler(instructions, DrainMultiplier);

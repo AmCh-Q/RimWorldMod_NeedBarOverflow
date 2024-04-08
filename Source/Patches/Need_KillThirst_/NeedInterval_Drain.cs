@@ -15,7 +15,7 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 			.Method(nameof(Need_KillThirst.NeedInterval));
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
-			=> Toggle(OverflowStats<Need_KillThirst>.EffectEnabled(Strings.FastDrain));
+			=> Toggle(OverflowStats<Need_KillThirst>.EffectEnabled(StatNames.FastDrain));
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
@@ -25,7 +25,7 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 				Unpatch(ref patched, original: original);
 		}
 		private static float DrainMultiplier() 
-			=> OverflowStats<Need_KillThirst>.EffectStat(Strings.FastDrain);
+			=> OverflowStats<Need_KillThirst>.EffectStat(StatNames.FastDrain);
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 			=> AdjustDrain.Transpiler(instructions, DrainMultiplier);

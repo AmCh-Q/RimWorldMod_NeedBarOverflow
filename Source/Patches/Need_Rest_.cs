@@ -18,13 +18,13 @@ namespace NeedBarOverflow.Patches.Need_Rest_
 		private static readonly TransIL transpiler = Transpiler;
 		public static void Toggle()
 		{
-			if (patchedDrain != OverflowStats<Need_Rest>.EffectEnabled(Strings.FastDrain) || 
-				patchedGain != OverflowStats<Need_Rest>.EffectEnabled(Strings.SlowGain))
+			if (patchedDrain != OverflowStats<Need_Rest>.EffectEnabled(StatNames.FastDrain) || 
+				patchedGain != OverflowStats<Need_Rest>.EffectEnabled(StatNames.SlowGain))
 			{
 				if (patchedDrain || patchedGain)
 					Toggle(false);
-				if (OverflowStats<Need_Rest>.EffectEnabled(Strings.FastDrain) ||
-                    OverflowStats<Need_Rest>.EffectEnabled(Strings.SlowGain))
+				if (OverflowStats<Need_Rest>.EffectEnabled(StatNames.FastDrain) ||
+                    OverflowStats<Need_Rest>.EffectEnabled(StatNames.SlowGain))
 					Toggle(true);
 			}
 		}
@@ -42,20 +42,20 @@ namespace NeedBarOverflow.Patches.Need_Rest_
 			}
 		}
 		private static float DrainMultiplier()
-		  => OverflowStats<Need_Rest>.EffectStat(Strings.FastDrain);
+		  => OverflowStats<Need_Rest>.EffectStat(StatNames.FastDrain);
 
 		private static float GainMultiplier()
-		  => OverflowStats<Need_Rest>.EffectStat(Strings.SlowGain);
+		  => OverflowStats<Need_Rest>.EffectStat(StatNames.SlowGain);
 
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{
-			if (OverflowStats<Need_Rest>.EffectEnabled(Strings.FastDrain))
+			if (OverflowStats<Need_Rest>.EffectEnabled(StatNames.FastDrain))
 			{
 				instructions = AdjustDrain.Transpiler(instructions, DrainMultiplier);
 				patchedDrain = true;
 			}
-			if (OverflowStats<Need_Rest>.EffectEnabled(Strings.SlowGain))
+			if (OverflowStats<Need_Rest>.EffectEnabled(StatNames.SlowGain))
 			{
 				instructions = AdjustGain.Transpiler(instructions, GainMultiplier);
 				patchedGain = true;
