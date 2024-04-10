@@ -40,6 +40,8 @@ namespace NeedBarOverflow.Patches.Need_
 				return m;
             Type type = n.GetType();
             float mult = Setting_Common.Overflow(type);
+			if (mult < 1)
+				return m;
 			if (type == typeof(Need_Food))
                 return Mathf.Max(m * mult, m + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
             return m * mult;

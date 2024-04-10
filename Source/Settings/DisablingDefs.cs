@@ -12,15 +12,21 @@ namespace NeedBarOverflow.Needs
             fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>("pawn");
         public static bool CanOverflow(Need n)
             => CanOverflow(fr_needPawn(n));
+        private static readonly Dictionary<int, int> overflowCache = new Dictionary<int, int>();
         public static bool CanOverflow(Pawn p)
         {
-            if (Refs.VFEAncients_HasPower != null &&
-                Refs.VFEAncients_HasPower(p))
-                return false;
-            if (!DisablingDefs.CheckPawnRace(p) || 
-                !DisablingDefs.CheckPawnHealth(p))
-                return false;
-            return true;
+            int thingId = p.thingIDNumber;
+            int tickState = Find.TickManager.TicksGame & ~1;
+            if (overflowCache.TryGetValue(thingId, out int state) &&
+                150 > (tickState - state))
+                return (state & 1) != 0;
+            state = ((Refs.VFEAncients_HasPower == null ||
+                !Refs.VFEAncients_HasPower(p)) &&
+                DisablingDefs.CheckPawnRace(p) &&
+                DisablingDefs.CheckPawnHealth(p))
+                ? 1 : 0;
+            overflowCache[thingId] = tickState | state;
+            return state != 0;
         }
         public static class DisablingDefs
 		{
@@ -36,25 +42,25 @@ namespace NeedBarOverflow.Needs
             public static readonly Dictionary<Type, HashSet<Def>> 
 				disablingDefs = new Dictionary<Type, HashSet<Def>>();
 			private static readonly Dictionary<Type, Dictionary<string, Def>> 
-				defsByTypeName = new Dictionary<Type, Dictionary<string, Def>>();
+				defsByTypeNameCache = new Dictionary<Type, Dictionary<string, Def>>();
 			private static Dictionary<string, Def> GetDefDict(Type defType)
             {
                 if (!typeof(Def).IsAssignableFrom(defType))
 					return null;
-                if (!defsByTypeName.ContainsKey(defType))
+                if (!defsByTypeNameCache.ContainsKey(defType))
                 {
-					defsByTypeName[defType] = new Dictionary<string, Def>();
+					defsByTypeNameCache[defType] = new Dictionary<string, Def>();
                     foreach (Def defItem in GenDefDatabase.GetAllDefsInDatabaseForDef(defType))
                     {
 						if (defItem is ThingDef raceDef && raceDef.race == null)
 							continue;
 						string defName = defItem.defName.Trim().ToLowerInvariant();
-                        defsByTypeName[defType][defName] = defItem;
+                        defsByTypeNameCache[defType][defName] = defItem;
                         string defLabel = defItem.label.Trim().ToLowerInvariant();
-                        defsByTypeName[defType].TryAdd(defLabel, defItem);
+                        defsByTypeNameCache[defType].TryAdd(defLabel, defItem);
                     }
                 }
-				return defsByTypeName[defType];
+				return defsByTypeNameCache[defType];
             }
             private static readonly Dictionary<Type, Pair<string, string>> 
 				colorizeCache = new Dictionary<Type, Pair<string, string>>();
@@ -114,7 +120,8 @@ namespace NeedBarOverflow.Needs
                     }
                     ParseDisabledDefs(key, value);
                 }
-				defsByTypeName.Clear();
+				defsByTypeNameCache.Clear();
+                overflowCache.Clear();
             }
 			public static void AddSettings(Listing_Standard ls)
 			{
