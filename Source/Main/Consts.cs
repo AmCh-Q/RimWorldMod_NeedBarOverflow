@@ -1,5 +1,13 @@
-﻿namespace NeedBarOverflow
+﻿using System.Reflection;
+
+namespace NeedBarOverflow
 {
+	public static class Consts
+	{
+        internal const BindingFlags bindingflags
+            = BindingFlags.Instance | BindingFlags.Static
+            | BindingFlags.Public | BindingFlags.NonPublic;
+    }
 	public static class Strings
 	{
 		public const string

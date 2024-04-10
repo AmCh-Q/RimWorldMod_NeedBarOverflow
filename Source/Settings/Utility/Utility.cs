@@ -64,9 +64,9 @@ namespace NeedBarOverflow.Needs
 			if (logSlider)
 			{
 				float num_pow;
-				if (num == txt_min)
+				if (num <= txt_min)
 					num_pow = slider_min;
-				else if (num == txt_max)
+				else if (num >= txt_max)
 					num_pow = slider_max;
 				else
 					num_pow = Mathf.Log10(num);
@@ -92,9 +92,9 @@ namespace NeedBarOverflow.Needs
 					leftAlignedLabel: txt_min_str,
 					rightAlignedLabel: txt_max_str);
 #endif
-				if (num_pow == slider_min)
+				if (num_pow <= slider_min)
 					num = txt_min;
-				else if (num_pow == slider_max)
+				else if (num_pow >= slider_max)
 					num = txt_max;
 				else
 					num = Mathf.Pow(10f, num_pow).CustomRound();
@@ -130,13 +130,12 @@ namespace NeedBarOverflow.Needs
 
 		private static float AddTextFieldNumeric(Rect rectNum, float num, float txt_min, float txt_max, bool showAsPerc)
 		{
-			float num2 = (showAsPerc ? 100f : 1f);
-			float val = num * num2;
-			string buffer = val.CustomToString(showAsPerc: false, translate: false);
-			Widgets.TextFieldNumeric(rectNum, ref val, ref buffer, txt_min * num2, txt_max * num2);
-			if (Mathf.Abs(val - num * num2) >= 0.01f)
-				num = val / num2;
-			return Mathf.Clamp(num, txt_min, txt_max);
+			float mult = showAsPerc ? 100f : 1f;
+			float invMult = showAsPerc ? 0.01f : 1f;
+            float val = num * mult;
+			string buffer = val.CustomToString(false, false);
+			Widgets.TextFieldNumeric(rectNum, ref val, ref buffer, txt_min * mult, txt_max * mult);
+			return val * invMult;
 		}
 
 		public static bool AddSimpleSetting(Listing_Standard ls, Type needType)

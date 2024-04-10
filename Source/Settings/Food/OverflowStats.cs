@@ -6,8 +6,8 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public enum StatName_Food
-	{
+	public enum StatName_Food : byte
+    {
 		OverflowBonus = 0,
 		DisableEating = 1,
 		NonHumanMult = 2,
@@ -18,7 +18,6 @@ namespace NeedBarOverflow.Needs
 	{
 		private sealed class OverflowStats : OverflowStats<Need_Food>
 		{
-			private static bool initialized = false;
 			public override void ExposeData()
 			{
 				Array Enums = Enum.GetValues(typeof(StatName_Food));
@@ -86,19 +85,36 @@ namespace NeedBarOverflow.Needs
 					1f, float.PositiveInfinity, true);
 				overflowStats[(int)stat] = f1;
 			}
-			public OverflowStats()
+			public static void MigrateSettings(
+				Dictionary<IntVec2, bool> enabledB,
+				Dictionary<IntVec2, float> statsB)
 			{
-				if (initialized)
-					return;
+				if (statsB.TryGetValue(new IntVec2(0, 1), out float f1))
+					overflowStats[(int)StatName_Food.OverflowBonus] = f1;
+				if (statsB.TryGetValue(new IntVec2(0, 2), out f1))
+				{
+					overflowStats[(int)StatName_Food.DisableEating]
+						= enabledB.GetValueOrDefault(new IntVec2(0, 1), true)
+						? f1 : -f1;
+				}
+				if (statsB.TryGetValue(new IntVec2(0, 3), out f1))
+					overflowStats[(int)StatName_Food.NonHumanMult] = f1;
+				if (statsB.TryGetValue(new IntVec2(0, 4), out f1))
+					overflowStats[(int)StatName_Food.GourmandMult] = f1;
+				if (statsB.TryGetValue(new IntVec2(0, 5), out f1))
+					overflowStats[(int)StatName_Food.ShowHediffLvl] = f1;
+			}
+			static OverflowStats()
+			{
 				// StatName_Food.OverflowBonus
 				// StatName_Food.DisableEating
 				// StatName_Food.NonHumanMult
 				// StatName_Food.GourmandMult
 				// StatName_Food.ShowHediffLvl
-				dfltStats = new float[] { 1f, 1f, 0.25f, 0.25f, 1.2f};
+				dfltStats = new float[] { 1f, 1f, 0.25f, 0.25f, 1.2f };
 				overflowStats = (float[])dfltStats.Clone();
-				initialized = true;
 			}
+			public OverflowStats() { }
 		}
 	}
 }

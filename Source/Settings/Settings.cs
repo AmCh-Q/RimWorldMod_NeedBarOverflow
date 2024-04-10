@@ -10,14 +10,12 @@ namespace NeedBarOverflow
 	public class Settings : ModSettings
 	{
 		private static bool showHiddenSettings;
-		internal static bool migrateSettings = false;
+		internal static int migrateSettings = 0;
 		private Vector2 settingsScrollPos;
-
 		public Settings()
 		{
 			Debug.Message("NeedBarOverflow_Settings constructor called");
 		}
-
 		public void DoWindowContents(Rect inRect)
 		{
 			Rect outRect = new Rect(0f, 0f, inRect.width, inRect.height);
@@ -76,7 +74,7 @@ namespace NeedBarOverflow
 		{
 			Debug.Message("ExposeData() called");
 			base.ExposeData();
-			Setting_Common common = new Setting_Common();
+            Setting_Common common = new Setting_Common();
 			Setting_Food food = new Setting_Food();
 			OverflowStats<Need_Rest> rest = new OverflowStats<Need_Rest>();
 			OverflowStats<Need_Joy> joy = new OverflowStats<Need_Joy>();
@@ -85,15 +83,15 @@ namespace NeedBarOverflow
 #endif
 			Scribe_Deep.Look(ref common, nameof(Setting_Common));
 			Scribe_Deep.Look(ref food, nameof(Need_Food));
-			Scribe_Deep.Look(ref rest, nameof(Need_Rest));
+            Scribe_Deep.Look(ref rest, nameof(Need_Rest));
 			Scribe_Deep.Look(ref joy, nameof(Need_Joy));
 #if (!v1_2 && !v1_3)
 			Scribe_Deep.Look(ref killThirst, nameof(Need_KillThirst));
 #endif
-			if (Scribe.mode == LoadSaveMode.LoadingVars &&
-				migrateSettings)
-				MigrateSettings();
-			if (Refs.initialized && 
+            if (Scribe.mode == LoadSaveMode.LoadingVars &&
+                migrateSettings == 1)
+                MigrateSettings();
+            if (Refs.initialized && 
 				(Scribe.mode == LoadSaveMode.PostLoadInit || 
 				Scribe.mode == LoadSaveMode.Saving))
 				Patches.PatchApplier.ApplyPatches();
@@ -108,7 +106,12 @@ namespace NeedBarOverflow
 			Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
 			Setting_Common.MigrateSettings();
 			Setting_Food.MigrateSettings(enabledB, statsB);
-			migrateSettings = false;
+			OverflowStats<Need_Rest>.MigrateSettings(enabledB, statsB, 1);
+            OverflowStats<Need_Joy>.MigrateSettings(enabledB, statsB, 2);
+#if (!v1_2 && !v1_3)
+            OverflowStats<Need_KillThirst>.MigrateSettings(enabledB, statsB, 16);
+#endif
+            migrateSettings = 2;
 		}
 	}
 }

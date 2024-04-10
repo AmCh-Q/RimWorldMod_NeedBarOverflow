@@ -24,10 +24,9 @@ namespace NeedBarOverflow.Patches.Need_Beauty_
 			else
 				Unpatch(ref patched, original: original);
 		}
-		private static float MaxValue()
-			=> Setting<Need_Beauty>.MaxValue;
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
-			=> ModifyClamp01.Transpiler(instructions, MaxValue);
+			=> ModifyClamp01.Transpiler(instructions, 
+				Setting<Need_Beauty>.MaxValue_get);
 	}
 }

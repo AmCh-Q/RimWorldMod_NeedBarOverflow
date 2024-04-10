@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using UnityEngine;
 using HarmonyLib;
 using RimWorld;
+using Verse;
 
 namespace NeedBarOverflow.Patches
 {
@@ -33,6 +34,8 @@ namespace NeedBarOverflow.Patches
 		public static readonly FieldInfo
 			f_curLevelInt = typeof(Need).Field("curLevelInt"),
 			f_needPawn = typeof(Need).Field("pawn");
+		public static readonly AccessTools.FieldRef<Need, Pawn>
+			fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>(f_needPawn);
 
 		public static void Patch(
 			ref HarmonyPatchType? patched, 
@@ -106,43 +109,6 @@ namespace NeedBarOverflow.Patches
 			harmony.Unpatch(original, (HarmonyPatchType)patched, harmony.Id);
 			if (updateState)
 				patched = null;
-		}
-
-		internal const BindingFlags bindingflags
-			= BindingFlags.Instance | BindingFlags.Static
-			| BindingFlags.Public | BindingFlags.NonPublic;
-		internal static MethodInfo Method(
-			this Type type, string name)
-		{
-			MethodInfo method = type.GetMethod(name, bindingflags);
-			method.NotNull(name);
-			return method;
-		}
-		internal static MethodInfo Getter(
-			this Type type, string name)
-		{
-			MethodInfo getter = type
-				.GetProperty(name, bindingflags)
-				.GetGetMethod(true);
-			getter.NotNull(name);
-			return getter;
-		}
-		internal static MethodInfo Setter(
-			this Type type, string name)
-		{
-			MethodInfo setter = type
-				.GetProperty(name, bindingflags)
-				.GetSetMethod(true);
-			setter.NotNull(name);
-			return setter;
-		}
-		internal static FieldInfo Field(
-			this Type type, string name)
-		{
-			FieldInfo field = type
-				.GetField(name, bindingflags);
-			field.NotNull(name);
-			return field;
 		}
 	}
 }

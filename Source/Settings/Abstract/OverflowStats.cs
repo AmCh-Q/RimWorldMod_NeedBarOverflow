@@ -5,14 +5,13 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public enum StatName_DG
+	public enum StatName_DG : byte
 	{
 		FastDrain = 0,
 		SlowGain = 1,
 	}
 	public class OverflowStats<T> : IExposable where T : Need
 	{
-		private static bool initialized;
 		protected static float[] dfltStats, overflowStats;
 		public static bool EffectEnabled(IConvertible statName)
 			=> Setting<T>.Enabled && overflowStats[(int)statName] > 0f;
@@ -59,13 +58,30 @@ namespace NeedBarOverflow.Needs
 					null, sl.tip, true);
 			overflowStats[(int)settingName] = b1 ? f1 : -f1;
 		}
-		public OverflowStats()
+        public static void MigrateSettings(
+			Dictionary<IntVec2, bool> enabledB,
+			Dictionary<IntVec2, float> statsB,
+			int idx)
+        {
+			int[] stats = new int[]
+			{
+                (int)StatName_DG.FastDrain,
+                (int)StatName_DG.SlowGain,
+            };
+			for (int i = 0; i < 2; i++)
+            {
+                IntVec2 v1 = new IntVec2(idx, i + 1);
+                if (!statsB.TryGetValue(v1, out float f1))
+                    continue;
+                bool b1 = enabledB.GetValueOrDefault(v1, overflowStats[stats[i]] >= 0);
+                overflowStats[stats[i]] = b1 ? f1 : -f1;
+            }
+        }
+        static OverflowStats()
 		{
-			if (initialized)
-				return;
 			dfltStats = new float[] { -0.5f, -0.5f }; // FastDrain, SlowGain
 			overflowStats = (float[])dfltStats.Clone();
-			initialized = true;
-		}
-	}
+        }
+		public OverflowStats() { }
+    }
 }

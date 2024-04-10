@@ -49,7 +49,8 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 					state = 1;
 					// Load the setting max joy instead of 1f
 					// So that Vanilla will calculate Min(amount, MaxJoy - CurLevel) instead
-					yield return new CodeInstruction(OpCodes.Call, Setting<Need_Joy>.MaxValue_get);
+					yield return new CodeInstruction(OpCodes.Call, 
+						Setting<Need_Joy>.MaxValue_get);
 					// Skip the load Constant
 					continue;
 				}

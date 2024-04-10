@@ -33,15 +33,6 @@
     <Compile Include="Compatibility\Savefilebackcompat.cs" />
     <Compile Include="Compatibility\TranslateBackCompat.cs" />
     <Compile Include="Main\Consts.cs" />
-    <Compile Include="Needs\Abstract\OverflowStats.cs" />
-    <Compile Include="Needs\Abstract\Setting.cs" />
-    <Compile Include="Needs\Food\DisablingDefs.cs" />
-    <Compile Include="Needs\Food\HealthStats.cs" />
-    <Compile Include="Needs\Food\OverflowStats.cs" />
-    <Compile Include="Needs\Food\Setting_Food.cs" />
-    <Compile Include="Needs\Setting_Common.cs" />
-    <Compile Include="Needs\Utility\SettingLabel.cs" />
-    <Compile Include="Needs\Utility\Utility.cs" />
     <Compile Include="Patches\Shared\Add1UpperBound.cs" />
     <Compile Include="Patches\Shared\AdjustGain.cs" />
     <Compile Include="Main\Debug.cs" />
@@ -75,9 +66,18 @@
     <Compile Include="Patches\Shared\AdjustDrain.cs" />
     <Compile Include="Patches\Need_Food_\Utility.cs" />
     <Compile Include="Patches\FoodUtility_.cs" />
-    <Compile Include="Main\Settings.cs" />
     <Compile Include="Main\Mod.cs" />
     <Compile Include="Properties\AssemblyInfo_1.2.cs" />
+    <Compile Include="Settings\Abstract\OverflowStats.cs" />
+    <Compile Include="Settings\Abstract\Setting.cs" />
+    <Compile Include="Settings\Food\DisablingDefs.cs" />
+    <Compile Include="Settings\Food\HealthStats.cs" />
+    <Compile Include="Settings\Food\OverflowStats.cs" />
+    <Compile Include="Settings\Food\Setting_Food.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\Setting_Common.cs" />
+    <Compile Include="Settings\Utility\SettingLabel.cs" />
+    <Compile Include="Settings\Utility\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.2.*" />

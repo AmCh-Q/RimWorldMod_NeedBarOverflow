@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NeedBarOverflow.Needs;
 using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow.Patches.Need_Food_
 {
+	using Needs;
 	public static class Utility
 	{
 		public static bool CanOverflowFood(Pawn p)
