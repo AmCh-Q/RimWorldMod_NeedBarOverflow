@@ -27,8 +27,8 @@ namespace NeedBarOverflow
 			ls.Begin(rect);
 			LsGap(ls);
 			ls.Label(Strings.RestartNReq.MyTranslate());
-
-			if (AddSimpleSetting(ls, typeof(Need_Food)))
+            Setting_Common.DisablingDefs.AddSettings(ls);
+            if (AddSimpleSetting(ls, typeof(Need_Food)))
 				Setting_Food.AddSettings(ls);
 			if (AddSimpleSetting(ls, typeof(Need_Rest)))
 				OverflowStats<Need_Rest>.AddSettings(ls);
@@ -104,7 +104,7 @@ namespace NeedBarOverflow
 			Dictionary<IntVec2, float> statsB = new Dictionary<IntVec2, float>();
 			Scribe_Collections.Look(ref enabledB, nameof(enabledB), LookMode.Value, LookMode.Value);
 			Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
-			Setting_Common.MigrateSettings();
+			Setting_Common.MigrateSettings(enabledB);
 			Setting_Food.MigrateSettings(enabledB, statsB);
 			OverflowStats<Need_Rest>.MigrateSettings(enabledB, statsB, 1);
             OverflowStats<Need_Joy>.MigrateSettings(enabledB, statsB, 2);

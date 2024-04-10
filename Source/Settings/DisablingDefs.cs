@@ -1,14 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public sealed partial class Setting_Food : IExposable
-	{
-		private static class DisablingDefs
+	public sealed partial class Setting_Common : IExposable
+    {
+        public static readonly AccessTools.FieldRef<Need, Pawn>
+            fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>("pawn");
+        public static bool CanOverflow(Need n)
+            => CanOverflow(fr_needPawn(n));
+        public static bool CanOverflow(Pawn p)
+        {
+            if (Refs.VFEAncients_HasPower != null &&
+                Refs.VFEAncients_HasPower(p))
+                return false;
+            if (!DisablingDefs.CheckPawnRace(p) || 
+                !DisablingDefs.CheckPawnHealth(p))
+                return false;
+            return true;
+        }
+        public static class DisablingDefs
 		{
 			private static readonly string suffix = "DISABLED";
 			private static readonly IReadOnlyDictionary<Type, string> 
@@ -44,6 +58,27 @@ namespace NeedBarOverflow.Needs
             }
             private static readonly Dictionary<Type, Pair<string, string>> 
 				colorizeCache = new Dictionary<Type, Pair<string, string>>();
+            public static bool CheckPawnRace(Pawn p)
+            {
+                HashSet<Def> defs = disablingDefs[typeof(ThingDef)];
+                if (defs.Count == 0)
+                    return true;
+                ThingDef thingDef = p.kindDef?.race;
+                if (thingDef == null)
+                    return true;
+                return !defs.Contains(thingDef);
+            }
+            public static bool CheckPawnHealth(Pawn p)
+            {
+                HashSet<Def> defs = disablingDefs[typeof(HediffDef)];
+                if (defs.Count == 0)
+                    return true;
+                List<Hediff> hediffs = p.health?.hediffSet?.hediffs;
+                if (hediffs.NullOrEmpty())
+                    return true;
+                return !hediffs.Any(hediff 
+                    => defs.Contains(hediff?.def));
+            }
             private static string ColorizeDefsByType(Type defType, string defsStr)
             {
 				if (colorizeCache.TryGetValue(
@@ -63,12 +98,14 @@ namespace NeedBarOverflow.Needs
 			}
 			public static void ExposeData()
 			{
-				Debug.Message("Setting_Food.ExposeData() called");
+				Debug.Message("DisablingDefs.ExposeData() called");
 				Scribe_Collections.Look(
 					ref disablingDefs_str, 
 					Strings.disablingDefs, 
 					LookMode.Value, LookMode.Value);
-				foreach (Type key in dfltDisablingDefNames.Keys)
+                if (disablingDefs_str == null)
+                    disablingDefs_str = new Dictionary<Type, string>(dfltDisablingDefNames);
+                foreach (Type key in dfltDisablingDefNames.Keys)
 				{
                     if (!disablingDefs_str.TryGetValue(key, out string value))
                     {
@@ -86,13 +123,13 @@ namespace NeedBarOverflow.Needs
 					string s1 = disablingDefs_str[key];
 					bool b1 = s1.EndsWith(suffix);
 					bool b2 = !b1;
-					SettingLabel sl = new SettingLabel(nameof(Need_Food), Strings.NoOverf_ + key.Name);
+					SettingLabel sl = new SettingLabel(nameof(Need), Strings.NoOverf_ + key.Name);
 					ls.CheckboxLabeled(sl.TranslatedLabel(), ref b2, sl.TranslatedTip());
 					if (b2)
 					{
 						if (b1)
 							s1 = s1.Remove(s1.Length - suffix.Length);
-                        s1 = ls.TextEntry(s1, 2);
+                        s1 = ls.TextEntry(s1, 2).Replace('，',',');
 						if (s1.Length > 0)
 							ls.Label(ColorizeDefsByType(key, s1));
 					}
@@ -109,7 +146,7 @@ namespace NeedBarOverflow.Needs
                     disablingDefs[defType].Clear();
                 else
                     disablingDefs[defType] = new HashSet<Def>();
-                if (!Enabled ||
+                if (!AnyEnabled ||
 					defNameStr.NullOrEmpty() || 
 					defNameStr.EndsWith(suffix))
 					return;

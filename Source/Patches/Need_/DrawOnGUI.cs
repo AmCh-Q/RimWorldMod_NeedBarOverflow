@@ -193,14 +193,14 @@ namespace NeedBarOverflow.Patches.Need_
 					yield return new CodeInstruction(OpCodes.Stloc_S, mult.LocalIndex);
 					continue;
 				}
-				if ((state == 3 || state == 5) && i < instructionList.Count - 2 &&
+				if ((state == 3 || state == 6) && i < instructionList.Count - 2 &&
 					codeInstruction.opcode == OpCodes.Ldloc_S &&
 					codeInstruction.OperandIs(num4Idx) &&
 					instructionList[i + 1].opcode == OpCodes.Mul &&
 					(instructionList[i + 2].Calls(m_DrawBarThreshold) ||
 					instructionList[i + 2].Calls(m_DrawBarInstantMarkerAt)))
 				{
-					// Stage 4 and Stage 6
+					// Stage 4 and Stage 7
 					state++;
 					// When drawing bars & markers, replace access to num4 with mult
 					// Note that percentages are basically "value / MaxLevel"
@@ -238,12 +238,25 @@ namespace NeedBarOverflow.Patches.Need_
 					i += 4;
 					continue;
 				}
-				if (state == 6 && i > 1 &&
+				if (state == 5 && i > 0 &&
+                    instructionList[i - 2].opcode == OpCodes.Ldarg_0 &&
+                    instructionList[i - 1].Calls(get_MaxLevel) &&
+                    codeInstruction.opcode == OpCodes.Blt_S)
+                {
+                    // Stage 6
+                    state = 6;
+                    // Limit the number of showUnitTicks to 10 max
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 11f);
+					yield return new CodeInstruction(OpCodes.Call, m_Min);
+                    yield return codeInstruction;
+                    continue;
+                }
+				if (state == 7 && i > 1 &&
 					instructionList[i - 1].opcode == OpCodes.Mul &&
 					codeInstruction.Calls(m_DrawBarInstantMarkerAt))
 				{
-					// Stage 7
-					state = 7;
+					// Stage 8
+					state = 8;
 					//  When drawing instant markers, it is possible that curInstantLevelPercentage > CurLevel
 					//	resulting in drawn > 1, so we cap it
 					//	m_DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.ModifyClamp01(curInstantLevelPercentage * mult) });
@@ -254,7 +267,7 @@ namespace NeedBarOverflow.Patches.Need_
 				}
 				yield return codeInstruction;
 			}
-			Debug.CheckTranspiler(state, 7);
+			Debug.CheckTranspiler(state, 8);
 		}
 	}
 }

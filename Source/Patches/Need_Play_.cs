@@ -16,7 +16,7 @@ namespace NeedBarOverflow.Patches.Need_Play_
 		public static readonly MethodBase original
 			= typeof(Need_Play)
 			.Method(nameof(Need_Play.Play));
-		private static readonly TransIL transpiler = Transpiler;
+		private static readonly TransILG transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Play)));
 		public static void Toggle(bool enabled)
@@ -28,10 +28,11 @@ namespace NeedBarOverflow.Patches.Need_Play_
 				Unpatch(ref patched, original: original);
 		}
 		public static IEnumerable<CodeInstruction> Transpiler(
-			IEnumerable<CodeInstruction> instructions)
+			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
 			int state = 0;
+			Label jumpLabel = ilg.DefineLabel();
 			for (int i = 0; i < instructionList.Count; i++)
 			{
 				CodeInstruction codeInstruction = instructionList[i];
@@ -44,7 +45,16 @@ namespace NeedBarOverflow.Patches.Need_Play_
 					instructionList[i + 4].Calls(set_CurLevelPercentage))
 				{
 					state = 1;
-					i += 4;
+					yield return codeInstruction;
+					yield return new CodeInstruction(OpCodes.Call, m_CanOverflow);
+					yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabel);
+					yield return instructionList[i + 1];
+					yield return new CodeInstruction(OpCodes.Dup);
+                    yield return instructionList[i + 2];
+                    yield return instructionList[i + 3];
+                    yield return instructionList[i + 4];
+                    yield return instructionList[i + 5].WithLabels(jumpLabel);
+                    i += 5;
 					continue;
 				}
 				yield return codeInstruction;

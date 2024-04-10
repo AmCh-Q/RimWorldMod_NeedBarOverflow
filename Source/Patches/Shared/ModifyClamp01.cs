@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
@@ -14,11 +13,14 @@ namespace NeedBarOverflow.Patches
 	public static class ModifyClamp01
 	{
         public static IEnumerable<CodeInstruction> Transpiler(
-            IEnumerable<CodeInstruction> instructions, MethodInfo get_MaxValue)
+            IEnumerable<CodeInstruction> instructions, ILGenerator ilg, MethodInfo get_MaxValue)
         {
             ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
             int state = 0;
-            for (int i = 0; i < instructionList.Count; i++)
+            Label[] jumpLabels = new Label[2];
+            for (int i = 0; i < 2; i++)
+                jumpLabels[i] = ilg.DefineLabel();
+            for (int i = 0; i < instructionList.Count - 1; i++)
             {
                 CodeInstruction codeInstruction = instructionList[i];
                 if (!codeInstruction.Calls(m_Clamp01))
@@ -33,9 +35,16 @@ namespace NeedBarOverflow.Patches
                 // vanilla, after ops: value clamped to 0-1
                 // patched, after ops: value clamped to 0-MaxValue
                 state++;
-                yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
+                yield return new CodeInstruction(OpCodes.Ldarg_0);
+                yield return new CodeInstruction(OpCodes.Call, m_CanOverflow);
+                yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabels[0]);
+                yield return codeInstruction;
+                yield return new CodeInstruction(OpCodes.Br_S, jumpLabels[1]);
+                yield return new CodeInstruction(OpCodes.Ldc_R4, 0f).WithLabels(jumpLabels[0]);
                 yield return new CodeInstruction(OpCodes.Call, get_MaxValue);
                 yield return new CodeInstruction(OpCodes.Call, m_Clamp);
+                yield return instructionList[i + 1].WithLabels(jumpLabels[1]);
+                i++;
             }
             Debug.CheckTranspiler(state, state > 0);
         }

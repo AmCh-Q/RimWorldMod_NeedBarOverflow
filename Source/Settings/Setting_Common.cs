@@ -8,7 +8,7 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public sealed class Setting_Common : IExposable
+	public sealed partial class Setting_Common : IExposable
 	{
 		private static readonly IReadOnlyDictionary<Type, float> dfltOverflow = new Dictionary<Type, float>
 		{
@@ -64,14 +64,15 @@ namespace NeedBarOverflow.Needs
 		public void ExposeData()
 		{
 			Debug.Message("Common.ExposeData() called with Scribe.mode == " + Scribe.mode);
-			Dictionary<string, float> vanillaOverflow = new Dictionary<string, float>();
+            Dictionary<string, float> vanillaOverflow = new Dictionary<string, float>();
 			if (Scribe.mode == LoadSaveMode.Saving)
 			{
 				foreach (KeyValuePair<Type, float> need in overflow)
 					vanillaOverflow.Add(need.Key.FullName, need.Value);
 			}
 			Scribe_Collections.Look(ref vanillaOverflow, Strings.overflow, LookMode.Value, LookMode.Value);
-			if (Scribe.mode != LoadSaveMode.LoadingVars)
+            DisablingDefs.ExposeData();
+            if (Scribe.mode != LoadSaveMode.LoadingVars)
 				return;
 			Dictionary<string, Type> typesByName = new Dictionary<string, Type>();
 			foreach (Type type in AccessTools.AllTypes())
@@ -83,7 +84,7 @@ namespace NeedBarOverflow.Needs
 			foreach (KeyValuePair<string, float> need in vanillaOverflow)
 				if (typesByName.TryGetValue(need.Key, out Type needType))
 					overflow[needType] = need.Value;
-		}
+        }
 
 		private static readonly Type[] migrationTypes = new Type[20]
 		{
@@ -121,20 +122,22 @@ namespace NeedBarOverflow.Needs
 #endif
 		};
 
-		internal static void MigrateSettings()
+		internal static void MigrateSettings(
+            Dictionary<IntVec2, bool> enabledB)
 		{
 			List<bool> enabledA = new List<bool>(20);
 			List<float> statsA = new List<float>(20);
 			Scribe_Collections.Look(ref enabledA, nameof(enabledA), LookMode.Value);
 			Scribe_Collections.Look(ref statsA, nameof(statsA), LookMode.Value);
-			for (int i = 0; i < Mathf.Min(20, enabledA.Count, statsA.Count); i++)
+            for (int i = 0; i < Mathf.Min(20, enabledA.Count, statsA.Count); i++)
 			{
 				if (migrationTypes[i] == null)
 					continue;
 				float stat = Mathf.Max(statsA[i], 1f);
 				stat = enabledA[i] ? stat : -stat;
 				overflow[migrationTypes[i]] = stat;
-			}
-		}
+            }
+            DisablingDefs.MigrateSettings(enabledB);
+        }
 	}
 }

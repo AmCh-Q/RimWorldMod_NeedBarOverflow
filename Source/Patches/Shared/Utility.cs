@@ -22,6 +22,7 @@ namespace NeedBarOverflow.Patches
 		public delegate IEnumerable<CodeInstruction> TransILG(IEnumerable<CodeInstruction> i, ILGenerator g);
 
 		public static readonly MethodInfo
+            m_CanOverflow = ((Func<Need, bool>)Needs.Setting_Common.CanOverflow).Method,
 			m_Clamp = ((Func<float, float, float, float>)Mathf.Clamp).Method,
 			m_Clamp01 = ((Func<float, float>)Mathf.Clamp01).Method,
 			m_Min = ((Func<float, float, float>)Mathf.Min).Method,
@@ -34,8 +35,6 @@ namespace NeedBarOverflow.Patches
 		public static readonly FieldInfo
 			f_curLevelInt = typeof(Need).Field("curLevelInt"),
 			f_needPawn = typeof(Need).Field("pawn");
-		public static readonly AccessTools.FieldRef<Need, Pawn>
-			fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>(f_needPawn);
 
 		public static void Patch(
 			ref HarmonyPatchType? patched, 
@@ -109,6 +108,6 @@ namespace NeedBarOverflow.Patches
 			harmony.Unpatch(original, (HarmonyPatchType)patched, harmony.Id);
 			if (updateState)
 				patched = null;
-		}
-	}
+        }
+    }
 }

@@ -70,7 +70,7 @@
     <Compile Include="Properties\AssemblyInfo_1.2.cs" />
     <Compile Include="Settings\Abstract\OverflowStats.cs" />
     <Compile Include="Settings\Abstract\Setting.cs" />
-    <Compile Include="Settings\Food\DisablingDefs.cs" />
+    <Compile Include="Settings\DisablingDefs.cs" />
     <Compile Include="Settings\Food\HealthStats.cs" />
     <Compile Include="Settings\Food\OverflowStats.cs" />
     <Compile Include="Settings\Food\Setting_Food.cs" />

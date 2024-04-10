@@ -5,7 +5,7 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public enum StatName_DG : byte
+	public enum StatName_DG
 	{
 		FastDrain = 0,
 		SlowGain = 1,

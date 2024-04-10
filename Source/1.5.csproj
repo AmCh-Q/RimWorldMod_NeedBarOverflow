@@ -39,7 +39,7 @@
     <Compile Include="Settings\Abstract\Setting.cs" />
     <Compile Include="Settings\Utility\SettingLabel.cs" />
     <Compile Include="Settings\Utility\Utility.cs" />
-    <Compile Include="Settings\Food\DisablingDefs.cs" />
+    <Compile Include="Settings\DisablingDefs.cs" />
     <Compile Include="Settings\Food\Setting_Food.cs" />
     <Compile Include="Settings\Food\HealthStats.cs" />
     <Compile Include="Settings\Food\OverflowStats.cs" />

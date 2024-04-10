@@ -11,7 +11,7 @@ namespace NeedBarOverflow.Needs
 	{
 		private static class HealthStats
 		{
-			private enum HealthName : byte
+			private enum HealthName
             {
 				Level = 0,
 				HungerFactor = 1,

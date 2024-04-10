@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
 
@@ -7,13 +8,13 @@ namespace NeedBarOverflow.Patches.Need_Beauty_
 {
 	using static Utility;
 	using Needs;
-	public static class LevelFromBeauty
+    public static class LevelFromBeauty
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original
 			= typeof(Need_Beauty)
 			.Method("LevelFromBeauty");
-		private static readonly TransIL transpiler = Transpiler;
+		private static readonly TransILG transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Beauty)));
 		public static void Toggle(bool enabled)
@@ -25,8 +26,8 @@ namespace NeedBarOverflow.Patches.Need_Beauty_
 				Unpatch(ref patched, original: original);
 		}
 		private static IEnumerable<CodeInstruction> Transpiler(
-			IEnumerable<CodeInstruction> instructions)
-			=> ModifyClamp01.Transpiler(instructions, 
+			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+			=> ModifyClamp01.Transpiler(instructions, ilg,
 				Setting<Need_Beauty>.MaxValue_get);
 	}
 }

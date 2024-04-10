@@ -26,11 +26,11 @@ namespace NeedBarOverflow.Patches
 				CodeInstruction codeInstruction = instructionList[i];
 				// In this case, we've reached the portion of code to patch
 				// This patch may be repeated
-				if (i >= 1 && i < instructionList.Count - 1 &&	// Not beginning or end of instructions
-					codeInstruction.opcode == OpCodes.Add &&	  // The amount to gain is on top of stack
-					instructionList[i + 1].Calls(set_CurLevel) && // In Vanilla, the amount after gain will be set
-					!instructionList[i - 1].Calls(get_CurLevel))  // The base amount is not on top of stack
-				{
+				if (i >= 1 && i < instructionList.Count - 1 && 	// Not beginning or end of instructions
+                    !instructionList[i - 1].Calls(get_CurLevel) && // The base amount is not on top of stack
+                    codeInstruction.opcode == OpCodes.Add &&	  // The amount to gain is on top of stack
+					instructionList[i + 1].Calls(set_CurLevel)) // In Vanilla, the amount after gain will be set
+                {
 					state++;
 					yield return new CodeInstruction(OpCodes.Call, GainMultiplier.Method);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
