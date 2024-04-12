@@ -7,7 +7,7 @@ using Verse;
 namespace NeedBarOverflow.Needs
 {
 	public enum StatName_Food
-    {
+	{
 		OverflowBonus = 0,
 		DisableEating = 1,
 		NonHumanMult = 2,

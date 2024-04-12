@@ -69,11 +69,11 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			UpdateHediff(need.CurLevel, need, pawn);
 		}
 #if (v1_2 || v1_3 || v1_4)
-        private static readonly AccessTools.FieldRef<Hediff, bool>
-            fr_visible = AccessTools.FieldRefAccess<Hediff, bool>(
+		private static readonly AccessTools.FieldRef<Hediff, bool>
+			fr_visible = AccessTools.FieldRefAccess<Hediff, bool>(
 			typeof(Hediff).GetField("visible", Consts.bindingflags));
 #endif
-        private static void UpdateHediff(
+		private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
 		{
 			Settings s = PatchApplier.s;
@@ -118,11 +118,11 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				(Setting_Food.EffectStat(StatName_Food.ShowHediffLvl) - 1f))
 			{
 #if (v1_2 || v1_3 || v1_4)
-                fr_visible(hediff) = true;
+				fr_visible(hediff) = true;
 #else
 				hediff.SetVisible();
 #endif
-            }
+			}
 		}
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)

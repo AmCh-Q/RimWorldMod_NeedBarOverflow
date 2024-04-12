@@ -8,7 +8,7 @@ namespace NeedBarOverflow.Patches.Need_Beauty_
 {
 	using static Utility;
 	using Needs;
-    public static class LevelFromBeauty
+	public static class LevelFromBeauty
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original

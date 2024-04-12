@@ -18,17 +18,17 @@ namespace NeedBarOverflow
 			XmlNode Node_ModSettings = doc?["SettingsBlock"]?["ModSettings"];
 			if (Node_ModSettings == null)
 				return;
-            XmlNode ClassAttribute = Node_ModSettings.Attributes?.GetNamedItem("Class");
+			XmlNode ClassAttribute = Node_ModSettings.Attributes?.GetNamedItem("Class");
 			if (ClassAttribute != null &&
-                ClassAttribute.Value == "NeedBarOverflow.NeedBarOverflow_Settings")
-            {
-                ClassAttribute.Value = "NeedBarOverflow.Settings";
-                doc.Save(settingsFilePath);
+				ClassAttribute.Value == "NeedBarOverflow.NeedBarOverflow_Settings")
+			{
+				ClassAttribute.Value = "NeedBarOverflow.Settings";
+				doc.Save(settingsFilePath);
 				Settings.migrateSettings = 1;
-                return;
-            }
-            if (Node_ModSettings["enabledA"] != null)
-                Settings.migrateSettings = 1;
+				return;
+			}
+			if (Node_ModSettings["enabledA"] != null)
+				Settings.migrateSettings = 1;
 		}
 	}
 }

@@ -239,18 +239,18 @@ namespace NeedBarOverflow.Patches.Need_
 					continue;
 				}
 				if (state == 5 && i > 0 &&
-                    instructionList[i - 2].opcode == OpCodes.Ldarg_0 &&
-                    instructionList[i - 1].Calls(get_MaxLevel) &&
-                    codeInstruction.opcode == OpCodes.Blt_S)
-                {
-                    // Stage 6
-                    state = 6;
-                    // Limit the number of showUnitTicks to 10 max
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 11f);
+					instructionList[i - 2].opcode == OpCodes.Ldarg_0 &&
+					instructionList[i - 1].Calls(get_MaxLevel) &&
+					codeInstruction.opcode == OpCodes.Blt_S)
+				{
+					// Stage 6
+					state = 6;
+					// Limit the number of showUnitTicks to 10 max
+					yield return new CodeInstruction(OpCodes.Ldc_R4, 11f);
 					yield return new CodeInstruction(OpCodes.Call, m_Min);
-                    yield return codeInstruction;
-                    continue;
-                }
+					yield return codeInstruction;
+					continue;
+				}
 				if (state == 7 && i > 1 &&
 					instructionList[i - 1].opcode == OpCodes.Mul &&
 					codeInstruction.Calls(m_DrawBarInstantMarkerAt))

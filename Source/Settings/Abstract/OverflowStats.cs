@@ -17,9 +17,9 @@ namespace NeedBarOverflow.Needs
 			=> Setting<T>.Enabled && overflowStats[(int)statName] > 0f;
 		public static float EffectStat(IConvertible statName)
 			=> overflowStats[(int)statName];
-        public static float EffectStat(int statId)
-            => overflowStats[statId];
-        public virtual void ExposeData()
+		public static float EffectStat(int statId)
+			=> overflowStats[statId];
+		public virtual void ExposeData()
 		{
 			Array Enums = Enum.GetValues(typeof(StatName_DG));
 			Dictionary<StatName_DG, float> dict = new Dictionary<StatName_DG, float>();
@@ -58,30 +58,30 @@ namespace NeedBarOverflow.Needs
 					null, sl.tip, true);
 			overflowStats[(int)settingName] = b1 ? f1 : -f1;
 		}
-        public static void MigrateSettings(
+		public static void MigrateSettings(
 			Dictionary<IntVec2, bool> enabledB,
 			Dictionary<IntVec2, float> statsB,
 			int idx)
-        {
+		{
 			int[] stats = new int[]
 			{
-                (int)StatName_DG.FastDrain,
-                (int)StatName_DG.SlowGain,
-            };
+				(int)StatName_DG.FastDrain,
+				(int)StatName_DG.SlowGain,
+			};
 			for (int i = 0; i < 2; i++)
-            {
-                IntVec2 v1 = new IntVec2(idx, i + 1);
-                if (!statsB.TryGetValue(v1, out float f1))
-                    continue;
-                bool b1 = enabledB.GetValueOrDefault(v1, overflowStats[stats[i]] >= 0);
-                overflowStats[stats[i]] = b1 ? f1 : -f1;
-            }
-        }
-        static OverflowStats()
+			{
+				IntVec2 v1 = new IntVec2(idx, i + 1);
+				if (!statsB.TryGetValue(v1, out float f1))
+					continue;
+				bool b1 = enabledB.GetValueOrDefault(v1, overflowStats[stats[i]] >= 0);
+				overflowStats[stats[i]] = b1 ? f1 : -f1;
+			}
+		}
+		static OverflowStats()
 		{
 			dfltStats = new float[] { -0.5f, -0.5f }; // FastDrain, SlowGain
 			overflowStats = (float[])dfltStats.Clone();
-        }
+		}
 		public OverflowStats() { }
-    }
+	}
 }

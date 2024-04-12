@@ -132,7 +132,7 @@ namespace NeedBarOverflow.Needs
 		{
 			float mult = showAsPerc ? 100f : 1f;
 			float invMult = showAsPerc ? 0.01f : 1f;
-            float val = num * mult;
+			float val = num * mult;
 			string buffer = val.CustomToString(false, false);
 			Widgets.TextFieldNumeric(rectNum, ref val, ref buffer, txt_min * mult, txt_max * mult);
 			return val * invMult;
@@ -146,7 +146,7 @@ namespace NeedBarOverflow.Needs
 			f1 = (b1 ? f1 : (0f - f1));
 			SettingLabel sl;
 			if (b1)
-                sl = new SettingLabel(needType.Name, Strings.OverfPerc);
+				sl = new SettingLabel(needType.Name, Strings.OverfPerc);
 			else
 				sl = new SettingLabel(needType.Name, Strings.OverfEnabled);
 			ls.CheckboxLabeled(sl.TranslatedLabel(), ref b1, sl.TranslatedTip());

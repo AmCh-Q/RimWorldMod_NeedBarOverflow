@@ -14,7 +14,7 @@ namespace NeedBarOverflow.Needs
 		public static float EffectStat(StatName_Food statName)
 			=> OverflowStats.EffectStat(statName);
 		public void ExposeData()
-        {
+		{
 			new OverflowStats().ExposeData();
 			HealthStats.ExposeData();
 		}
@@ -25,10 +25,10 @@ namespace NeedBarOverflow.Needs
 		}
 		public static void MigrateSettings(
 			Dictionary<IntVec2, bool> enabledB,
-            Dictionary<IntVec2, float> statsB)
-        {
+			Dictionary<IntVec2, float> statsB)
+		{
 			OverflowStats.MigrateSettings(enabledB, statsB);
-            HealthStats.MigrateSettings();
-        }
-    }
+			HealthStats.MigrateSettings();
+		}
+	}
 }

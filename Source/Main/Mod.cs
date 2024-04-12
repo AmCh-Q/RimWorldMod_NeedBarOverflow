@@ -17,10 +17,10 @@ namespace NeedBarOverflow
 				Refs.Init();
 				Needs.Setting_Common.DisablingDefs.LoadDisabledDefs();
 				Needs.Setting_Food.ApplyFoodHediffSettings();
-                ApplyPatches();
-                if (Settings.migrateSettings == 2)
-                    s.Write();
-            }, "NeedBarOverflow.Mod.ctor", false, null);
+				ApplyPatches();
+				if (Settings.migrateSettings == 2)
+					s.Write();
+			}, "NeedBarOverflow.Mod.ctor", false, null);
 		}
 		public override string SettingsCategory() => Strings.Name.Translate();
 		public override void DoSettingsWindowContents(Rect inRect)

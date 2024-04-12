@@ -50,11 +50,11 @@ namespace NeedBarOverflow.Patches.Need_Play_
 					yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabel);
 					yield return instructionList[i + 1];
 					yield return new CodeInstruction(OpCodes.Dup);
-                    yield return instructionList[i + 2];
-                    yield return instructionList[i + 3];
-                    yield return instructionList[i + 4];
-                    yield return instructionList[i + 5].WithLabels(jumpLabel);
-                    i += 5;
+					yield return instructionList[i + 2];
+					yield return instructionList[i + 3];
+					yield return instructionList[i + 4];
+					yield return instructionList[i + 5].WithLabels(jumpLabel);
+					i += 5;
 					continue;
 				}
 				yield return codeInstruction;

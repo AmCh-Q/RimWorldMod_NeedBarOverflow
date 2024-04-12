@@ -6,37 +6,37 @@ using Verse;
 namespace NeedBarOverflow
 {
 	internal static class Helpers
-    {
-        internal static MethodInfo Method(this Type type, string name)
-        {
-            MethodInfo method = type.GetMethod(name, Consts.bindingflags);
-            method.NotNull(name);
-            return method;
-        }
-        internal static MethodInfo Getter(this Type type, string name)
-        {
-            MethodInfo getter = type
-                .GetProperty(name, Consts.bindingflags)
-                .GetGetMethod(true);
-            getter.NotNull(name);
-            return getter;
-        }
-        internal static MethodInfo Setter(this Type type, string name)
-        {
-            MethodInfo setter = type
-                .GetProperty(name, Consts.bindingflags)
-                .GetSetMethod(true);
-            setter.NotNull(name);
-            return setter;
-        }
-        internal static FieldInfo Field(this Type type, string name)
-        {
-            FieldInfo field = type
-                .GetField(name, Consts.bindingflags);
-            field.NotNull(name);
-            return field;
-        }
-        internal static float CustomRound(this float d)
+	{
+		internal static MethodInfo Method(this Type type, string name)
+		{
+			MethodInfo method = type.GetMethod(name, Consts.bindingflags);
+			method.NotNull(name);
+			return method;
+		}
+		internal static MethodInfo Getter(this Type type, string name)
+		{
+			MethodInfo getter = type
+				.GetProperty(name, Consts.bindingflags)
+				.GetGetMethod(true);
+			getter.NotNull(name);
+			return getter;
+		}
+		internal static MethodInfo Setter(this Type type, string name)
+		{
+			MethodInfo setter = type
+				.GetProperty(name, Consts.bindingflags)
+				.GetSetMethod(true);
+			setter.NotNull(name);
+			return setter;
+		}
+		internal static FieldInfo Field(this Type type, string name)
+		{
+			FieldInfo field = type
+				.GetField(name, Consts.bindingflags);
+			field.NotNull(name);
+			return field;
+		}
+		internal static float CustomRound(this float d)
 		{
 			if (Mathf.Abs(d) <= 0.005f || float.IsNaN(d))
 				return 0;
@@ -48,7 +48,7 @@ namespace NeedBarOverflow
 			return scale * Mathf.Round(d / scale);
 		}
 		internal static string CustomToString(
-            this float d, bool showAsPerc, bool translate)
+			this float d, bool showAsPerc, bool translate)
 		{
 			if (float.IsInfinity(d) && translate)
 				return "∞";

@@ -11,10 +11,10 @@ namespace NeedBarOverflow.Needs
 	{
 		public static void ApplyFoodHediffSettings()
 			=> HealthStats.ApplyFoodHediffSettings();
-        private static class HealthStats
+		private static class HealthStats
 		{
 			private enum HealthName
-            {
+			{
 				Level = 0,
 				HungerFactor = 1,
 				HealingFactor = 2,
@@ -38,52 +38,52 @@ namespace NeedBarOverflow.Needs
 				Enum.GetValues(typeof(HealthName))
 				.Cast<int>().Any(
 					stat => healthStats[stat, 0] >= 0f);
-            public static void ExposeData()
-            {
-                Array Enums = Enum.GetValues(typeof(HealthName));
-                Dictionary<HealthName, string> healthStat_strs
-                    = new Dictionary<HealthName, string>();
-                if (Scribe.mode == LoadSaveMode.Saving)
-                {
-                    foreach (HealthName key in Enums)
-                    {
-                        IEnumerable<string> statStr()
-                        {
-                            for (int i = 0; i < 9; i++)
-                                yield return healthStats[(int)key, i].ToString();
-                        }
-                        healthStat_strs[key] = string.Join(Strings.Space, statStr());
-                    }
-                }
-                Scribe_Collections.Look(ref healthStat_strs,
-                    Strings.healthStats, LookMode.Value, LookMode.Value);
-                if (Scribe.mode == LoadSaveMode.LoadingVars)
-                {
-                    Buffer.BlockCopy(dfltHealthStats, 0, healthStats, 0,
-                        6 * 10 * sizeof(float));
-                    foreach (HealthName key in Enums)
-                    {
-                        if (healthStat_strs == null ||
-                            !healthStat_strs.TryGetValue(key, out string statStr) ||
-                            statStr.NullOrEmpty())
-                            continue;
-                        float[] stats = statStr.Split(' ')
-                            .Select(x => float.Parse(x)).ToArray();
-                        for (int i = 1; i < Mathf.Min(stats.Length, 9); i++)
-                            healthStats[(int)key, i] = stats[i];
-                        if (key != HealthName.Level &&
-                            (healthStats[(int)key, 0] >= 0)
-                            != (stats[0] >= 0))
-                            healthStats[(int)key, 0] = -healthStats[(int)key, 0] - 1f;
-                    }
-                    healthStats[(int)HealthName.Level, 1] = 1f;
-                }
-                if (Refs.initialized &&
-                    (Scribe.mode == LoadSaveMode.PostLoadInit ||
-                    Scribe.mode == LoadSaveMode.Saving))
-                    ApplyFoodHediffSettings();
-            }
-            public static void AddSettings(Listing_Standard ls)
+			public static void ExposeData()
+			{
+				Array Enums = Enum.GetValues(typeof(HealthName));
+				Dictionary<HealthName, string> healthStat_strs
+					= new Dictionary<HealthName, string>();
+				if (Scribe.mode == LoadSaveMode.Saving)
+				{
+					foreach (HealthName key in Enums)
+					{
+						IEnumerable<string> statStr()
+						{
+							for (int i = 0; i < 9; i++)
+								yield return healthStats[(int)key, i].ToString();
+						}
+						healthStat_strs[key] = string.Join(Strings.Space, statStr());
+					}
+				}
+				Scribe_Collections.Look(ref healthStat_strs,
+					Strings.healthStats, LookMode.Value, LookMode.Value);
+				if (Scribe.mode == LoadSaveMode.LoadingVars)
+				{
+					Buffer.BlockCopy(dfltHealthStats, 0, healthStats, 0,
+						6 * 10 * sizeof(float));
+					foreach (HealthName key in Enums)
+					{
+						if (healthStat_strs == null ||
+							!healthStat_strs.TryGetValue(key, out string statStr) ||
+							statStr.NullOrEmpty())
+							continue;
+						float[] stats = statStr.Split(' ')
+							.Select(x => float.Parse(x)).ToArray();
+						for (int i = 1; i < Mathf.Min(stats.Length, 9); i++)
+							healthStats[(int)key, i] = stats[i];
+						if (key != HealthName.Level &&
+							(healthStats[(int)key, 0] >= 0)
+							!= (stats[0] >= 0))
+							healthStats[(int)key, 0] = -healthStats[(int)key, 0] - 1f;
+					}
+					healthStats[(int)HealthName.Level, 1] = 1f;
+				}
+				if (Refs.initialized &&
+					(Scribe.mode == LoadSaveMode.PostLoadInit ||
+					Scribe.mode == LoadSaveMode.Saving))
+					ApplyFoodHediffSettings();
+			}
+			public static void AddSettings(Listing_Standard ls)
 			{
 				Array Enums = Enum.GetValues(typeof(HealthName));
 				Utility.LsGap(ls);
@@ -148,40 +148,40 @@ namespace NeedBarOverflow.Needs
 			public static void MigrateSettings()
 			{
 				const string name = "foodHealthStats_";
-                List<bool> foodOverflowEffects = new List<bool>(5);
-                List<float> foodHealthStats = new List<float>(10);
-                int[] arrIdxs = new int[6]
+				List<bool> foodOverflowEffects = new List<bool>(5);
+				List<float> foodHealthStats = new List<float>(10);
+				int[] arrIdxs = new int[6]
 				{
 					(int)HealthName.Level,
-                    (int)HealthName.HungerFactor,
-                    (int)HealthName.HealingFactor,
-                    (int)HealthName.MovingOffset,
-                    (int)HealthName.VomitFreq,
-                    (int)HealthName.EatingOffset,
-                };
-                Buffer.BlockCopy(dfltHealthStats, 0, healthStats, 0,
-                    6 * 10 * sizeof(float));
-                Scribe_Collections.Look(ref foodOverflowEffects, nameof(foodOverflowEffects), LookMode.Value);
-                for (int i = 0; i < 6; i++)
-                {
+					(int)HealthName.HungerFactor,
+					(int)HealthName.HealingFactor,
+					(int)HealthName.MovingOffset,
+					(int)HealthName.VomitFreq,
+					(int)HealthName.EatingOffset,
+				};
+				Buffer.BlockCopy(dfltHealthStats, 0, healthStats, 0,
+					6 * 10 * sizeof(float));
+				Scribe_Collections.Look(ref foodOverflowEffects, nameof(foodOverflowEffects), LookMode.Value);
+				for (int i = 0; i < 6; i++)
+				{
 					if (i > 0 && i <= foodOverflowEffects.Count && 
 						!foodOverflowEffects.NullOrEmpty())
-                    {
-                        bool b1 = foodOverflowEffects[i - 1];
-                        float f1 = healthStats[arrIdxs[i], 0];
-                        if ((f1 >= 0) != b1)
-                            healthStats[arrIdxs[i], 0] = -f1 - 1;
-                    }
-                    Scribe_Collections.Look(ref foodHealthStats, name + i.ToStringCached(), LookMode.Value);
-                    if (foodHealthStats.NullOrEmpty())
-                        continue;
+					{
+						bool b1 = foodOverflowEffects[i - 1];
+						float f1 = healthStats[arrIdxs[i], 0];
+						if ((f1 >= 0) != b1)
+							healthStats[arrIdxs[i], 0] = -f1 - 1;
+					}
+					Scribe_Collections.Look(ref foodHealthStats, name + i.ToStringCached(), LookMode.Value);
+					if (foodHealthStats.NullOrEmpty())
+						continue;
 					int lastIdx = Mathf.Min(9, foodHealthStats.Count);
-                    for (int j = 1; j < lastIdx; j++)
+					for (int j = 1; j < lastIdx; j++)
 						healthStats[arrIdxs[i], j] = foodHealthStats[j];
-                }
-                healthStats[(int)HealthName.Level, 1] = 1f;
-            }
-            public static void ApplyFoodHediffSettings()
+				}
+				healthStats[(int)HealthName.Level, 1] = 1f;
+			}
+			public static void ApplyFoodHediffSettings()
 			{
 				if (!AffectHealth)
 					return;

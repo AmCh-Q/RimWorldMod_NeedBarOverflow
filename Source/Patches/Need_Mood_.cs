@@ -9,7 +9,7 @@ namespace NeedBarOverflow.Patches.Need_Mood_
 	using static Utility;
 	using Needs;
 
-    public static class CurInstantLevel
+	public static class CurInstantLevel
 	{
 		public static HarmonyPatchType? patched;
 		public static readonly MethodBase original

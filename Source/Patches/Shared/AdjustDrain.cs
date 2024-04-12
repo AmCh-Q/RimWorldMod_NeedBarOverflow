@@ -31,8 +31,8 @@ namespace NeedBarOverflow.Patches
 					instructionList[i + 1].Calls(set_CurLevel)) // In Vanilla, the amount after drain will be set 
 				{
 					state++;
-                    yield return codeInstruction;
-                    yield return new CodeInstruction(OpCodes.Call, DrainMultiplier.Method);
+					yield return codeInstruction;
+					yield return new CodeInstruction(OpCodes.Call, DrainMultiplier.Method);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevelPercentage);
 					yield return new CodeInstruction(OpCodes.Call, adjust);

@@ -27,8 +27,8 @@ namespace NeedBarOverflow
 			ls.Begin(rect);
 			LsGap(ls);
 			ls.Label(Strings.RestartNReq.MyTranslate());
-            Setting_Common.DisablingDefs.AddSettings(ls);
-            if (AddSimpleSetting(ls, typeof(Need_Food)))
+			Setting_Common.DisablingDefs.AddSettings(ls);
+			if (AddSimpleSetting(ls, typeof(Need_Food)))
 				Setting_Food.AddSettings(ls);
 			if (AddSimpleSetting(ls, typeof(Need_Rest)))
 				OverflowStats<Need_Rest>.AddSettings(ls);
@@ -74,7 +74,7 @@ namespace NeedBarOverflow
 		{
 			Debug.Message("ExposeData() called");
 			base.ExposeData();
-            Setting_Common common = new Setting_Common();
+			Setting_Common common = new Setting_Common();
 			Setting_Food food = new Setting_Food();
 			OverflowStats<Need_Rest> rest = new OverflowStats<Need_Rest>();
 			OverflowStats<Need_Joy> joy = new OverflowStats<Need_Joy>();
@@ -83,15 +83,15 @@ namespace NeedBarOverflow
 #endif
 			Scribe_Deep.Look(ref common, nameof(Setting_Common));
 			Scribe_Deep.Look(ref food, nameof(Need_Food));
-            Scribe_Deep.Look(ref rest, nameof(Need_Rest));
+			Scribe_Deep.Look(ref rest, nameof(Need_Rest));
 			Scribe_Deep.Look(ref joy, nameof(Need_Joy));
 #if (!v1_2 && !v1_3)
 			Scribe_Deep.Look(ref killThirst, nameof(Need_KillThirst));
 #endif
-            if (Scribe.mode == LoadSaveMode.LoadingVars &&
-                migrateSettings == 1)
-                MigrateSettings();
-            if (Refs.initialized && 
+			if (Scribe.mode == LoadSaveMode.LoadingVars &&
+				migrateSettings == 1)
+				MigrateSettings();
+			if (Refs.initialized && 
 				(Scribe.mode == LoadSaveMode.PostLoadInit || 
 				Scribe.mode == LoadSaveMode.Saving))
 				Patches.PatchApplier.ApplyPatches();
@@ -107,11 +107,11 @@ namespace NeedBarOverflow
 			Setting_Common.MigrateSettings(enabledB);
 			Setting_Food.MigrateSettings(enabledB, statsB);
 			OverflowStats<Need_Rest>.MigrateSettings(enabledB, statsB, 1);
-            OverflowStats<Need_Joy>.MigrateSettings(enabledB, statsB, 2);
+			OverflowStats<Need_Joy>.MigrateSettings(enabledB, statsB, 2);
 #if (!v1_2 && !v1_3)
-            OverflowStats<Need_KillThirst>.MigrateSettings(enabledB, statsB, 16);
+			OverflowStats<Need_KillThirst>.MigrateSettings(enabledB, statsB, 16);
 #endif
-            migrateSettings = 2;
+			migrateSettings = 2;
 		}
 	}
 }

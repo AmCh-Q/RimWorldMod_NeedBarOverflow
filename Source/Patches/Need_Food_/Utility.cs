@@ -3,8 +3,8 @@ using Verse;
 
 namespace NeedBarOverflow.Patches.Need_Food_
 {
-    using Needs;
-    public static class Utility
+	using Needs;
+	public static class Utility
 	{
 		public static bool CanConsumeMoreFood(Pawn pawn)
 		{
@@ -14,6 +14,6 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				|| need.CurLevel < Setting_Food.EffectStat(StatName_Food.DisableEating) * need.MaxLevel
 				|| need.CurCategory > HungerCategory.Fed // Pawn is hungry
 				|| !Setting_Common.DisablingDefs.CanOverflow(pawn);
-        }
+		}
 	}
 }
