@@ -88,7 +88,7 @@
     <Compile Include="Properties\AssemblyInfo_1.5.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*-*" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*" />
     <PackageReference Include="Lib.Harmony" Version="2.3.*" ExcludeAssets="runtime" />
     <None Include="..\LICENSE" Pack="true" PackagePath=".." />
   </ItemGroup>

@@ -6,77 +6,75 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
-	public sealed partial class Setting_Common : IExposable
+    public enum StatName_DisableType
     {
-        public static readonly AccessTools.FieldRef<Need, Pawn>
+        Race = 0,
+        Apparel = 1,
+        Hediff = 2,
+    }
+    public sealed partial class Setting_Common : IExposable
+    {
+        private static readonly AccessTools.FieldRef<Need, Pawn>
             fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>("pawn");
         public static bool CanOverflow(Need n)
-            => CanOverflow(fr_needPawn(n));
-        private static readonly Dictionary<int, int> overflowCache = new Dictionary<int, int>();
-        public static bool CanOverflow(Pawn p)
-        {
-            int thingId = p.thingIDNumber;
-            int tickState = Find.TickManager.TicksGame & ~1;
-            if (overflowCache.TryGetValue(thingId, out int state) &&
-                150 > (tickState - state))
-                return (state & 1) != 0;
-            state = ((Refs.VFEAncients_HasPower == null ||
-                !Refs.VFEAncients_HasPower(p)) &&
-                DisablingDefs.CheckPawnRace(p) &&
-                DisablingDefs.CheckPawnHealth(p))
-                ? 1 : 0;
-            overflowCache[thingId] = tickState | state;
-            return state != 0;
-        }
+            => DisablingDefs.CanOverflow(fr_needPawn(n));
         public static class DisablingDefs
 		{
 			private static readonly string suffix = "DISABLED";
-			private static readonly IReadOnlyDictionary<Type, string> 
-				dfltDisablingDefNames = new Dictionary<Type, string>
-			{
-				{ typeof(ThingDef), suffix },
-				{ typeof(HediffDef), suffix }
-			};
-            private static Dictionary<Type, string> disablingDefs_str
-                = new Dictionary<Type, string>(dfltDisablingDefNames);
-            public static readonly Dictionary<Type, HashSet<Def>> 
-				disablingDefs = new Dictionary<Type, HashSet<Def>>();
-			private static readonly Dictionary<Type, Dictionary<string, Def>> 
-				defsByTypeNameCache = new Dictionary<Type, Dictionary<string, Def>>();
-			private static Dictionary<string, Def> GetDefDict(Type defType)
+            private static readonly string[] dfltDisablingDefNames = new string[3]
             {
-                if (!typeof(Def).IsAssignableFrom(defType))
-					return null;
-                if (!defsByTypeNameCache.ContainsKey(defType))
-                {
-					defsByTypeNameCache[defType] = new Dictionary<string, Def>();
-                    foreach (Def defItem in GenDefDatabase.GetAllDefsInDatabaseForDef(defType))
-                    {
-						if (defItem is ThingDef raceDef && raceDef.race == null)
-							continue;
-						string defName = defItem.defName.Trim().ToLowerInvariant();
-                        defsByTypeNameCache[defType][defName] = defItem;
-                        string defLabel = defItem.label.Trim().ToLowerInvariant();
-                        defsByTypeNameCache[defType].TryAdd(defLabel, defItem);
-                    }
-                }
-				return defsByTypeNameCache[defType];
+                suffix, "VFEE_Apparel_TechfriarCrown", suffix,
+            };
+            private static readonly Type[] dfltDisablingDefTypes = new Type[3]
+            {
+                typeof(ThingDef), typeof(ThingDef), typeof(HediffDef),
+            };
+            private static string[] disablingDefs_str = new string[3];
+            public static readonly HashSet<Def>[] disablingDefs = new HashSet<Def>[3];
+			private static readonly Dictionary<string, Def>[] 
+                defsByDisableTypeCache = new Dictionary<string, Def>[3];
+            private static readonly Dictionary<StatName_DisableType, Pair<string, string>> 
+				colorizeCache = new Dictionary<StatName_DisableType, Pair<string, string>>();
+            private static int pawnIdCache = -1;
+            private static bool canOverflowCache = false;
+            public static bool CanOverflow(Pawn p)
+            {
+                int thingId = p.thingIDNumber;
+                if (thingId == pawnIdCache)
+                    return canOverflowCache;
+                pawnIdCache = thingId;
+                canOverflowCache =
+                    (Refs.VFEAncients_HasPower == null ||
+                    !Refs.VFEAncients_HasPower(p)) &&
+                    CheckPawnRace(p) &&
+                    CheckPawnApparel(p) &&
+                    CheckPawnHealth(p);
+                return canOverflowCache;
             }
-            private static readonly Dictionary<Type, Pair<string, string>> 
-				colorizeCache = new Dictionary<Type, Pair<string, string>>();
             public static bool CheckPawnRace(Pawn p)
             {
-                HashSet<Def> defs = disablingDefs[typeof(ThingDef)];
+                HashSet<Def> defs = disablingDefs[(int)StatName_DisableType.Race];
                 if (defs.Count == 0)
                     return true;
-                ThingDef thingDef = p.kindDef?.race;
+                Def thingDef = p.kindDef?.race;
                 if (thingDef == null)
                     return true;
                 return !defs.Contains(thingDef);
             }
+            public static bool CheckPawnApparel(Pawn p)
+            {
+                HashSet<Def> defs = disablingDefs[(int)StatName_DisableType.Apparel];
+                if (defs.Count == 0)
+                    return true;
+                List<Apparel> apparels = p.apparel?.WornApparel;
+                if (apparels.NullOrEmpty())
+                    return true;
+                return !apparels.Any(apparel
+                    => defs.Contains(apparel?.def));
+            }
             public static bool CheckPawnHealth(Pawn p)
             {
-                HashSet<Def> defs = disablingDefs[typeof(HediffDef)];
+                HashSet<Def> defs = disablingDefs[(int)StatName_DisableType.Hediff];
                 if (defs.Count == 0)
                     return true;
                 List<Hediff> hediffs = p.health?.hediffSet?.hediffs;
@@ -85,7 +83,33 @@ namespace NeedBarOverflow.Needs
                 return !hediffs.Any(hediff 
                     => defs.Contains(hediff?.def));
             }
-            private static string ColorizeDefsByType(Type defType, string defsStr)
+            private static Dictionary<string, Def> GetDefDict(StatName_DisableType statName)
+            {
+                if (!Refs.initialized)
+                    return null;
+                Dictionary<string, Def> defDict = defsByDisableTypeCache[(int)statName];
+                if (defDict != default)
+                    return defDict;
+                defDict = defsByDisableTypeCache[(int)statName] = new Dictionary<string, Def>();
+                foreach (Def defItem in
+                    GenDefDatabase.GetAllDefsInDatabaseForDef(
+                        dfltDisablingDefTypes[(int)statName]))
+                {
+                    if (defItem is ThingDef thingDef &&
+                        ((statName == StatName_DisableType.Race && thingDef.race == null) ||
+                        (statName == StatName_DisableType.Apparel && thingDef.apparel == null)))
+                        continue;
+                    string defName = defItem.defName.Trim().ToLowerInvariant();
+                    if (!defName.NullOrEmpty())
+                        defDict[defName] = defItem;
+                    string defLabel = defItem.label.Trim().ToLowerInvariant();
+                    if (!defLabel.NullOrEmpty())
+                        defDict.TryAdd(defLabel, defItem);
+                }
+                Debug.Message("GetDefDict() Loaded " + statName.ToString());
+                return defDict;
+            }
+            private static string ColorizeDefsByType(StatName_DisableType defType, string defsStr)
             {
 				if (colorizeCache.TryGetValue(
 					defType, out Pair<string, string> pair) &&
@@ -95,8 +119,14 @@ namespace NeedBarOverflow.Needs
                 Dictionary<string, Def> defDict = GetDefDict(defType);
                 for (int i = 0; i < strArr.Length; i++)
                 {
-					if (defDict.ContainsKey(strArr[i].Trim().ToLowerInvariant()))
-						strArr[i] = strArr[i].Colorize(ColoredText.NameColor);
+                    string key = strArr[i].Trim().ToLowerInvariant();
+                    if (defDict.TryGetValue(key, out Def def))
+                    {
+                        string defName = def.defName;
+                        if (key != defName.Trim().ToLowerInvariant())
+                            strArr[i] = string.Concat(strArr[i], " (", defName, ")");
+                        strArr[i] = strArr[i].Colorize(ColoredText.NameColor);
+                    }
                 }
 				string colorized = string.Join(",", strArr);
 				colorizeCache[defType] = new Pair<string, string>(defsStr, colorized);
@@ -105,32 +135,39 @@ namespace NeedBarOverflow.Needs
 			public static void ExposeData()
 			{
 				Debug.Message("DisablingDefs.ExposeData() called");
+                Dictionary<StatName_DisableType, string> scribeDefDict 
+                    = new Dictionary<StatName_DisableType, string>();
+                if (Scribe.mode == LoadSaveMode.Saving)
+                {
+                    foreach (StatName_DisableType key
+                        in Enum.GetValues(typeof(StatName_DisableType)))
+                        scribeDefDict.Add(key, disablingDefs_str[(int)key]);
+                    LoadDisabledDefs();
+                }
 				Scribe_Collections.Look(
-					ref disablingDefs_str, 
+					ref scribeDefDict, 
 					Strings.disablingDefs, 
 					LookMode.Value, LookMode.Value);
-                if (disablingDefs_str == null)
-                    disablingDefs_str = new Dictionary<Type, string>(dfltDisablingDefNames);
-                foreach (Type key in dfltDisablingDefNames.Keys)
-				{
-                    if (!disablingDefs_str.TryGetValue(key, out string value))
+                if (Scribe.mode == LoadSaveMode.LoadingVars)
+                {
+                    foreach (StatName_DisableType key
+                        in Enum.GetValues(typeof(StatName_DisableType)))
                     {
-                        value = dfltDisablingDefNames[key];
-                        disablingDefs_str[key] = value;
+                        if (scribeDefDict[key] == default)
+                            disablingDefs_str[(int)key] = dfltDisablingDefNames[(int)key];
+                        else
+                            disablingDefs_str[(int)key] = scribeDefDict[key];
                     }
-                    ParseDisabledDefs(key, value);
                 }
-				defsByTypeNameCache.Clear();
-                overflowCache.Clear();
             }
 			public static void AddSettings(Listing_Standard ls)
 			{
-				foreach (Type key in new List<Type>(disablingDefs_str.Keys))
+				foreach (StatName_DisableType defType in Enum.GetValues(typeof(StatName_DisableType)))
 				{
-					string s1 = disablingDefs_str[key];
+					string s1 = disablingDefs_str[(int)defType] ?? dfltDisablingDefNames[(int)defType];
 					bool b1 = s1.EndsWith(suffix);
 					bool b2 = !b1;
-					SettingLabel sl = new SettingLabel(nameof(Need), Strings.NoOverf_ + key.Name);
+					SettingLabel sl = new SettingLabel(nameof(Need), Strings.NoOverf_ + defType.ToString());
 					ls.CheckboxLabeled(sl.TranslatedLabel(), ref b2, sl.TranslatedTip());
 					if (b2)
 					{
@@ -138,21 +175,30 @@ namespace NeedBarOverflow.Needs
 							s1 = s1.Remove(s1.Length - suffix.Length);
                         s1 = ls.TextEntry(s1, 2).Replace('，',',');
 						if (s1.Length > 0)
-							ls.Label(ColorizeDefsByType(key, s1));
+							ls.Label(ColorizeDefsByType(defType, s1), tooltip: sl.TranslatedTip());
 					}
 					else if (!b1)
                     {
                         s1 += suffix;
                     }
-					disablingDefs_str[key] = s1;
+					disablingDefs_str[(int)defType] = s1;
                 }
 			}
-			private static void ParseDisabledDefs(Type defType, string defNameStr)
+            public static void LoadDisabledDefs()
             {
-                if (disablingDefs.ContainsKey(defType))
-                    disablingDefs[defType].Clear();
+                Debug.Message("DisablingDefs.LoadDisabledDefs() called");
+                if (!Refs.initialized)
+                    return;
+                foreach (StatName_DisableType key
+                    in Enum.GetValues(typeof(StatName_DisableType)))
+                    ParseDisabledDefs(key, disablingDefs_str[(int)key]);
+            }
+			private static void ParseDisabledDefs(StatName_DisableType defType, string defNameStr)
+            {
+                if (disablingDefs[(int)defType] == default)
+                    disablingDefs[(int)defType] = new HashSet<Def>();
                 else
-                    disablingDefs[defType] = new HashSet<Def>();
+                    disablingDefs[(int)defType].Clear();
                 if (!AnyEnabled ||
 					defNameStr.NullOrEmpty() || 
 					defNameStr.EndsWith(suffix))
@@ -163,7 +209,8 @@ namespace NeedBarOverflow.Needs
                 Dictionary<string, Def> defDict = GetDefDict(defType);
                 foreach (string defName in defNames)
 					if (defDict.TryGetValue(defName.Trim(), out Def def))
-						disablingDefs[defType].Add(def);
+						disablingDefs[(int)defType].Add(def);
+                Debug.Message("DisablingDefs.ParseDisabledDefs() parsed " + defType.ToString());
             }
             public static void MigrateSettings(
 				Dictionary<IntVec2, bool> enabledB)
@@ -176,16 +223,14 @@ namespace NeedBarOverflow.Needs
                 string s1 = foodDisablingDefs[0];
                 if (!enabledB.TryGetValue(new IntVec2(0, 10), out bool b1) || !b1)
                     s1 += suffix;
-                disablingDefs_str[typeof(ThingDef)] = s1;
-                ParseDisabledDefs(typeof(ThingDef), s1);
+                disablingDefs_str[(int)StatName_DisableType.Race] = s1;
 
                 if (foodDisablingDefs.Count < 2 && foodDisablingDefs[1].NullOrEmpty())
                     return;
                 s1 = foodDisablingDefs[1];
                 if (!enabledB.TryGetValue(new IntVec2(0, 11), out b1) || !b1)
                     s1 += suffix;
-                disablingDefs_str[typeof(HediffDef)] = s1;
-                ParseDisabledDefs(typeof(HediffDef), s1);
+                disablingDefs_str[(int)StatName_DisableType.Hediff] = s1;
             }
         }
 	}

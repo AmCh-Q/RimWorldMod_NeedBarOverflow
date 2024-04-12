@@ -15,7 +15,9 @@ namespace NeedBarOverflow
 			{
 				Debug.Message("NeedBarOverflow LongEvent called");
 				Refs.Init();
-				ApplyPatches();
+				Needs.Setting_Common.DisablingDefs.LoadDisabledDefs();
+				Needs.Setting_Food.ApplyFoodHediffSettings();
+                ApplyPatches();
                 if (Settings.migrateSettings == 2)
                     s.Write();
             }, "NeedBarOverflow.Mod.ctor", false, null);

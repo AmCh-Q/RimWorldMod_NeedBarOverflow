@@ -32,10 +32,12 @@ namespace NeedBarOverflow.Patches
 					instructionList[i + 1].Calls(set_CurLevel)) // In Vanilla, the amount after gain will be set
                 {
 					state++;
-					yield return new CodeInstruction(OpCodes.Call, GainMultiplier.Method);
+                    yield return codeInstruction;
+                    yield return new CodeInstruction(OpCodes.Call, GainMultiplier.Method);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevelPercentage);
 					yield return new CodeInstruction(OpCodes.Call, adjust);
+					continue;
 				}
 				yield return codeInstruction;
 			}

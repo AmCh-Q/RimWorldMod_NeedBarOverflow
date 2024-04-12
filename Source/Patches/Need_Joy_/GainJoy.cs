@@ -18,7 +18,7 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 		public static readonly MethodBase original
 			= typeof(Need_Joy)
 			.Method(nameof(Need_Joy.GainJoy));
-		private static readonly TransIL transpiler = Transpiler;
+		private static readonly TransILG transpiler = Transpiler;
 		public static void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Joy)));
 		public static void Toggle(bool enabled)
@@ -30,11 +30,14 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 				Unpatch(ref patched, original: original);
 		}
 		private static IEnumerable<CodeInstruction> Transpiler(
-			IEnumerable<CodeInstruction> instructions)
+			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
 			int state = 0;
-			for (int i = 0; i < instructionList.Count; i++)
+            Label[] jumpLabels = new Label[2];
+            for (int i = 0; i < 2; i++)
+                jumpLabels[i] = ilg.DefineLabel();
+            for (int i = 0; i < instructionList.Count; i++)
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				// In this case, we've reached the portion of code to patch
@@ -47,12 +50,19 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 					instructionList[i + 4].Calls(m_Min))					// Vanilla would calculate Min(amount, 1f - CurLevel)
 				{
 					state = 1;
-					// Load the setting max joy instead of 1f
-					// So that Vanilla will calculate Min(amount, MaxJoy - CurLevel) instead
-					yield return new CodeInstruction(OpCodes.Call, 
-						Setting<Need_Joy>.MaxValue_get);
-					// Skip the load Constant
-					continue;
+                    // Load the setting max joy instead of 1f
+                    // So that Vanilla will calculate Min(amount, MaxJoy - CurLevel) instead
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Call, m_CanOverflow);
+                    yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabels[0]);
+                    yield return codeInstruction;
+                    yield return new CodeInstruction(OpCodes.Br_S, jumpLabels[1]);
+                    yield return new CodeInstruction(OpCodes.Call, 
+						Setting<Need_Joy>.MaxValue_get).WithLabels(jumpLabels[0]);
+                    yield return instructionList[i + 1].WithLabels(jumpLabels[1]);
+                    i++;
+                    // Skip the load Constant
+                    continue;
 				}
 				yield return codeInstruction;
 			}
