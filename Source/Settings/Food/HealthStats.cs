@@ -119,12 +119,20 @@ namespace NeedBarOverflow.Needs
 							continue;
 						sl = new SettingLabel(nameof(Need_Food), 
 							Strings.HealthStat_ + key.ToString());
-                        float txt_min = dfltHealthStats[(int)key, 0];
-                        float txt_max = dfltHealthStats[(int)key, 9];
-                        txt_min = txt_min < 0f ? txt_min : -txt_min - 1f;
-                        txt_min = Mathf.Max(txt_min, healthStats[(int)key, i - 1]);
-                        txt_max = Mathf.Min(txt_max, healthStats[(int)key, i + 1]);
-                        if (txt_min < txt_max)
+						float txt_min = dfltHealthStats[(int)key, 0];
+						float txt_max = dfltHealthStats[(int)key, 9];
+						txt_min = txt_min < 0f ? txt_min : -txt_min - 1f;
+						txt_min = Mathf.Max(txt_min, healthStats[(int)key, i - 1]);
+						txt_max = Mathf.Min(txt_max, healthStats[(int)key, i + 1]);
+						if (i == 1 && key == HealthName.Level)
+						{
+							healthStats[(int)key, i] = 1f;
+							ls.Label(sl.label
+								.MyTranslate(healthStats[(int)key, i]
+								.CustomToString(true, false)));
+							ls.Gap(Text.LineHeight * 1.2f - ls.verticalSpacing * 0.6f);
+						}
+						else if (txt_min < txt_max)
 						{
 							float f1 = healthStats[(int)key, i];
 							float slider_min = Mathf.Log10(txt_min);
@@ -140,12 +148,12 @@ namespace NeedBarOverflow.Needs
 						}
 						else
 						{
+							healthStats[(int)key, i] = Mathf.Clamp(healthStats[(int)key, i], txt_max, txt_min);
 							ls.Label(sl.label
 								.MyTranslate(healthStats[(int)key, i]
 								.CustomToString(true, false)));
-                            healthStats[(int)key, i] = Mathf.Clamp(healthStats[(int)key, i], txt_max, txt_min);
-                            ls.Gap(Text.LineHeight * 1.2f - ls.verticalSpacing * 0.6f);
-                        }
+							ls.Gap(Text.LineHeight * 1.2f - ls.verticalSpacing * 0.6f);
+						}
 					}
 				}
 			}
@@ -181,12 +189,12 @@ namespace NeedBarOverflow.Needs
 						continue;
 					int lastIdx = Mathf.Min(9, foodHealthStats.Count);
 					for (int j = 1; j < lastIdx; j++)
-                    {
-                        healthStats[arrIdxs[i], j]
-                            = Mathf.Clamp(foodHealthStats[j],
-                            dfltHealthStats[arrIdxs[i], 0],
-                            dfltHealthStats[arrIdxs[i], 9]);
-                    }
+					{
+						healthStats[arrIdxs[i], j]
+							= Mathf.Clamp(foodHealthStats[j],
+							dfltHealthStats[arrIdxs[i], 0],
+							dfltHealthStats[arrIdxs[i], 9]);
+					}
 				}
 				healthStats[(int)HealthName.Level, 1] = 1f;
 			}

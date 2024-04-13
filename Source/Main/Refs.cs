@@ -32,7 +32,7 @@ namespace NeedBarOverflow
 						" expected but failed to load."));
 			}
 		}
-        /*
+		/*
 		// VFE Anvients patch is disabled 
 		// because the "Disable Need Overflow with some apparel" setting should be enough
 		private static void VFEAncients()
@@ -61,5 +61,5 @@ namespace NeedBarOverflow
 				null, m_VFEAncients_HasPower, false);
 		}
 		*/
-    }
+	}
 }

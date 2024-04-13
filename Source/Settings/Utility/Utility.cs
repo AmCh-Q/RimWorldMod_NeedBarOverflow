@@ -144,14 +144,14 @@ namespace NeedBarOverflow.Needs
 			float f1 = Setting_Common.overflow[needType];
 			bool b1 = f1 > 0f;
 			f1 = (b1 ? f1 : (0f - f1));
-            string numString = f1.CustomToString(true, true);
-            SettingLabel sl;
+			string numString = f1.CustomToString(true, true);
+			SettingLabel sl;
 			if (b1)
-                sl = new SettingLabel(needType.Name, Strings.OverfPerc);
+				sl = new SettingLabel(needType.Name, Strings.OverfPerc);
 			else
-                sl = new SettingLabel(needType.Name, Strings.OverfEnabled);
-            ls.CheckboxLabeled(sl.TranslatedLabel(numString), ref b1, sl.TranslatedTip(numString));
-            ls.Gap(ls.verticalSpacing * -0.5f);
+				sl = new SettingLabel(needType.Name, Strings.OverfEnabled);
+			ls.CheckboxLabeled(sl.TranslatedLabel(numString), ref b1, sl.TranslatedTip(numString));
+			ls.Gap(ls.verticalSpacing * -0.5f);
 			if (b1)
 			{
 				AddNumSetting(ls, ref f1, true, 

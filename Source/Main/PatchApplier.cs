@@ -9,11 +9,12 @@
 				return;
 			Debug.Message("Applying Patches...");
 			//General Patches
-			GenUI_.BottomPart						.Toggle();
-			GenUI_.DrawStatusLevel					.Toggle();
-			Need_.CurLevel							.Toggle();
-			Need_.DrawOnGUI							.Toggle();
-			BeautyUtility_.AverageBeautyPerceptible	.Toggle();
+			SavedGameLoaderNow_.LoadGameFromSaveFileNow	.Toggle();
+			GenUI_.BottomPart							.Toggle();
+			GenUI_.DrawStatusLevel						.Toggle();
+			Need_.CurLevel								.Toggle();
+			Need_.DrawOnGUI								.Toggle();
+			BeautyUtility_.AverageBeautyPerceptible		.Toggle();
 			//Setting_Food
 			Need_Food_.NutritionWanted				.Toggle();
 			FloatMenuMakerMap_.AddHumanlikeOrders	.Toggle();

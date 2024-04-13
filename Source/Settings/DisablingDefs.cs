@@ -18,6 +18,8 @@ namespace NeedBarOverflow.Needs
 			fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>("pawn");
 		public static bool CanOverflow(Need n)
 			=> DisablingDefs.CanOverflow(fr_needPawn(n));
+		public static bool CanOverflow(Pawn p)
+			=> DisablingDefs.CanOverflow(p);
 		public static class DisablingDefs
 		{
 			private static readonly string suffix = "DISABLED";

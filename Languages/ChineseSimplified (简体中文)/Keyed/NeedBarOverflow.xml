@@ -68,7 +68,7 @@
   <NBO.Need_Joy.FastDrain>娱乐值溢出后更快下降：{0}效果</NBO.Need_Joy.FastDrain>
   <NBO.Need_Joy.FastDrain_Tip>如果小人的娱乐值大于100%，他的娱乐值下降速度将增加({0} × 溢出值)。此设置越高、娱乐值越高，娱乐值下降地越快。</NBO.Need_Joy.FastDrain_Tip>
   <NBO.Need_Joy.SlowGain>娱乐值溢出后娱乐效率更低：{0}效果</NBO.Need_Joy.SlowGain>
-  <NBO.Need_Joy.SlowGain_Tip>如果小人的娱乐值大于100%，他的娱乐效率被除以({0} × 溢出值 + 100%)。此设置越高、娱乐值越高，娱乐效率越低。</NBO.Need_Joy.SlowGain_Tip>
+  <NBO.Need_Joy.SlowGain_Tip>如果小人的娱乐值大于100%，他的娱乐效率将被除以({0} × 溢出值 + 100%)。此设置越高、娱乐值越高，娱乐效率越低。</NBO.Need_Joy.SlowGain_Tip>
 
   <NBO.Need_Mood.OverfEnabled>启用心情值溢出</NBO.Need_Mood.OverfEnabled>
   <NBO.Need_Mood.OverfEnabled_Tip>允许小人的心情值溢出</NBO.Need_Mood.OverfEnabled_Tip>

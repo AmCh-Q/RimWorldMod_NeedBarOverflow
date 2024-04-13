@@ -20,7 +20,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			= typeof(Need_Food)
 			.Method(nameof(Need_Food.NeedInterval));
 		private static readonly TransIL transpiler = Transpiler;
-		private static readonly Dictionary<Pawn, float>
+		public static readonly Dictionary<Pawn, float>
 			pawnsWithFoodOverflow = new Dictionary<Pawn, float>();
 		public static void Toggle()
 			=> Toggle(Setting_Food.AffectHealth);
@@ -31,44 +31,56 @@ namespace NeedBarOverflow.Patches.Need_Food_
 					transpiler: transpiler);
 			else
 				Unpatch(ref patched, original: original);
-			ResetHediff();
+			if (Current.ProgramState == ProgramState.Playing)
+				ResetHediff();
 		}
 		public static void ResetHediff()
 		{
-			if (!patched.HasValue)
+			pawnsWithFoodOverflow.Clear();
+			foreach (Pawn pawn in Find.WorldPawns.AllPawnsAliveOrDead)
+				if (HasHediff(pawn))
+					pawnsWithFoodOverflow.TryAdd(pawn, -1);
+			foreach (Map map in Find.Maps)
+				foreach (Pawn pawn in map.mapPawns.AllPawns)
+					if (HasHediff(pawn))
+						pawnsWithFoodOverflow.TryAdd(pawn, -1);
+			Pawn[] pawnArr = pawnsWithFoodOverflow.Keys.ToArray();
+			if (patched.HasValue)
 			{
-				ClearHediff();
-				return;
+				foreach (Pawn pawn in pawnArr)
+					UpdateHediff(pawn);
 			}
-			foreach (Pawn pawn in pawnsWithFoodOverflow.Keys.ToArray())
+			else
 			{
-				pawnsWithFoodOverflow[pawn] = -1f;
-				UpdateHediff(pawn);
+				foreach (Pawn pawn in pawnArr)
+					RemoveHediff(pawn, false);
+				pawnsWithFoodOverflow.Clear();
 			}
 		}
-		public static void ClearHediff()
+		private static bool HasHediff(Pawn pawn)
+			=> pawn.health?.hediffSet.HasHediff(Refs.FoodOverflow) ?? false;
+		private static void RemoveHediff(Pawn pawn, bool removeFromList = true)
 		{
-			foreach (Pawn pawn in pawnsWithFoodOverflow.Keys)
-			{
 #if (v1_2 || v1_3 || v1_4)
-				Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
-				if (hediff != null)
-					pawn.health.RemoveHediff(hediff);
+			Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
+			if (hediff != null)
+				pawn.health.RemoveHediff(hediff);
 #else
-				if (pawn.health.hediffSet.TryGetHediff(Refs.FoodOverflow, out Hediff hediff))
-					pawn.health.RemoveHediff(hediff);
+			if (pawn.health.hediffSet.TryGetHediff(Refs.FoodOverflow, out Hediff hediff))
+				pawn.health.RemoveHediff(hediff);
 #endif
-			}
-			pawnsWithFoodOverflow.Clear();
+			if (removeFromList)
+				pawnsWithFoodOverflow.Remove(pawn);
 		}
 		public static void UpdateHediff(Pawn pawn)
 		{
 			Need_Food need = pawn?.needs?.food;
 			if (need == null || pawn.Destroyed)
-            {
-                pawnsWithFoodOverflow.Remove(pawn);
-                return;
-            }
+			{
+				RemoveHediff(pawn);
+				return;
+			}
+			pawnsWithFoodOverflow[pawn] = -1f;
 			UpdateHediff(need.CurLevel, need, pawn);
 		}
 #if (v1_2 || v1_3 || v1_4)
@@ -76,40 +88,19 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			fr_visible = AccessTools.FieldRefAccess<Hediff, bool>(
 			typeof(Hediff).GetField("visible", Consts.bindingflags));
 #endif
-        private static void UpdateHediff(
+		private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
 		{
 			Settings s = PatchApplier.s;
-            Pawn_HealthTracker health = pawn?.health;
+			Pawn_HealthTracker health = pawn?.health;
 			Hediff hediff;
-			if (health?.hediffSet == null)
+			if (newValue <= need.MaxLevel || !Setting_Common.CanOverflow(pawn))
 			{
-				pawnsWithFoodOverflow.Remove(pawn);
-				return;
-            }
-			if (newValue <= need.MaxLevel || Setting_Common.CanOverflow(need))
-			{
-#if (v1_2 || v1_3 || v1_4)
-				if (pawnsWithFoodOverflow.Remove(pawn))
-				{
-					hediff = health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
-					if (hediff != null)
-						health.RemoveHediff(hediff);
-				}
-#else
-				if (pawnsWithFoodOverflow.Remove(pawn) &&
-					health.hediffSet.TryGetHediff(Refs.FoodOverflow, out hediff))
-					health.RemoveHediff(hediff);
-#endif
+				if (newValue > need.MaxLevel)
+					need.CurLevel = need.MaxLevel;
+				RemoveHediff(pawn);
 				return;
 			}
-#if (v1_2 || v1_3 || v1_4)
-			hediff = health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
-			if (hediff == null)
-				hediff = health.AddHediff(Refs.FoodOverflow);
-#else
-			hediff = health.GetOrAddHediff(Refs.FoodOverflow);
-#endif
 			if (!pawnsWithFoodOverflow.TryGetValue(pawn, out float effectMultiplier) ||
 				effectMultiplier < 0f)
 			{
@@ -121,6 +112,13 @@ namespace NeedBarOverflow.Patches.Need_Food_
 					effectMultiplier = 1f;
 				pawnsWithFoodOverflow[pawn] = effectMultiplier;
 			}
+#if (v1_2 || v1_3 || v1_4)
+			hediff = health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
+			if (hediff == null)
+				hediff = health.AddHediff(Refs.FoodOverflow);
+#else
+			hediff = health.GetOrAddHediff(Refs.FoodOverflow);
+#endif
 			hediff.Severity = (need.CurLevelPercentage - 1) * effectMultiplier;
 			if (!hediff.Visible && hediff.Severity > 
 				(Setting_Food.EffectStat(StatName_Food.ShowHediffLvl) - 1f))

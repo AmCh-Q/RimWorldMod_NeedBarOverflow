@@ -17,7 +17,7 @@ namespace NeedBarOverflow
 			{ "NBO.Need_Food.OverflowBonus_Tip", "NBO.FoodOverfVal_Tip"},
 			{ "NBO.Need_Food.DisableEating", "NBO.FoodOverfDisableEating"},
 			{ "NBO.Need_Food.DisableEating_Tip", "NBO.FoodOverfDisableEating_Tip"},
-            { "NBO.NoOverf.Race", "NBO.NoFoodOverfRace"},
+			{ "NBO.NoOverf.Race", "NBO.NoFoodOverfRace"},
 			{ "NBO.NoOverf.Race_Tip", "NBO.NoFoodOverfRace_Tip"},
 			{ "NBO.NoOverf.Hediff", "NBO.NoFoodOverfHediff"},
 			{ "NBO.NoOverf.Hediff_Tip", "NBO.NoFoodOverfHediff_Tip"},
@@ -133,7 +133,7 @@ namespace NeedBarOverflow
 			{ "NBO.Need_Sadism.OverfEnabled_Tip", "NBO.SadismOverfEnabled_Tip"},
 			{ "NBO.Need_Sadism.OverfPerc", "NBO.SadismOverfPerc"},
 			{ "NBO.Need_Sadism.OverfPerc_Tip", "NBO.SadismOverfPerc_Tip"},
-        };
+		};
 
 		internal static string MyTranslate(
 			this string str, params NamedArgument[] args)
@@ -147,7 +147,7 @@ namespace NeedBarOverflow
 				backup.TryTranslate(out result))
 				return result;
 			Debug.Warning("Translation key and replacement for [" + key + "] not found.");
-            return key.Translate();
+			return key.Translate();
 		}
 	}
 }
