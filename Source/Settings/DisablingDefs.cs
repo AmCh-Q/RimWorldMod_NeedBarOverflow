@@ -46,8 +46,8 @@ namespace NeedBarOverflow.Needs
 					return canOverflowCache;
 				pawnIdCache = thingId;
 				canOverflowCache =
-					//(Refs.VFEAncients_HasPower == null ||
-					//!Refs.VFEAncients_HasPower(p)) &&
+					(Refs.VFEAncients_HasPower == null ||
+					!Refs.VFEAncients_HasPower(p)) &&
 					CheckPawnRace(p) &&
 					CheckPawnApparel(p) &&
 					CheckPawnHealth(p);
