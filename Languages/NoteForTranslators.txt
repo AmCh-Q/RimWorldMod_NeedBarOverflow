@@ -8,6 +8,7 @@
 # 1. Back up your translation file, then copy it to the same directory as this one
 # 2. Rename this file's end from ".txt" to ".py"
 # 3. Right click this file and run with python.exe
+# Thank you for help translating my mod!
 
 # 如果你并不打算翻译这个模组，你可以忽略这个文件。
 # 如果你在2024年4月后第一次尝试翻译这个模组，你也可以忽略这个文件。
@@ -18,6 +19,7 @@
 # 1. 先备份好你的翻译文件，把它复制到同路径下
 # 2. 把这个文件后缀改成.py
 # 3. 右键使用python.exe运行
+# 感谢你翻译我的模组！
 
 replacement_keys = [
   ['NBO.RestartReq_tip', 'NBO.RestartReq_Tip'],
