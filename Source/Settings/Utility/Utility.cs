@@ -31,9 +31,9 @@ namespace NeedBarOverflow.Needs
 				float txt_min = 0f, float txt_max = float.PositiveInfinity,
 				string name = null, string tip = null, bool showAsPerc = false)
 		{
-			string numString = num.CustomToString(showAsPerc, translate: true);
-			string txt_min_str = txt_min.CustomToString(showAsPerc, translate: true);
-			string txt_max_str = txt_max.CustomToString(showAsPerc, translate: true);
+			string numString = num.CustomToString(showAsPerc, true);
+			string txt_min_str = txt_min.CustomToString(showAsPerc, true);
+			string txt_max_str = txt_max.CustomToString(showAsPerc, true);
 			if (!name.NullOrEmpty())
 			{
 				string labeltxt = name.MyTranslate(numString);
@@ -50,7 +50,7 @@ namespace NeedBarOverflow.Needs
 					TooltipHandler.TipRegion(new Rect(
 						0, ls.CurHeight, ls.ColumnWidth,
 						Text.LineHeight * 1.2f),
-						tip.Translate(numString));
+						tip.MyTranslate(numString));
 				ls.Gap(ls.verticalSpacing * 1.5f);
 			}
 			float mul = (showAsPerc ? 100f : 1f);
@@ -144,13 +144,14 @@ namespace NeedBarOverflow.Needs
 			float f1 = Setting_Common.overflow[needType];
 			bool b1 = f1 > 0f;
 			f1 = (b1 ? f1 : (0f - f1));
-			SettingLabel sl;
+            string numString = f1.CustomToString(true, true);
+            SettingLabel sl;
 			if (b1)
-				sl = new SettingLabel(needType.Name, Strings.OverfPerc);
+                sl = new SettingLabel(needType.Name, Strings.OverfPerc);
 			else
-				sl = new SettingLabel(needType.Name, Strings.OverfEnabled);
-			ls.CheckboxLabeled(sl.TranslatedLabel(), ref b1, sl.TranslatedTip());
-			ls.Gap(ls.verticalSpacing * -0.5f);
+                sl = new SettingLabel(needType.Name, Strings.OverfEnabled);
+            ls.CheckboxLabeled(sl.TranslatedLabel(numString), ref b1, sl.TranslatedTip(numString));
+            ls.Gap(ls.verticalSpacing * -0.5f);
 			if (b1)
 			{
 				AddNumSetting(ls, ref f1, true, 

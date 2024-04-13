@@ -44,8 +44,8 @@ namespace NeedBarOverflow.Needs
 					return canOverflowCache;
 				pawnIdCache = thingId;
 				canOverflowCache =
-					(Refs.VFEAncients_HasPower == null ||
-					!Refs.VFEAncients_HasPower(p)) &&
+					//(Refs.VFEAncients_HasPower == null ||
+					//!Refs.VFEAncients_HasPower(p)) &&
 					CheckPawnRace(p) &&
 					CheckPawnApparel(p) &&
 					CheckPawnHealth(p);
@@ -119,13 +119,13 @@ namespace NeedBarOverflow.Needs
 				Dictionary<string, Def> defDict = GetDefDict(defType);
 				for (int i = 0; i < strArr.Length; i++)
 				{
-					string key = strArr[i].Trim().ToLowerInvariant();
-					if (defDict.TryGetValue(key, out Def def))
+					if (defDict.TryGetValue(
+						strArr[i].Trim().ToLowerInvariant(), 
+						out Def def))
 					{
-						string defName = def.defName;
-						if (key != defName.Trim().ToLowerInvariant())
-							strArr[i] = string.Concat(strArr[i], " (", defName, ")");
-						strArr[i] = strArr[i].Colorize(ColoredText.NameColor);
+						strArr[i] = string.Concat(
+							def.LabelCap, " (", def.defName, ")")
+							.Colorize(ColoredText.NameColor);
 					}
 				}
 				string colorized = string.Join(",", strArr);
@@ -167,7 +167,7 @@ namespace NeedBarOverflow.Needs
 					string s1 = disablingDefs_str[(int)defType] ?? dfltDisablingDefNames[(int)defType];
 					bool b1 = s1.EndsWith(suffix);
 					bool b2 = !b1;
-					SettingLabel sl = new SettingLabel(nameof(Need), Strings.NoOverf_ + defType.ToString());
+					SettingLabel sl = new SettingLabel(string.Empty, Strings.NoOverf_ + defType.ToString());
 					ls.CheckboxLabeled(sl.TranslatedLabel(), ref b2, sl.TranslatedTip());
 					if (b2)
 					{

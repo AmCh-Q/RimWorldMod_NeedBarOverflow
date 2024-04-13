@@ -13,8 +13,8 @@ namespace NeedBarOverflow
 		public const string
 			Space = " ",
 			Name = "NBO.Name",
-			RestartReq = "NBO.RestartReq_tip",
-			RestartNReq = "NBO.RestartNReq_tip",
+			RestartReq = "NBO.RestartReq_Tip",
+			RestartNReq = "NBO.RestartNReq_Tip",
 
 			overflow = nameof(overflow),
 			overflowStats = nameof(overflowStats),

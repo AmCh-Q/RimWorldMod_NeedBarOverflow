@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
-using HarmonyLib;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow
@@ -13,13 +9,13 @@ namespace NeedBarOverflow
 		public static TraitDef Gourmand;
 		public static PawnCapacityDef Eating;
 		public static HediffDef FoodOverflow;
-		public static Func<Thing, bool> VFEAncients_HasPower;
+		//public static Func<Thing, bool> VFEAncients_HasPower;
 		public static void Init()
 		{
 			InitDef(ref Gourmand, nameof(Gourmand));
 			InitDef(ref Eating, nameof(Eating));
 			InitDef(ref FoodOverflow, nameof(FoodOverflow));
-			VFEAncients();
+			//VFEAncients();
 			initialized = true;
 		}
 		private static void InitDef<T>(
@@ -36,6 +32,9 @@ namespace NeedBarOverflow
 						" expected but failed to load."));
 			}
 		}
+        /*
+		// VFE Anvients patch is disabled 
+		// because the "Disable Need Overflow with some apparel" setting should be enough
 		private static void VFEAncients()
 		{
 			// VFE-Ancients Compatibility
@@ -61,5 +60,6 @@ namespace NeedBarOverflow
 				Expression.GetFuncType(new[] { typeof(Thing), typeof(bool) }),
 				null, m_VFEAncients_HasPower, false);
 		}
-	}
+		*/
+    }
 }

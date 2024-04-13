@@ -40,7 +40,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				ClearHediff();
 				return;
 			}
-			foreach (Pawn pawn in new List<Pawn>(pawnsWithFoodOverflow.Keys))
+			foreach (Pawn pawn in pawnsWithFoodOverflow.Keys.ToArray())
 			{
 				pawnsWithFoodOverflow[pawn] = -1f;
 				UpdateHediff(pawn);
@@ -64,8 +64,11 @@ namespace NeedBarOverflow.Patches.Need_Food_
 		public static void UpdateHediff(Pawn pawn)
 		{
 			Need_Food need = pawn?.needs?.food;
-			if (need == null)
-				return;
+			if (need == null || pawn.Destroyed)
+            {
+                pawnsWithFoodOverflow.Remove(pawn);
+                return;
+            }
 			UpdateHediff(need.CurLevel, need, pawn);
 		}
 #if (v1_2 || v1_3 || v1_4)
@@ -73,13 +76,18 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			fr_visible = AccessTools.FieldRefAccess<Hediff, bool>(
 			typeof(Hediff).GetField("visible", Consts.bindingflags));
 #endif
-		private static void UpdateHediff(
+        private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
 		{
 			Settings s = PatchApplier.s;
-			Pawn_HealthTracker health = pawn.health;
+            Pawn_HealthTracker health = pawn?.health;
 			Hediff hediff;
-			if (newValue <= need.MaxLevel)
+			if (health?.hediffSet == null)
+			{
+				pawnsWithFoodOverflow.Remove(pawn);
+				return;
+            }
+			if (newValue <= need.MaxLevel || Setting_Common.CanOverflow(need))
 			{
 #if (v1_2 || v1_3 || v1_4)
 				if (pawnsWithFoodOverflow.Remove(pawn))
