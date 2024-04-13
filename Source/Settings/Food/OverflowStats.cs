@@ -104,17 +104,6 @@ namespace NeedBarOverflow.Needs
 				if (statsB.TryGetValue(new IntVec2(0, 5), out f1))
 					overflowStats[(int)StatName_Food.ShowHediffLvl] = f1;
 			}
-			static OverflowStats()
-			{
-				// StatName_Food.OverflowBonus
-				// StatName_Food.DisableEating
-				// StatName_Food.NonHumanMult
-				// StatName_Food.GourmandMult
-				// StatName_Food.ShowHediffLvl
-				dfltStats = new float[] { 1f, 1f, 0.25f, 0.25f, 1.2f };
-				overflowStats = (float[])dfltStats.Clone();
-			}
-			public OverflowStats() { }
 		}
 	}
 }

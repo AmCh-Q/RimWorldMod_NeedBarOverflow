@@ -78,8 +78,16 @@ namespace NeedBarOverflow.Needs
 			}
 		}
 		static OverflowStats()
-		{
-			dfltStats = new float[] { -0.5f, -0.5f }; // FastDrain, SlowGain
+        {
+            // StatName_Food.OverflowBonus
+            // StatName_Food.DisableEating
+            // StatName_Food.NonHumanMult
+            // StatName_Food.GourmandMult
+            // StatName_Food.ShowHediffLvl
+			if (typeof(T) == typeof(Need_Food))
+				dfltStats = new float[] { 1f, 1f, 0.25f, 0.25f, 1.2f };
+			else
+				dfltStats = new float[] { -0.5f, -0.5f }; // FastDrain, SlowGain
 			overflowStats = (float[])dfltStats.Clone();
 		}
 		public OverflowStats() { }
