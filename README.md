@@ -1,6 +1,7 @@
 # Need Bar Overflow
 This is a Mod for the game [RimWorld](https://store.steampowered.com/app/294100).  
-[Main Page On Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2566316158)  
+[Main Page on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2566316158)
+[Source Code on GitHub](https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow)
 
 ## Install Mod Locally
 1. Make sure you have installed RimWorld game version 1.2-1.5, pre-1.2 versions of the game are not supported due to lack of Harmony support.  
@@ -15,7 +16,8 @@ This mod requires [RimRef](https://www.nuget.org/packages/Krafs.Rimworld.Ref) an
 
 # 需求条溢出
 这个是为游戏“[环世界](https://store.steampowered.com/app/294100)”制作的一个模组。  
-[Steam创意工坊主页在这](https://steamcommunity.com/sharedfiles/filedetails/?id=2566316158)  
+[Steam创意工坊主页](https://steamcommunity.com/sharedfiles/filedetails/?id=2566316158)
+[源代码在GitHub](https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow)
 
 ## 本地安装
 1. 确认你安装了环世界1.2-1.5版本，1.1以前的版本因为Harmony不支持而无法运行此模组；  
