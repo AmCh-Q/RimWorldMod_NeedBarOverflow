@@ -1,4 +1,6 @@
-﻿namespace NeedBarOverflow.Patches
+﻿using NeedBarOverflow.Patches.ModCompat;
+
+namespace NeedBarOverflow.Patches
 {
 	public static class PatchApplier
 	{
@@ -56,7 +58,14 @@
 			//Need_Play
 			Need_Play_.Play.Toggle();
 #endif
-			Debug.Message("Done Applying Patches.");
+			ApplyModPatches();
+            Debug.Message("Done Applying Patches.");
 		}
+		public static void ApplyModPatches()
+        {
+            //CM Color Coded Mood Bar [1.1+]
+            //https://steamcommunity.com/sharedfiles/filedetails/?id=2006605356
+            CM_Color_Coded_Mood_Bar.Toggle();
+        }
 	}
 }

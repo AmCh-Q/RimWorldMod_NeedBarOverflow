@@ -6,11 +6,11 @@ using HarmonyLib;
 
 namespace NeedBarOverflow.Patches
 {
-	// In many parts of the game (especiall when drawing UI), the games expects Need.CurLevelPercentage to be between 0-1
-	// They'd behave unexpected otherwise
-	// This patch inserts a Mathf.Max(value,1f) call after Need.CurLevelPercentage to correct that
+    // In many parts of the game (especiall when drawing UI), the game expects Need.CurLevelPercentage to be between 0-1
+    // If Need.CurLevelPercentage > 1, the UI may be drawn out of the box
+    // This patch inserts a Mathf.Min(value,1f) call after Need.CurLevelPercentage to correct that
 
-	using static Utility;
+    using static Utility;
 	public static class Add1UpperBound
 	{
 		public static readonly

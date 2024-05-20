@@ -33,6 +33,7 @@
     <Compile Include="Compatibility\Savefilebackcompat.cs" />
     <Compile Include="Compatibility\TranslateBackCompat.cs" />
     <Compile Include="Main\Consts.cs" />
+    <Compile Include="Patches\ModCompat\CM Color Coded Mood Bar.cs" />
     <Compile Include="Patches\SavedGameLoaderNow_.cs" />
     <Compile Include="Settings\Abstract\OverflowStats.cs" />
     <Compile Include="Settings\Settings.cs" />
