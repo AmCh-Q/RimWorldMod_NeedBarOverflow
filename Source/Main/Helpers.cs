@@ -13,6 +13,7 @@ namespace NeedBarOverflow
 			method.NotNull(name);
 			return method;
 		}
+
 		internal static MethodInfo Getter(this Type type, string name)
 		{
 			MethodInfo getter = type
@@ -21,6 +22,7 @@ namespace NeedBarOverflow
 			getter.NotNull(name);
 			return getter;
 		}
+
 		internal static MethodInfo Setter(this Type type, string name)
 		{
 			MethodInfo setter = type
@@ -29,6 +31,7 @@ namespace NeedBarOverflow
 			setter.NotNull(name);
 			return setter;
 		}
+
 		internal static FieldInfo Field(this Type type, string name)
 		{
 			FieldInfo field = type
@@ -36,23 +39,40 @@ namespace NeedBarOverflow
 			field.NotNull(name);
 			return field;
 		}
-		internal static float CustomRound(this float d)
-		{
-			if (Mathf.Abs(d) <= 0.005f || float.IsNaN(d))
-				return 0;
-			else if (float.IsInfinity(d))
-				return d;
-			float scale = Mathf.Floor(Mathf.Log10(Mathf.Abs(d)));
-			scale = Mathf.Pow(10, scale - 2f);
-			scale = Mathf.Max(scale, 0.01f);
-			return scale * Mathf.Round(d / scale);
-		}
-		internal static string CustomToString(
+
+		internal static float SigFigScale(this float d, int numSigFig = 2)
+        {
+            if (float.IsInfinity(d) || float.IsNaN(d))
+                return 0f;
+            float scale = Mathf.Floor(Mathf.Log10(Mathf.Abs(d)));
+            scale = Mathf.Max(scale - numSigFig, -numSigFig);
+            return Mathf.Pow(10, scale);
+        }
+
+		internal static float RoundToMultiple(this float d, float roundTo)
+        {
+            if (float.IsInfinity(d) || roundTo == 0f)
+                return d;
+            if (float.IsNaN(d) || !float.IsFinite(roundTo))
+                return 0;
+            return roundTo * Mathf.Round(d / roundTo);
+        }
+
+        internal static float RoundToSigFig(this float d, int numSigFig = 2)
+        {
+            if (float.IsInfinity(d))
+                return d;
+            if (float.IsNaN(d))
+                return 0;
+            return RoundToMultiple(d, SigFigScale(d, numSigFig));
+        }
+
+        internal static string CustomToString(
 			this float d, bool showAsPerc, bool translate)
 		{
-			if (float.IsInfinity(d) && translate)
-				return "∞";
-			d = d.CustomRound();
+			if (!float.IsFinite(d))
+				return translate ? "∞" : d.ToString();
+			d = d.RoundToSigFig();
 			if (showAsPerc)
 				return Mathf.RoundToInt(d * 100f).ToStringCached() + "%";
 			if (d >= 10f)

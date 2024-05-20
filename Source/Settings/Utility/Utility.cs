@@ -73,31 +73,31 @@ namespace NeedBarOverflow.Needs
 #if (v1_2 || v1_3)
 				// Obsolete as of 1.4
 				num_pow = Widgets.HorizontalSlider(
-					rectSlider, (float)num_pow, 
+					rectSlider, num_pow, 
 					slider_min, slider_max);
 #elif (v1_4)
 				// Temporary for 1.4
 				// The nuget package alerts an error for this
 				// But if this is the only "error" it compiles correctly...
 				num_pow = Widgets.HorizontalSlider_NewTemp(
-					rectSlider, (float)num_pow, 
+					rectSlider, num_pow, 
 					slider_min, slider_max, 
 					leftAlignedLabel: txt_min_str, 
 					rightAlignedLabel: txt_max_str);
 #else
 				// For 1.5
 				num_pow = Widgets.HorizontalSlider(
-					rectSlider, (float)num_pow,
+					rectSlider, num_pow,
 					slider_min, slider_max,
 					leftAlignedLabel: txt_min_str,
 					rightAlignedLabel: txt_max_str);
 #endif
 				if (num_pow <= slider_min)
 					num = txt_min;
-				else if (num_pow >= slider_max)
+				else if (num_pow == slider_max)
 					num = txt_max;
 				else
-					num = Mathf.Pow(10f, num_pow).CustomRound();
+					num = Mathf.Pow(10f, num_pow).RoundToSigFig();
 			}
 			else
 			{
@@ -106,7 +106,7 @@ namespace NeedBarOverflow.Needs
 				num = Widgets.HorizontalSlider(
 					rectSlider, num, 
 					txt_min, txt_max
-					).CustomRound();
+					).RoundToSigFig();
 #elif (v1_4)
 				// Temporary for 1.4
 				// The nuget package alerts an error for this
@@ -115,14 +115,14 @@ namespace NeedBarOverflow.Needs
 					rectSlider, num, txt_min, txt_max, 
 					leftAlignedLabel: txt_min_str, 
 					rightAlignedLabel: txt_max_str
-					).CustomRound();
+					).RoundToSigFig();
 #else
 				// For 1.5
 				num = Widgets.HorizontalSlider(
 					rectSlider, num, txt_min, txt_max,
 					leftAlignedLabel: txt_min_str,
-					rightAlignedLabel: txt_max_str
-					).CustomRound();
+					rightAlignedLabel: txt_max_str,
+					roundTo: num.SigFigScale());
 #endif
 			}
 			ls.Gap(ls.verticalSpacing * 1.5f + Text.LineHeight);
@@ -143,13 +143,10 @@ namespace NeedBarOverflow.Needs
 			LsGap(ls);
 			float f1 = Setting_Common.overflow[needType];
 			bool b1 = f1 > 0f;
-			f1 = (b1 ? f1 : (0f - f1));
+			f1 = (b1 ? f1 : -f1);
 			string numString = f1.CustomToString(true, true);
-			SettingLabel sl;
-			if (b1)
-				sl = new SettingLabel(needType.Name, Strings.OverfPerc);
-			else
-				sl = new SettingLabel(needType.Name, Strings.OverfEnabled);
+			SettingLabel sl = new SettingLabel(needType.Name,
+                b1 ? Strings.OverfPerc : Strings.OverfEnabled);
 			ls.CheckboxLabeled(sl.TranslatedLabel(numString), ref b1, sl.TranslatedTip(numString));
 			ls.Gap(ls.verticalSpacing * -0.5f);
 			if (b1)
