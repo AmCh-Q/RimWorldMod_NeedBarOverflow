@@ -31,27 +31,27 @@ namespace NeedBarOverflow.Needs
 			{
 				typeof(ThingDef), typeof(ThingDef), typeof(HediffDef),
 			};
-			private static string[] disablingDefs_str = new string[3];
+			private static readonly string[] disablingDefs_str = new string[3];
 			public static readonly HashSet<Def>[] disablingDefs = new HashSet<Def>[3];
 			private static readonly Dictionary<string, Def>[] 
 				defsByDisableTypeCache = new Dictionary<string, Def>[3];
 			private static readonly Dictionary<StatName_DisableType, Pair<string, string>> 
 				colorizeCache = new Dictionary<StatName_DisableType, Pair<string, string>>();
-			private static int pawnIdCache = -1;
-			private static bool canOverflowCache = false;
+			private static int pawnIdCached = -1;
+			private static bool canOverflowCached = false;
 			public static bool CanOverflow(Pawn p)
 			{
 				int thingId = p.thingIDNumber;
-				if (thingId == pawnIdCache)
-					return canOverflowCache;
-				pawnIdCache = thingId;
-				canOverflowCache =
+				if (thingId == pawnIdCached)
+					return canOverflowCached;
+				pawnIdCached = thingId;
+				canOverflowCached =
 					(Refs.VFEAncients_HasPower == null ||
 					!Refs.VFEAncients_HasPower(p)) &&
 					CheckPawnRace(p) &&
 					CheckPawnApparel(p) &&
 					CheckPawnHealth(p);
-				return canOverflowCache;
+				return canOverflowCached;
 			}
 			public static bool CheckPawnRace(Pawn p)
 			{

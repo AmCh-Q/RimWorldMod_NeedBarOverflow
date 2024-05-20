@@ -11,7 +11,7 @@ namespace NeedBarOverflow.Patches.BeautyUtility_
 	using Needs;
 	// BeautyUtility.AverageBeautyPerceptible gets called whenever the instant beauty value is needed
 	// But it is slow due to needing to search many cells
-	// We cache the value for every 6 ticks (10 updates per second) to improve performance
+	// We cache the value for every 12 ticks (5 updates per second) to improve performance
 	// This patch is automatically disabled if Performance Optimizer mod is active
 	public static class AverageBeautyPerceptible
 	{
