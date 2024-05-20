@@ -46,8 +46,8 @@ namespace NeedBarOverflow.Needs
 					return canOverflowCached;
 				pawnIdCached = thingId;
 				canOverflowCached =
-					(Refs.VFEAncients_HasPower == null ||
-					!Refs.VFEAncients_HasPower(p)) &&
+				//	(Refs.VFEAncients_HasPower == null ||
+				//	!Refs.VFEAncients_HasPower(p)) &&
 					CheckPawnRace(p) &&
 					CheckPawnApparel(p) &&
 					CheckPawnHealth(p);
@@ -88,7 +88,10 @@ namespace NeedBarOverflow.Needs
 			private static Dictionary<string, Def> GetDefDict(StatName_DisableType statName)
 			{
 				if (!Refs.initialized)
-					return null;
+                {
+					Debug.Message("GetDefDict: Refs not initialized");
+                    return null;
+                }
 				Dictionary<string, Def> defDict = defsByDisableTypeCache[(int)statName];
 				if (defDict != default)
 					return defDict;
@@ -189,8 +192,11 @@ namespace NeedBarOverflow.Needs
 			public static void LoadDisabledDefs()
 			{
 				Debug.Message("DisablingDefs.LoadDisabledDefs() called");
-				if (!Refs.initialized)
-					return;
+                if (!Refs.initialized)
+                {
+                    Debug.Message("LoadDisabledDefs: Refs not initialized");
+                    return;
+                }
 				foreach (StatName_DisableType key
 					in Enum.GetValues(typeof(StatName_DisableType)))
 					ParseDisabledDefs(key, disablingDefs_str[(int)key]);

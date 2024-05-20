@@ -71,23 +71,20 @@ namespace NeedBarOverflow
 			this float d, bool showAsPerc, bool translate)
 		{
 			if (!float.IsFinite(d))
-				return translate ? "∞" : d.ToString();
+				return translate ? "∞" : d.ToString("N0");
 			d = d.RoundToSigFig();
-			if (showAsPerc)
-				d *= 100f;
-			string result;
-            float dAbs = Mathf.Abs(d);
-            if (dAbs > int.MaxValue)
-				result = d.ToString();
-			else if (dAbs >= 9.95f)
-                result = Mathf.RoundToInt(d).ToStringCached();
-            else if (dAbs >= 0.995f)
-                result = d.ToString("N1");
-            else
-                result = d.ToString("N2");
-			if (showAsPerc)
-				result += '%';
-			return result;
+            if (showAsPerc && !translate)
+                d *= 100f;
+            string formatStr;
+            if (showAsPerc && translate)
+				formatStr = "P0";
+			else if (Mathf.Abs(d) >= 9.95f)
+                formatStr = "N0";
+			else if (Mathf.Abs(d) >= 0.995f)
+                formatStr = "N1";
+			else
+                formatStr = "N2";
+			return d.ToString(formatStr);
 		}
 	}
 }

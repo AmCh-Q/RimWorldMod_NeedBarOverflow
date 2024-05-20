@@ -50,11 +50,12 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 			{
 				ThingDef thingDef = thing.def;
 				if (
-#if v1_5
-					thingDef == ThingDefOf.HemogenPack ||
+					!thingDef.IsNutritionGivingIngestible
+#if v1_4 || v1_5
+					|| thingDef.ingestible.specialThoughtDirect
+                    == ModDefOf.IngestedHemogenPack
 #endif
-					!thingDef.IsNutritionGivingIngestible || 
-					!pawn.RaceProps.CanEverEat(thing))
+                    || !pawn.RaceProps.CanEverEat(thing))
 					continue;
 				string ingestAction;
 				string ingestCommand = thingDef.ingestible.ingestCommandString;

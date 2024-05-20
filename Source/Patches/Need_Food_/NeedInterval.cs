@@ -58,15 +58,15 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			}
 		}
 		private static bool HasHediff(Pawn pawn)
-			=> pawn.health?.hediffSet.HasHediff(Refs.FoodOverflow) ?? false;
+			=> pawn.health?.hediffSet.HasHediff(ModDefOf.FoodOverflow) ?? false;
 		private static void RemoveHediff(Pawn pawn, bool removeFromList = true)
 		{
 #if (v1_2 || v1_3 || v1_4)
-			Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
+			Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(ModDefOf.FoodOverflow);
 			if (hediff != null)
 				pawn.health.RemoveHediff(hediff);
 #else
-			if (pawn.health.hediffSet.TryGetHediff(Refs.FoodOverflow, out Hediff hediff))
+            if (pawn.health.hediffSet.TryGetHediff(ModDefOf.FoodOverflow, out Hediff hediff))
 				pawn.health.RemoveHediff(hediff);
 #endif
 			if (removeFromList)
@@ -106,18 +106,18 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			{
 				if (!pawn.RaceProps.Humanlike)
 					effectMultiplier = Setting_Food.EffectStat(StatName_Food.NonHumanMult);
-				else if ((bool)(pawn.story?.traits?.HasTrait(Refs.Gourmand)))
+				else if ((bool)(pawn.story?.traits?.HasTrait(ModDefOf.Gourmand)))
 					effectMultiplier = Setting_Food.EffectStat(StatName_Food.GourmandMult);
 				else
 					effectMultiplier = 1f;
 				pawnsWithFoodOverflow[pawn] = effectMultiplier;
 			}
 #if (v1_2 || v1_3 || v1_4)
-			hediff = health.hediffSet.GetFirstHediffOfDef(Refs.FoodOverflow);
+			hediff = health.hediffSet.GetFirstHediffOfDef(ModDefOf.FoodOverflow);
 			if (hediff == null)
-				hediff = health.AddHediff(Refs.FoodOverflow);
+				hediff = health.AddHediff(ModDefOf.FoodOverflow);
 #else
-			hediff = health.GetOrAddHediff(Refs.FoodOverflow);
+            hediff = health.GetOrAddHediff(ModDefOf.FoodOverflow);
 #endif
 			hediff.Severity = (need.CurLevelPercentage - 1) * effectMultiplier;
 			if (!hediff.Visible && hediff.Severity > 

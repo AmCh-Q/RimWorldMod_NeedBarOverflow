@@ -77,8 +77,13 @@ namespace NeedBarOverflow.Needs
 							healthStats[(int)key, 0] = -healthStats[(int)key, 0] - 1f;
 					}
 					healthStats[(int)HealthName.Level, 1] = 1f;
-				}
-				if (Refs.initialized &&
+                }
+                if (!Refs.initialized)
+                {
+                    Debug.Message("HealthStats.ExposeData: Refs not initialized");
+                    return;
+                }
+                if (Refs.initialized &&
 					(Scribe.mode == LoadSaveMode.PostLoadInit ||
 					Scribe.mode == LoadSaveMode.Saving))
 					ApplyFoodHediffSettings();
@@ -204,7 +209,7 @@ namespace NeedBarOverflow.Needs
 					return;
 				for (int i = 1; i < 9; i++)
 				{
-					HediffStage stage = Refs.FoodOverflow.stages[i - 1];
+					HediffStage stage = ModDefOf.FoodOverflow.stages[i - 1];
 					stage.minSeverity = healthStats[(int)HealthName.Level, i] - 1f;
 					if (healthStats[(int)HealthName.HungerFactor, 0] >= 0f)
 						stage.hungerRateFactor 
@@ -232,7 +237,7 @@ namespace NeedBarOverflow.Needs
 					{
 						PawnCapacityModifier capMod = new PawnCapacityModifier
 						{
-							capacity = Refs.Eating,
+							capacity = ModDefOf.Eating,
 							offset = offset
 						};
 						stage.capMods.Add(capMod);

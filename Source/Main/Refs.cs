@@ -7,20 +7,47 @@ using Verse;
 
 namespace NeedBarOverflow
 {
-	internal static class Refs
+    [DefOf]
+    public static class ModDefOf
+    {
+        public static TraitDef Gourmand;
+        public static PawnCapacityDef Eating;
+        public static HediffDef FoodOverflow;
+#if v1_4 || v1_5
+        [MayRequireBiotech]
+        public static ThoughtDef IngestedHemogenPack;
+#endif
+        static ModDefOf()
+            => DefOfHelper.EnsureInitializedInCtor(typeof(ModDefOf));
+    }
+
+    internal static class Refs
 	{
 		public static bool initialized = false;
 		public static TraitDef Gourmand;
 		public static PawnCapacityDef Eating;
 		public static HediffDef FoodOverflow;
-		public static Func<Thing, bool> VFEAncients_HasPower;
 		public static void Init()
 		{
 			InitDef(ref Gourmand, nameof(Gourmand));
 			InitDef(ref Eating, nameof(Eating));
 			InitDef(ref FoodOverflow, nameof(FoodOverflow));
-			VFEAncients();
-			initialized = true;
+            if (ModDefOf.Gourmand == null)
+            {
+                Log.Error("ModDefOf.Gourmand null!");
+                ModDefOf.Gourmand = Gourmand;
+            }
+            if (ModDefOf.Eating == null)
+            {
+                Log.Error("ModDefOf.Eating null!");
+                ModDefOf.Eating = Eating;
+            }
+            if (ModDefOf.FoodOverflow == null)
+            {
+                Log.Error("ModDefOf.FoodOverflow null!");
+                ModDefOf.FoodOverflow = FoodOverflow;
+            }
+            initialized = true;
 		}
 		private static void InitDef<T>(
 			ref T def, string defName, 
@@ -35,7 +62,9 @@ namespace NeedBarOverflow
 						Strings.Space, defName, 
 						" expected but failed to load."));
 			}
-		}
+        }
+        /*
+        public static Func<Thing, bool> VFEAncients_HasPower;
 		private static void VFEAncients()
 		{
 			// VFE-Ancients Compatibility
@@ -61,5 +90,6 @@ namespace NeedBarOverflow
 				Expression.GetFuncType(new[] { typeof(Thing), typeof(bool) }),
 				null, m_VFEAncients_HasPower, false);
 		}
-	}
+		*/
+    }
 }

@@ -35,13 +35,14 @@ namespace NeedBarOverflow.Patches.FoodUtility_
 			if (!__result)
 				return;
 			ThingDef thingDef = inv.def;
-			if (
-#if v1_5
-				thingDef == ThingDefOf.HemogenPack ||
+			if (!thingDef.IsNutritionGivingIngestible
+#if v1_4 || v1_5
+                || thingDef.ingestible.specialThoughtDirect 
+				== ModDefOf.IngestedHemogenPack
 #endif
-				!thingDef.IsNutritionGivingIngestible ||
-				Need_Food_.Utility.CanConsumeMoreFood(pawn))
-				__result = false;
+                || Need_Food_.Utility.CanConsumeMoreFood(pawn)
+                )
+                __result = false;
         }
 	}
 }
