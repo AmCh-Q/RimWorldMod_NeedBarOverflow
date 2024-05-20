@@ -7,8 +7,8 @@ namespace NeedBarOverflow.Needs
 {
 	public enum StatName_DG
 	{
-		FastDrain = 0,
-		SlowGain = 1,
+		FastDrain,
+		SlowGain,
 	}
 	public class OverflowStats<T> : IExposable where T : Need
 	{

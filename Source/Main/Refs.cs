@@ -24,31 +24,12 @@ namespace NeedBarOverflow
     internal static class Refs
 	{
 		public static bool initialized = false;
-		public static TraitDef Gourmand;
-		public static PawnCapacityDef Eating;
-		public static HediffDef FoodOverflow;
-		public static void Init()
+        public static void Init()
 		{
-			InitDef(ref Gourmand, nameof(Gourmand));
-			InitDef(ref Eating, nameof(Eating));
-			InitDef(ref FoodOverflow, nameof(FoodOverflow));
-            if (ModDefOf.Gourmand == null)
-            {
-                Log.Error("ModDefOf.Gourmand null!");
-                ModDefOf.Gourmand = Gourmand;
-            }
-            if (ModDefOf.Eating == null)
-            {
-                Log.Error("ModDefOf.Eating null!");
-                ModDefOf.Eating = Eating;
-            }
-            if (ModDefOf.FoodOverflow == null)
-            {
-                Log.Error("ModDefOf.FoodOverflow null!");
-                ModDefOf.FoodOverflow = FoodOverflow;
-            }
             initialized = true;
-		}
+        }
+        // public static Func<Thing, bool> VFEAncients_HasPower;
+        /*
 		private static void InitDef<T>(
 			ref T def, string defName, 
 			bool force = true) where T : Def
@@ -63,8 +44,6 @@ namespace NeedBarOverflow
 						" expected but failed to load."));
 			}
         }
-        /*
-        public static Func<Thing, bool> VFEAncients_HasPower;
 		private static void VFEAncients()
 		{
 			// VFE-Ancients Compatibility

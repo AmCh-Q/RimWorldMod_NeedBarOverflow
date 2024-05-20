@@ -78,11 +78,6 @@ namespace NeedBarOverflow.Needs
 					}
 					healthStats[(int)HealthName.Level, 1] = 1f;
                 }
-                if (!Refs.initialized)
-                {
-                    Debug.Message("HealthStats.ExposeData: Refs not initialized");
-                    return;
-                }
                 if (Refs.initialized &&
 					(Scribe.mode == LoadSaveMode.PostLoadInit ||
 					Scribe.mode == LoadSaveMode.Saving))

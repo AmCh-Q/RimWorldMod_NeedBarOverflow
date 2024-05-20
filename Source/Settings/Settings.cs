@@ -91,11 +91,6 @@ namespace NeedBarOverflow
 			if (Scribe.mode == LoadSaveMode.LoadingVars &&
 				migrateSettings == 1)
 				MigrateSettings();
-            if (!Refs.initialized)
-            {
-                Debug.Message("Settings.ExposeData: Refs not initialized");
-                return;
-            }
             if (Refs.initialized && 
 				(Scribe.mode == LoadSaveMode.PostLoadInit || 
 				Scribe.mode == LoadSaveMode.Saving))

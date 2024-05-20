@@ -8,9 +8,9 @@ namespace NeedBarOverflow.Needs
 {
 	public enum StatName_DisableType
 	{
-		Race = 0,
-		Apparel = 1,
-		Hediff = 2,
+		Race,
+		Apparel,
+		Hediff,
 	}
 	public sealed partial class Setting_Common : IExposable
 	{
@@ -89,7 +89,7 @@ namespace NeedBarOverflow.Needs
 			{
 				if (!Refs.initialized)
                 {
-					Debug.Message("GetDefDict: Refs not initialized");
+					Debug.Warning("GetDefDict: Refs not initialized");
                     return null;
                 }
 				Dictionary<string, Def> defDict = defsByDisableTypeCache[(int)statName];
@@ -194,7 +194,7 @@ namespace NeedBarOverflow.Needs
 				Debug.Message("DisablingDefs.LoadDisabledDefs() called");
                 if (!Refs.initialized)
                 {
-                    Debug.Message("LoadDisabledDefs: Refs not initialized");
+                    Debug.Warning("LoadDisabledDefs: Refs not initialized");
                     return;
                 }
 				foreach (StatName_DisableType key

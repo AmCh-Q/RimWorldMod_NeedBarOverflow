@@ -8,11 +8,11 @@ namespace NeedBarOverflow.Needs
 {
 	public enum StatName_Food
 	{
-		OverflowBonus = 0,
-		DisableEating = 1,
-		NonHumanMult = 2,
-		GourmandMult = 3,
-		ShowHediffLvl = 4,
+		OverflowBonus,
+		DisableEating,
+		NonHumanMult,
+		GourmandMult,
+		ShowHediffLvl,
 	}
 	public sealed partial class Setting_Food : IExposable
 	{
