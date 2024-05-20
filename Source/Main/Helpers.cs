@@ -71,7 +71,7 @@ namespace NeedBarOverflow
 			this float d, bool showAsPerc, bool translate)
 		{
 			if (!float.IsFinite(d))
-				return translate ? "∞" : d.ToString("N0");
+				return translate ? "∞" : d.ToString("F0");
 			d = d.RoundToSigFig();
             if (showAsPerc && !translate)
                 d *= 100f;
@@ -79,11 +79,11 @@ namespace NeedBarOverflow
             if (showAsPerc && translate)
 				formatStr = "P0";
 			else if (Mathf.Abs(d) >= 9.95f)
-                formatStr = "N0";
+                formatStr = "F0";
 			else if (Mathf.Abs(d) >= 0.995f)
-                formatStr = "N1";
+                formatStr = "F1";
 			else
-                formatStr = "N2";
+                formatStr = "F2";
 			return d.ToString(formatStr);
 		}
 	}
