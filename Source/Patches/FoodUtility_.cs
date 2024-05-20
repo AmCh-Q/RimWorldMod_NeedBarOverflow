@@ -31,7 +31,17 @@ namespace NeedBarOverflow.Patches.FoodUtility_
 		// Then pawn will not ingest
 		// Otherwise __result will be unchanged
 		private static void Postfix(Pawn pawn, Thing inv, ref bool __result)
-			=> __result &= !inv.def.IsNutritionGivingIngestible
-				|| Need_Food_.Utility.CanConsumeMoreFood(pawn);
+		{
+			if (!__result)
+				return;
+			ThingDef thingDef = inv.def;
+			if (
+#if v1_5
+				thingDef == ThingDefOf.HemogenPack ||
+#endif
+				!thingDef.IsNutritionGivingIngestible ||
+				Need_Food_.Utility.CanConsumeMoreFood(pawn))
+				__result = false;
+        }
 	}
 }

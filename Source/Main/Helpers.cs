@@ -74,12 +74,20 @@ namespace NeedBarOverflow
 				return translate ? "∞" : d.ToString();
 			d = d.RoundToSigFig();
 			if (showAsPerc)
-				return Mathf.RoundToInt(d * 100f).ToStringCached() + "%";
-			if (d >= 10f)
-				return Mathf.RoundToInt(d).ToStringCached();
-			if (d >= 1f)
-				return d.ToString("N1");
-			return d.ToString("N2");
+				d *= 100f;
+			string result;
+            float dAbs = Mathf.Abs(d);
+            if (dAbs > int.MaxValue)
+				result = d.ToString();
+			else if (dAbs >= 9.95f)
+                result = Mathf.RoundToInt(d).ToStringCached();
+            else if (dAbs >= 0.995f)
+                result = d.ToString("N1");
+            else
+                result = d.ToString("N2");
+			if (showAsPerc)
+				result += '%';
+			return result;
 		}
 	}
 }

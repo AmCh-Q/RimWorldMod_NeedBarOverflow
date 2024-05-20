@@ -18,8 +18,8 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 		public static readonly MethodBase original
 			= typeof(FloatMenuMakerMap)
 			.Method("AddHumanlikeOrders");
-		private static readonly 
-			Action<Vector3, Pawn, List<FloatMenuOption>> 
+		private static readonly
+			Action<Vector3, Pawn, List<FloatMenuOption>>
 				postfix = Postfix;
 		public static void Toggle()
 			=> Toggle(Setting_Food.EffectEnabled(StatName_Food.DisableEating));
@@ -49,8 +49,12 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 			foreach (Thing thing in thingList)
 			{
 				ThingDef thingDef = thing.def;
-				if (!thingDef.IsNutritionGivingIngestible
-					|| !pawn.RaceProps.CanEverEat(thing))
+				if (
+#if v1_5
+					thingDef == ThingDefOf.HemogenPack ||
+#endif
+					!thingDef.IsNutritionGivingIngestible || 
+					!pawn.RaceProps.CanEverEat(thing))
 					continue;
 				string ingestAction;
 				string ingestCommand = thingDef.ingestible.ingestCommandString;
