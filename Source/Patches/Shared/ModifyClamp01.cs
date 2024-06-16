@@ -20,7 +20,7 @@ namespace NeedBarOverflow.Patches
 			Label[] jumpLabels = new Label[2];
 			for (int i = 0; i < 2; i++)
 				jumpLabels[i] = ilg.DefineLabel();
-			for (int i = 0; i < instructionList.Count - 1; i++)
+			for (int i = 0; i < instructionList.Count; i++)
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				if (!codeInstruction.Calls(m_Clamp01))

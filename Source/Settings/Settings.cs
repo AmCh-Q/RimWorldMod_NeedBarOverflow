@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow
 {
-	using Needs;
-	using System.Collections.Generic;
-	using static Needs.Utility;
-	public class Settings : ModSettings
+    using Needs;
+    using static Needs.Utility;
+    public class Settings : ModSettings
 	{
 		private static bool showHiddenSettings;
 		internal static int migrateSettings = 0;
@@ -100,11 +100,15 @@ namespace NeedBarOverflow
 		internal static void MigrateSettings()
 		{
 			Debug.Message("MigrateSettings() called");
-			Dictionary<IntVec2, bool> enabledB = new Dictionary<IntVec2, bool>();
-			Dictionary<IntVec2, float> statsB = new Dictionary<IntVec2, float>();
+			Dictionary<IntVec2, bool> enabledB = null;
+			Dictionary<IntVec2, float> statsB = null;
 			Scribe_Collections.Look(ref enabledB, nameof(enabledB), LookMode.Value, LookMode.Value);
 			Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
-			Setting_Common.MigrateSettings(enabledB);
+			if (enabledB is null)
+				enabledB = new Dictionary<IntVec2, bool>();
+            if (statsB is null)
+                statsB = new Dictionary<IntVec2, float>();
+            Setting_Common.MigrateSettings(enabledB);
 			Setting_Food.MigrateSettings(enabledB, statsB);
 			OverflowStats<Need_Rest>.MigrateSettings(enabledB, statsB, 1);
 			OverflowStats<Need_Joy>.MigrateSettings(enabledB, statsB, 2);

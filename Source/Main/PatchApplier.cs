@@ -1,7 +1,6 @@
-﻿using NeedBarOverflow.Patches.ModCompat;
-
-namespace NeedBarOverflow.Patches
+﻿namespace NeedBarOverflow.Patches
 {
+	using ModCompat;
 	public static class PatchApplier
 	{
 		public static Settings s;

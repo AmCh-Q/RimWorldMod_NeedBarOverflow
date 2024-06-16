@@ -10,7 +10,6 @@ namespace NeedBarOverflow.Patches.Need_Joy_
 {
 	using static Utility;
 	using Needs;
-	using System;
 
 	public static class GainJoy
 	{

@@ -11,9 +11,9 @@ namespace NeedBarOverflow.Needs
 	{
 		public static void ApplyFoodHediffSettings()
 			=> HealthStats.ApplyFoodHediffSettings();
-		private static class HealthStats
+        public static class HealthStats
 		{
-			private enum HealthName
+            public enum HealthName
 			{
 				Level = 0,
 				HungerFactor = 1,
@@ -22,7 +22,7 @@ namespace NeedBarOverflow.Needs
 				EatingOffset = 4,
 				VomitFreq = 5,
 			}
-			private static readonly float[,] dfltHealthStats = new float[6, 10]
+            public static readonly float[,] dfltHealthStats = new float[6, 10]
 			{
 				{ -0.5f, 1f, 1.2f, 1.4f, 1.6f, 1.8f, 2f, 3f, 5f, float.PositiveInfinity }, // HealthName.Level
 				{ -2f, 1f, 1.05f, 1.1f, 1.2f, 1.3f, 1.5f, 2f, 5f, float.PositiveInfinity }, // HealthName.HungerFactor
@@ -31,8 +31,8 @@ namespace NeedBarOverflow.Needs
 				{ 0f, 0.05f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 1f }, // HealthName.EatingOffset
 				{ -1f, 0f, 0f, 0f, 0f, 0.25f, 2f, 5f, 6f, 24f }, // HealthName.VomitFreq
 			};
-			private static readonly float[,] healthStats = (float[,])dfltHealthStats.Clone();
-			private static bool showDetails = false;
+            public static readonly float[,] healthStats = (float[,])dfltHealthStats.Clone();
+            public static bool showDetails = false;
 			public static bool AffectHealth
 				=> Enabled &&
 				Enum.GetValues(typeof(HealthName))

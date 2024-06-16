@@ -16,7 +16,7 @@ namespace NeedBarOverflow.Needs
 	}
 	public sealed partial class Setting_Food : IExposable
 	{
-		private sealed class OverflowStats : OverflowStats<Need_Food>
+        public sealed class OverflowStats : OverflowStats<Need_Food>
 		{
 			public override void ExposeData()
 			{

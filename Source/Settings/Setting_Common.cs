@@ -125,19 +125,22 @@ namespace NeedBarOverflow.Needs
 		internal static void MigrateSettings(
 			Dictionary<IntVec2, bool> enabledB)
 		{
-			List<bool> enabledA = new List<bool>(20);
-			List<float> statsA = new List<float>(20);
+			List<bool> enabledA = null;
+			List<float> statsA = null;
 			Scribe_Collections.Look(ref enabledA, nameof(enabledA), LookMode.Value);
 			Scribe_Collections.Look(ref statsA, nameof(statsA), LookMode.Value);
-			for (int i = 0; i < Mathf.Min(20, enabledA.Count, statsA.Count); i++)
-			{
-				if (migrationTypes[i] == null)
-					continue;
-				float stat = Mathf.Max(statsA[i], 1f);
-				stat = enabledA[i] ? stat : -stat;
-				overflow[migrationTypes[i]] = stat;
-			}
-			DisablingDefs.MigrateSettings(enabledB);
+			if (!(enabledA is null && statsA is null))
+            {
+                for (int i = 0; i < Mathf.Min(20, enabledA.Count, statsA.Count); i++)
+                {
+                    if (migrationTypes[i] == null)
+                        continue;
+                    float stat = Mathf.Max(statsA[i], 1f);
+                    stat = enabledA[i] ? stat : -stat;
+                    overflow[migrationTypes[i]] = stat;
+                }
+            }
+            DisablingDefs.MigrateSettings(enabledB);
 		}
 	}
 }

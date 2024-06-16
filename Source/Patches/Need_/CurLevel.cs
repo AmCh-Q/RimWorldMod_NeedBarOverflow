@@ -7,7 +7,6 @@ using System.Reflection.Emit;
 using UnityEngine;
 using HarmonyLib;
 using RimWorld;
-using Verse;
 
 namespace NeedBarOverflow.Patches.Need_
 {
@@ -72,7 +71,7 @@ namespace NeedBarOverflow.Patches.Need_
 					instructionList[i + 3].Calls(m_Clamp) &&
 					// There is an instruction after everything is done
 					//   (It's stfld but what it is doesn't matter)
-					instructionList.Count() > i + 4)
+					instructionList.Count > i + 4)
 				{
 					state = 1;
 					// First check if f_curLevelInt < new value

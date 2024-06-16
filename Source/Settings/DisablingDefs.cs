@@ -223,7 +223,7 @@ namespace NeedBarOverflow.Needs
 			public static void MigrateSettings(
 				Dictionary<IntVec2, bool> enabledB)
 			{
-				List<string> foodDisablingDefs = new List<string>();
+				List<string> foodDisablingDefs = null;
 				Scribe_Collections.Look(ref foodDisablingDefs, 
 					nameof(foodDisablingDefs), LookMode.Value);
 				if (foodDisablingDefs.NullOrEmpty() || foodDisablingDefs[0].NullOrEmpty())

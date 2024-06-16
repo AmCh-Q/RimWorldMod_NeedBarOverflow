@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
 
 namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 {
