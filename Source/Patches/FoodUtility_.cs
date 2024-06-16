@@ -36,7 +36,7 @@ namespace NeedBarOverflow.Patches.FoodUtility_
 				return;
 			ThingDef thingDef = inv.def;
 			if (!thingDef.IsNutritionGivingIngestible
-#if v1_4 || v1_5
+#if !v1_2 && !v1_3
                 || thingDef.ingestible.specialThoughtDirect 
 				== ModDefOf.IngestedHemogenPack
 #endif

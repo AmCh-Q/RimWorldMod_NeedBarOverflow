@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if !v1_2
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
@@ -90,3 +91,4 @@ namespace NeedBarOverflow.Patches.Need_Suppression_
 		}
 	}
 }
+#endif

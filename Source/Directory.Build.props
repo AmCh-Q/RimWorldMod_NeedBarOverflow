@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file will be automatically imported when building each project.
+So a lot of common properties are moved here.
+Additionally, the property BaseIntermediateOutputPath has to be set here, explanations below:
+1. MSBUildProjectExtensionsPath has to be unique for each individual project because each uses Nuget packages of different versions, and using the same MSBUildProjectExtensionsPath causes the Nuget packages to conflict with each other during builds.
+2. MSBUildProjectExtensionsPath is derived from BaseIntermediateOutputPath and cannot be changed in .csproj file (because it is loaded after importing Microsoft.Common.props), read: https://stackoverflow.com/q/75645721 , https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-by-directory?view=vs-2022#import-order
+3. Thus BaseIntermediateOutputPath has to be set in this file.
+4. Alternatively, we could import Microsoft.Common.props later, but that's difficult/impossible when we are using Microsoft.NET.Sdk.
+-->
+<Project>
+  <PropertyGroup>
+    <!-- Package properties
+    https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target -->
+    <Authors>AmCh</Authors>
+    <Copyright>Copyright © AmCh 2024</Copyright>
+    <PackageLicenseFile>..\LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>..\README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow.git</RepositoryUrl>
+    <!-- Common MSBuild project properties
+    https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties -->
+    <RootNamespace>NeedBarOverflow</RootNamespace>
+    <AssemblyName>Need Bar Overflow</AssemblyName>
+    <OutputPath>..\$(MSBuildProjectName)\Assemblies</OutputPath>
+    <BaseIntermediateOutputPath>obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <!-- Assembly attribute properties
+    https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#assembly-attribute-properties -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <!-- Publish-related properties
+    https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#publish-related-properties -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <!-- Code analysis properties
+    https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#code-analysis-properties -->
+    <AnalysisLevel>preview-recommended</AnalysisLevel>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- Language options
+    https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language -->
+    <LangVersion>latestMajor</LangVersion>
+    <Nullable>enable</Nullable>
+    <!-- Output options
+    https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/output -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetType>library</TargetType>
+    <!-- Code Generation Options
+    https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/code-generation -->
+    <DebugType>none</DebugType>
+    <Optimize Condition=" '$(Configuration)' != 'Debug' ">true</Optimize>
+    <Optimize Condition=" '$(Configuration)' == 'Debug' ">false</Optimize>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

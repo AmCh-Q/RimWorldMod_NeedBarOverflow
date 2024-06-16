@@ -39,13 +39,13 @@
 			Need_Comfort_.CurInstantLevel.Toggle();
 			//Outdoors
 			Need_Outdoors_.NeedInterval.Toggle();
-#if (v1_3 || v1_4 || v1_5)
+#if !v1_2
 			//Indoors
 			Need_Indoors_.NeedInterval.Toggle();
 			//Suppression
 			Need_Suppression_.DrawSuppressionBar.Toggle();
 #endif
-#if (v1_4 || v1_5)
+#if !v1_2 && !v1_3
 			//KillThirst
 			Need_KillThirst_.Notify_KilledPawn	.Toggle();
 			Need_KillThirst_.NeedInterval_Drain	.Toggle();
@@ -57,7 +57,7 @@
 			//Need_Play
 			Need_Play_.Play.Toggle();
 #endif
-			ApplyModPatches();
+            ApplyModPatches();
             Debug.Message("Done Applying Patches.");
 		}
 		public static void ApplyModPatches()

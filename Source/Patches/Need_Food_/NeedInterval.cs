@@ -61,7 +61,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			=> pawn.health?.hediffSet.HasHediff(ModDefOf.FoodOverflow) ?? false;
 		private static void RemoveHediff(Pawn pawn, bool removeFromList = true)
 		{
-#if (v1_2 || v1_3 || v1_4)
+#if v1_2 || v1_3 || v1_4
 			Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(ModDefOf.FoodOverflow);
 			if (hediff != null)
 				pawn.health.RemoveHediff(hediff);
@@ -83,7 +83,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			pawnsWithFoodOverflow[pawn] = -1f;
 			UpdateHediff(need.CurLevel, need, pawn);
 		}
-#if (v1_2 || v1_3 || v1_4)
+#if v1_2 || v1_3 || v1_4
 		private static readonly AccessTools.FieldRef<Hediff, bool>
 			fr_visible = AccessTools.FieldRefAccess<Hediff, bool>(
 			typeof(Hediff).GetField("visible", Consts.bindingflags));
@@ -112,7 +112,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 					effectMultiplier = 1f;
 				pawnsWithFoodOverflow[pawn] = effectMultiplier;
 			}
-#if (v1_2 || v1_3 || v1_4)
+#if v1_2 || v1_3 || v1_4
 			hediff = health.hediffSet.GetFirstHediffOfDef(ModDefOf.FoodOverflow);
 			if (hediff == null)
 				hediff = health.AddHediff(ModDefOf.FoodOverflow);
@@ -123,7 +123,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			if (!hediff.Visible && hediff.Severity > 
 				(Setting_Food.EffectStat(StatName_Food.ShowHediffLvl) - 1f))
 			{
-#if (v1_2 || v1_3 || v1_4)
+#if v1_2 || v1_3 || v1_4
 				fr_visible(hediff) = true;
 #else
 				hediff.SetVisible();

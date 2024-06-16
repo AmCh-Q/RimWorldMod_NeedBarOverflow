@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if !v1_2 && !v1_3
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
@@ -62,3 +63,4 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 		}
 	}
 }
+#endif
