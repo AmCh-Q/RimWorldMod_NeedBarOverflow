@@ -78,7 +78,7 @@ namespace NeedBarOverflow
 				d *= 100f;
 			d = d.RoundToSigFig();
 			string result;
-			if (Mathf.Abs(d) >= 9.95f)
+			if (showAsPerc || Mathf.Abs(d) >= 9.95f)
 			{
 				result = Mathf.RoundToInt(d).ToStringCached();
 			}
