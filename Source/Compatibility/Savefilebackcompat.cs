@@ -15,7 +15,7 @@ namespace NeedBarOverflow
 				return;
 			XmlDocument doc = new() { XmlResolver = null };
 			XmlReader reader = XmlReader.Create(
-				new StringReader(settingsFilePath),
+				new StreamReader(settingsFilePath),
 				new XmlReaderSettings() { XmlResolver = null }
 			);
 			doc.Load(reader);
