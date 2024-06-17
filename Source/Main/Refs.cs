@@ -52,7 +52,7 @@ namespace NeedBarOverflow
 		private static void VFEAncients()
 		{
 			// VFE-Ancients Compatibility
-			if (VFEAncients_HasPower  is not null)
+			if (VFEAncients_HasPower is not null)
 				return;
 			if (!ModLister.HasActiveModWithName("Vanilla Factions Expanded - Ancients"))
 				return;
