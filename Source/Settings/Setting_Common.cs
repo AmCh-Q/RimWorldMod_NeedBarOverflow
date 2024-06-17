@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,7 +10,7 @@ namespace NeedBarOverflow.Needs
 {
 	public sealed partial class Setting_Common : IExposable
 	{
-		private static readonly FrozenDictionary<Type, float> dfltOverflow = new Dictionary<Type, float>
+		private static readonly Dictionary<Type, float> dfltOverflow = new()
 		{
 			{ typeof(Need), -2f},
 			{ typeof(Need_Food), 3f },
@@ -37,12 +36,10 @@ namespace NeedBarOverflow.Needs
 			{ typeof(Need_MechEnergy), -2f },
 			{ typeof(Need_Play), -2f }
 	#endif
-		}.ToFrozenDictionary();
+		};
 
-		private static readonly FrozenDictionary<string, float> modsOverflow = new Dictionary<string, float>()
-		{
-			// Add Name and default setting of needs here
-		}.ToFrozenDictionary();
+		// Add Name and default setting of needs here
+		private static readonly Dictionary<string, float> modsOverflow = [];
 
 		private static Dictionary<Type, float> overflow = new(dfltOverflow);
 

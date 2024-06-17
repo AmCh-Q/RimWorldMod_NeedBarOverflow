@@ -1,12 +1,11 @@
-﻿using System.Collections.Frozen;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse;
 
 namespace NeedBarOverflow
 {
 	internal static class TranslateBackCompat
 	{
-		private static readonly FrozenDictionary<string, string> backUpKeys = new Dictionary<string, string>
+		private static readonly Dictionary<string, string> backUpKeys = new()
 		{
 			{ "NBO.RestartReq_Tip", "NBO.RestartReq_tip"},
 			{ "NBO.RestartNReq_Tip", "NBO.RestartNReq_tip"},
@@ -134,7 +133,7 @@ namespace NeedBarOverflow
 			{ "NBO.Need_Sadism.OverfEnabled_Tip", "NBO.SadismOverfEnabled_Tip"},
 			{ "NBO.Need_Sadism.OverfPerc", "NBO.SadismOverfPerc"},
 			{ "NBO.Need_Sadism.OverfPerc_Tip", "NBO.SadismOverfPerc_Tip"},
-		}.ToFrozenDictionary();
+		};
 
 		internal static string MyTranslate(
 			this string str, params NamedArgument[] args)
