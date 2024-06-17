@@ -38,11 +38,11 @@ namespace NeedBarOverflow.Needs
 				typeof(ThingDef), typeof(ThingDef), typeof(HediffDef),
 			];
 
-			private static readonly string[] disablingDefs_str = new string[3];
-			public static readonly HashSet<Def>[] disablingDefs = new HashSet<Def>[3];
+			private static readonly string[] disablingDefs_str = [.. dfltDisablingDefNames];
+			public static readonly HashSet<Def>[] disablingDefs = [[], [], []];
 
 			private static readonly Dictionary<string, Def>[]
-				defsByDisableTypeCache = new Dictionary<string, Def>[3];
+				defsByDisableTypeCache = [[], [], []];
 
 			private static readonly Dictionary<StatName_DisableType, Pair<string, string>>
 				colorizeCache = [];
@@ -176,10 +176,9 @@ namespace NeedBarOverflow.Needs
 					foreach (StatName_DisableType key
 						in Enum.GetValues(typeof(StatName_DisableType)))
 					{
-						if (scribeDefDict[key] == default)
-							disablingDefs_str[(int)key] = dfltDisablingDefNames[(int)key];
-						else
-							disablingDefs_str[(int)key] = scribeDefDict[key];
+						disablingDefs_str[(int)key]
+							= scribeDefDict?.GetValueOrDefault(key)
+							?? dfltDisablingDefNames[(int)key];
 					}
 				}
 			}
@@ -188,7 +187,7 @@ namespace NeedBarOverflow.Needs
 			{
 				foreach (StatName_DisableType defType in Enum.GetValues(typeof(StatName_DisableType)))
 				{
-					string s1 = disablingDefs_str[(int)defType] ?? dfltDisablingDefNames[(int)defType];
+					string s1 = disablingDefs_str[(int)defType];
 					bool b1 = s1.EndsWith(suffix, StringComparison.Ordinal);
 					bool b2 = !b1;
 					SettingLabel sl = new(string.Empty, Strings.NoOverf_ + defType.ToString());
@@ -223,10 +222,7 @@ namespace NeedBarOverflow.Needs
 
 			private static void ParseDisabledDefs(StatName_DisableType defType, string defNameStr)
 			{
-				if (disablingDefs[(int)defType] == default)
-					disablingDefs[(int)defType] = [];
-				else
-					disablingDefs[(int)defType].Clear();
+				disablingDefs[(int)defType].Clear();
 				if (!AnyEnabled ||
 					defNameStr.NullOrEmpty() ||
 					defNameStr.EndsWith(suffix, StringComparison.Ordinal))

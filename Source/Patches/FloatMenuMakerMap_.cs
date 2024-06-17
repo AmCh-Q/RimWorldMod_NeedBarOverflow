@@ -50,7 +50,7 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 			if (c.ContainsStaticFire(pawn.Map))
 				return;
 
-			HashSet<string> ingestOrders = [];
+			List<string> ingestOrders = [];
 			List<Thing> thingList = c.GetThingList(pawn.Map);
 			if (thingList.NullOrEmpty())
 				return;
