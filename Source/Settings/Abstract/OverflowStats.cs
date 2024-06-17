@@ -51,8 +51,8 @@ namespace NeedBarOverflow.Needs
 		{
 			SettingLabel sl = new(typeof(T).Name, settingName.ToString());
 			float f1 = overflowStats[(int)settingName];
-			bool b1 = f1 > 0f;
-			f1 = b1 ? f1 : -f1;
+			bool b1 = f1 >= 0f;
+			f1 = b1 ? f1 : -f1 - 1f;
 			ls.CheckboxLabeled(
 				sl.TranslatedLabel(f1.ToStringPercent()), ref b1,
 				sl.TranslatedTip(f1.ToStringPercent()));
@@ -64,8 +64,7 @@ namespace NeedBarOverflow.Needs
 					0f, float.PositiveInfinity,
 					null, sl.tip, true);
 			}
-
-			overflowStats[(int)settingName] = b1 ? f1 : -f1;
+			overflowStats[(int)settingName] = b1 ? f1 : -f1 - 1f;
 		}
 
 		public static void MigrateSettings(
@@ -84,7 +83,7 @@ namespace NeedBarOverflow.Needs
 				if (!statsB.TryGetValue(v1, out float f1))
 					continue;
 				bool b1 = enabledB.GetValueOrDefault(v1, overflowStats[stats[i]] >= 0);
-				overflowStats[stats[i]] = b1 ? f1 : -f1;
+				overflowStats[stats[i]] = b1 ? f1 : -f1 - 1f;
 			}
 		}
 

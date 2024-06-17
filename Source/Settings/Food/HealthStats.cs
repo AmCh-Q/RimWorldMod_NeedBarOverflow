@@ -196,7 +196,7 @@ namespace NeedBarOverflow.Needs
 						bool b1 = foodOverflowEffects[i - 1];
 						float f1 = healthStats[arrIdxs[i], 0];
 						if ((f1 >= 0) != b1)
-							healthStats[arrIdxs[i], 0] = -f1 - 1;
+							healthStats[arrIdxs[i], 0] = -f1 - 1f;
 					}
 					Scribe_Collections.Look(ref foodHealthStats, name + i.ToStringCached(), LookMode.Value);
 					if (foodHealthStats.NullOrEmpty())

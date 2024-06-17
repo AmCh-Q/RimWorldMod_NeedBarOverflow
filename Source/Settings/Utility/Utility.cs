@@ -149,8 +149,8 @@ namespace NeedBarOverflow.Needs
 		{
 			LsGap(ls);
 			float f1 = Setting_Common.GetOverflow(needType);
-			bool b1 = f1 > 0f;
-			f1 = b1 ? f1 : -f1;
+			bool b1 = f1 >= 0f;
+			f1 = b1 ? f1 : -f1 - 1f;
 			string numString = f1.CustomToString(true, true);
 			SettingLabel sl = new(needType.Name,
 				b1 ? Strings.OverfPerc : Strings.OverfEnabled);
@@ -161,7 +161,7 @@ namespace NeedBarOverflow.Needs
 				AddNumSetting(ls, ref f1, true,
 					0f, 2.002f, 1f, float.PositiveInfinity, null, sl.tip, true);
 			}
-			Setting_Common.SetOverflow(needType, b1 ? f1 : -f1);
+			Setting_Common.SetOverflow(needType, b1 ? f1 : -f1 - 1f);
 			return b1;
 		}
 	}

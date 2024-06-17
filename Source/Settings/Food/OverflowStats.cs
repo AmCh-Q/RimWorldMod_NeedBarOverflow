@@ -47,8 +47,8 @@ namespace NeedBarOverflow.Needs
 				stat = StatName_Food.DisableEating;
 				sl = new(nameof(Need_Food), stat.ToString());
 				f1 = overflowStats[(int)stat];
-				bool b1 = f1 > 0f;
-				f1 = b1 ? f1 : -f1;
+				bool b1 = f1 >= 0f;
+				f1 = b1 ? f1 : -f1 - 1f;
 				ls.CheckboxLabeled(sl.TranslatedLabel(
 					f1.ToStringPercent()), ref b1, sl.TranslatedTip(f1.ToStringPercent()));
 				if (b1)
@@ -59,7 +59,7 @@ namespace NeedBarOverflow.Needs
 						showAsPerc: true);
 				}
 
-				overflowStats[(int)stat] = b1 ? f1 : -f1;
+				overflowStats[(int)stat] = b1 ? f1 : -f1 - 1f;
 			}
 
 			public static void AddSettingsForHealthStats(Listing_Standard ls)
@@ -101,7 +101,7 @@ namespace NeedBarOverflow.Needs
 				{
 					overflowStats[(int)StatName_Food.DisableEating]
 						= enabledB.GetValueOrDefault(new IntVec2(0, 1), true)
-						? f1 : -f1;
+						? f1 : -f1 - 1f;
 				}
 				if (statsB.TryGetValue(new IntVec2(0, 3), out f1))
 					overflowStats[(int)StatName_Food.NonHumanMult] = f1;
