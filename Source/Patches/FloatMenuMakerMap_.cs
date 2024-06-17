@@ -60,8 +60,7 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 				if (
 					!thingDef.IsNutritionGivingIngestible
 #if !v1_2 && !v1_3
-					|| thingDef.ingestible.specialThoughtDirect
-					== ModDefOf.IngestedHemogenPack
+					|| thingDef.ingestible.specialThoughtDirect == ModDefOf.IngestedHemogenPack
 #endif
 					|| !pawn.RaceProps.CanEverEat(thing))
 				{
