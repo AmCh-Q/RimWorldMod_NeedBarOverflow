@@ -1,39 +1,48 @@
 ﻿#if !v1_2
+using HarmonyLib;
+using NeedBarOverflow.Needs;
+using RimWorld;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using RimWorld;
+using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches.Need_Suppression_
 {
-	using static Utility;
-	using Needs;
 	public static class DrawSuppressionBar
 	{
 		public static HarmonyPatchType? patched;
+
 		public static readonly MethodBase original
 			= typeof(Need_Suppression)
 			.Method(nameof(Need_Suppression.DrawSuppressionBar));
+
 		private static readonly TransILG transpiler = Transpiler;
+
 		public static void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Suppression)));
+
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
+			{
 				Patch(ref patched, original: original,
 					transpiler: transpiler);
+			}
 			else
+			{
 				Unpatch(ref patched, original: original);
+			}
 		}
+
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
-			MethodInfo m_DrawBarThreshold 
+			MethodInfo m_DrawBarThreshold
 				= typeof(Need).Method("DrawBarThreshold");
-			ReadOnlyCollection<CodeInstruction> instructionList = Add1UpperBound.Transpiler(instructions).ToList().AsReadOnly();
+			ReadOnlyCollection<CodeInstruction> instructionList = Add1UpperBound.TranspilerMethod(instructions).ToList().AsReadOnly();
 			int state = 0;
 			Label end = ilg.DefineLabel();
 			LocalBuilder perc = ilg.DeclareLocal(typeof(float));
@@ -56,7 +65,7 @@ namespace NeedBarOverflow.Patches.Need_Suppression_
 					yield return new CodeInstruction(OpCodes.Stloc_S, perc.LocalIndex);
 				}
 				yield return codeInstruction;
-				if ((state == 1 || state == 2) && 
+				if ((state == 1 || state == 2) &&
 					i < instructionList.Count - 1 &&
 					codeInstruction.opcode == OpCodes.Ldc_R4 &&
 					instructionList[i + 1].Calls(m_DrawBarThreshold))

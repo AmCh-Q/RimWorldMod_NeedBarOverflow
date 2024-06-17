@@ -1,16 +1,17 @@
-﻿using System;
+﻿using HarmonyLib;
+using RimWorld;
+using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using HarmonyLib;
-using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow.Needs
 {
 	public sealed partial class Setting_Common : IExposable
 	{
-		private static readonly IReadOnlyDictionary<Type, float> dfltOverflow = new Dictionary<Type, float>
+		private static readonly FrozenDictionary<Type, float> dfltOverflow = new Dictionary<Type, float>
 		{
 			{ typeof(Need), -2f},
 			{ typeof(Need_Food), 3f },
@@ -36,16 +37,16 @@ namespace NeedBarOverflow.Needs
 			{ typeof(Need_MechEnergy), -2f },
 			{ typeof(Need_Play), -2f }
 	#endif
-		};
+		}.ToFrozenDictionary();
 
-		private static readonly IReadOnlyDictionary<string, float> modsOverflow = new Dictionary<string, float>()
+		private static readonly FrozenDictionary<string, float> modsOverflow = new Dictionary<string, float>()
 		{
 			// Add Name and default setting of needs here
-		};
+		}.ToFrozenDictionary();
 
-		public static Dictionary<Type, float> overflow = new Dictionary<Type, float>(dfltOverflow);
+		private static Dictionary<Type, float> overflow = new(dfltOverflow);
 
-		public static bool AnyEnabled => overflow.Any((KeyValuePair<Type, float> x) => x.Value > 0f);
+		public static bool AnyEnabled => overflow.Any(x => x.Value > 0f);
 
 		public static bool Enabled(Type needType)
 		{
@@ -54,40 +55,53 @@ namespace NeedBarOverflow.Needs
 			return overflow[typeof(Need)] > 0f;
 		}
 
-		public static float Overflow(Type needType)
+		public static float GetOverflow(Type needType)
 		{
 			if (overflow.TryGetValue(needType, out float value))
 				return value;
 			return overflow[typeof(Need)];
 		}
 
+		public static void SetOverflow(Type needType, float value)
+		{
+			if (overflow.ContainsKey(needType))
+				overflow[needType] = value;
+			else
+				overflow[typeof(Need)] = value;
+		}
+
 		public void ExposeData()
 		{
 			Debug.Message("Common.ExposeData() called with Scribe.mode == " + Scribe.mode);
-			Dictionary<string, float> vanillaOverflow = new Dictionary<string, float>();
+			Dictionary<string, float> vanillaOverflow = [];
 			if (Scribe.mode == LoadSaveMode.Saving)
 			{
 				foreach (KeyValuePair<Type, float> need in overflow)
 					vanillaOverflow.Add(need.Key.FullName, need.Value);
 			}
 			Scribe_Collections.Look(ref vanillaOverflow, Strings.overflow, LookMode.Value, LookMode.Value);
+			vanillaOverflow ??= [];
 			DisablingDefs.ExposeData();
 			if (Scribe.mode != LoadSaveMode.LoadingVars)
 				return;
-			Dictionary<string, Type> typesByName = new Dictionary<string, Type>();
+			Dictionary<string, Type> typesByName = [];
 			foreach (Type type in AccessTools.AllTypes())
 				typesByName[type.FullName] = type;
-			overflow = new Dictionary<Type, float>(dfltOverflow);
+			overflow = new(dfltOverflow);
 			foreach (KeyValuePair<string, float> need in modsOverflow)
+			{
 				if (typesByName.TryGetValue(need.Key, out Type needType))
 					overflow[needType] = need.Value;
+			}
 			foreach (KeyValuePair<string, float> need in vanillaOverflow)
+			{
 				if (typesByName.TryGetValue(need.Key, out Type needType))
 					overflow[needType] = need.Value;
+			}
 		}
 
-		private static readonly Type[] migrationTypes = new Type[20]
-		{
+		private static readonly Type?[] migrationTypes =
+		[
 			typeof(Need_Food),
 			typeof(Need_Rest),
 			typeof(Need_Joy),
@@ -120,27 +134,28 @@ namespace NeedBarOverflow.Needs
 			typeof(Need_MechEnergy),
 			typeof(Need_Play)
 #endif
-		};
+		];
 
 		internal static void MigrateSettings(
 			Dictionary<IntVec2, bool> enabledB)
 		{
-			List<bool> enabledA = null;
-			List<float> statsA = null;
+			List<bool> enabledA = [];
+			List<float> statsA = [];
 			Scribe_Collections.Look(ref enabledA, nameof(enabledA), LookMode.Value);
 			Scribe_Collections.Look(ref statsA, nameof(statsA), LookMode.Value);
-			if (!(enabledA is null && statsA is null))
-            {
-                for (int i = 0; i < Mathf.Min(20, enabledA.Count, statsA.Count); i++)
-                {
-                    if (migrationTypes[i] == null)
-                        continue;
-                    float stat = Mathf.Max(statsA[i], 1f);
-                    stat = enabledA[i] ? stat : -stat;
-                    overflow[migrationTypes[i]] = stat;
-                }
-            }
-            DisablingDefs.MigrateSettings(enabledB);
+			if (enabledA is not null && statsA is not null)
+			{
+				for (int i = 0; i < Mathf.Min(20, enabledA.Count, statsA.Count); i++)
+				{
+					Type? migrationType = migrationTypes[i];
+					if (migrationType is null)
+						continue;
+					float stat = Mathf.Max(statsA[i], 1f);
+					stat = enabledA[i] ? stat : -stat;
+					overflow[migrationType] = stat;
+				}
+			}
+			DisablingDefs.MigrateSettings(enabledB);
 		}
 	}
 }

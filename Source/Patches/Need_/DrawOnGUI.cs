@@ -1,37 +1,47 @@
-﻿using System;
+﻿using HarmonyLib;
+using NeedBarOverflow.Needs;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
-using HarmonyLib;
-using RimWorld;
+using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches.Need_
 {
-	using static Utility;
-	using Needs;
 	public static class DrawOnGUI
 	{
 		public static HarmonyPatchType? patched;
+
 		public static readonly MethodBase original
 			= typeof(Need)
 			.Method(nameof(Need.DrawOnGUI));
+
 		private static readonly Func<bool> prefix = Prefix;
 		private static readonly TransILG transpiler = Transpiler;
+
 		public static void Toggle()
 			=> Toggle(Setting_Common.AnyEnabled);
+
 		public static void Toggle(bool enable)
 		{
 			if (enable)
+			{
 				Patch(ref patched, original: original,
 					prefix: prefix,
 					transpiler: transpiler);
+			}
 			else
+			{
 				Unpatch(ref patched, original: original);
+			}
 		}
+
 		private static bool Prefix() => Event.current.type != EventType.Layout;
+
 		// Need.DrawOnGUI usually expects the need level percentage to be between 0 and 1
 		//   and may overflow otherwise
 		// This patch fixes the visuals
@@ -149,7 +159,7 @@ namespace NeedBarOverflow.Patches.Need_
 					continue;
 				}
 				if (state > 1 &&
-					codeInstruction.opcode == OpCodes.Ldarg_0 && 
+					codeInstruction.opcode == OpCodes.Ldarg_0 &&
 					instructionList[i + 1].Calls(get_MaxLevel))
 				{
 					// Stage 2+
@@ -161,7 +171,7 @@ namespace NeedBarOverflow.Patches.Need_
 					continue;
 				}
 				if (state > 1 &&
-					codeInstruction.opcode == OpCodes.Ldarg_0 && 
+					codeInstruction.opcode == OpCodes.Ldarg_0 &&
 					instructionList[i + 1].Calls(get_CurLevelPercentage))
 				{
 					// Stage 2+

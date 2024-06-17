@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches
 {
 	// Many methods in the vanilla game uses Mathf.ModifyClamp01 to clamp the needs
 	// This patch replaces them with a more general Mathf.Clamp with adjusted upper bounds
-	using static Utility;
+
 	public static class ModifyClamp01
 	{
 		public static IEnumerable<CodeInstruction> Transpiler(

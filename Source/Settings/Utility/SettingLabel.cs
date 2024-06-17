@@ -8,12 +8,16 @@ namespace NeedBarOverflow.Needs
 
 		public string TranslatedLabel()
 		  => label.MyTranslate();
+
 		public string TranslatedLabel(NamedArgument arg)
 		  => label.MyTranslate(arg);
+
 		public string TranslatedTip()
 		  => tip.MyTranslate();
+
 		public string TranslatedTip(NamedArgument arg)
 		  => tip.MyTranslate(arg);
+
 		public SettingLabel(string typeName, string settingsName)
 		{
 			string text = typeName.NullOrEmpty() ? string.Empty : ".";

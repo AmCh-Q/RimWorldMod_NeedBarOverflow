@@ -1,7 +1,8 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -11,9 +12,10 @@ namespace NeedBarOverflow.Needs
 	{
 		public static void ApplyFoodHediffSettings()
 			=> HealthStats.ApplyFoodHediffSettings();
-        public static class HealthStats
+
+		public static class HealthStats
 		{
-            public enum HealthName
+			public enum HealthName
 			{
 				Level = 0,
 				HungerFactor = 1,
@@ -22,7 +24,8 @@ namespace NeedBarOverflow.Needs
 				EatingOffset = 4,
 				VomitFreq = 5,
 			}
-            public static readonly float[,] dfltHealthStats = new float[6, 10]
+
+			public static readonly float[,] dfltHealthStats = new float[6, 10]
 			{
 				{ -0.5f, 1f, 1.2f, 1.4f, 1.6f, 1.8f, 2f, 3f, 5f, float.PositiveInfinity }, // HealthName.Level
 				{ -2f, 1f, 1.05f, 1.1f, 1.2f, 1.3f, 1.5f, 2f, 5f, float.PositiveInfinity }, // HealthName.HungerFactor
@@ -31,18 +34,20 @@ namespace NeedBarOverflow.Needs
 				{ 0f, 0.05f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 1f }, // HealthName.EatingOffset
 				{ -1f, 0f, 0f, 0f, 0f, 0.25f, 2f, 5f, 6f, 24f }, // HealthName.VomitFreq
 			};
-            public static readonly float[,] healthStats = (float[,])dfltHealthStats.Clone();
-            public static bool showDetails = false;
+
+			public static readonly float[,] healthStats = (float[,])dfltHealthStats.Clone();
+			public static bool showDetails;
+
 			public static bool AffectHealth
 				=> Enabled &&
 				Enum.GetValues(typeof(HealthName))
 				.Cast<int>().Any(
 					stat => healthStats[stat, 0] >= 0f);
+
 			public static void ExposeData()
 			{
 				Array Enums = Enum.GetValues(typeof(HealthName));
-				Dictionary<HealthName, string> healthStat_strs
-					= new Dictionary<HealthName, string>();
+				Dictionary<HealthName, string> healthStat_strs = [];
 				if (Scribe.mode == LoadSaveMode.Saving)
 				{
 					foreach (HealthName key in Enums)
@@ -50,7 +55,7 @@ namespace NeedBarOverflow.Needs
 						IEnumerable<string> statStr()
 						{
 							for (int i = 0; i < 9; i++)
-								yield return healthStats[(int)key, i].ToString();
+								yield return healthStats[(int)key, i].ToString(CultureInfo.InvariantCulture);
 						}
 						healthStat_strs[key] = string.Join(Strings.Space, statStr());
 					}
@@ -63,32 +68,39 @@ namespace NeedBarOverflow.Needs
 						6 * 10 * sizeof(float));
 					foreach (HealthName key in Enums)
 					{
-						if (healthStat_strs == null ||
+						if (healthStat_strs is null ||
 							!healthStat_strs.TryGetValue(key, out string statStr) ||
 							statStr.NullOrEmpty())
+						{
 							continue;
-						float[] stats = statStr.Split(' ')
-							.Select(x => float.Parse(x)).ToArray();
+						}
+
+						float[] stats = statStr.Split(' ').Select(float.Parse).ToArray();
 						for (int i = 1; i < Mathf.Min(stats.Length, 9); i++)
 							healthStats[(int)key, i] = stats[i];
 						if (key != HealthName.Level &&
 							(healthStats[(int)key, 0] >= 0)
 							!= (stats[0] >= 0))
+						{
 							healthStats[(int)key, 0] = -healthStats[(int)key, 0] - 1f;
+						}
 					}
 					healthStats[(int)HealthName.Level, 1] = 1f;
-                }
-                if (Refs.initialized &&
+				}
+				if (Refs.initialized &&
 					(Scribe.mode == LoadSaveMode.PostLoadInit ||
 					Scribe.mode == LoadSaveMode.Saving))
+				{
 					ApplyFoodHediffSettings();
+				}
 			}
+
 			public static void AddSettings(Listing_Standard ls)
 			{
 				Array Enums = Enum.GetValues(typeof(HealthName));
 				Utility.LsGap(ls);
-				SettingLabel sl = new SettingLabel(nameof(Need_Food), Strings.HealthDetails);
-				ls.CheckboxLabeled(sl.TranslatedLabel(), 
+				SettingLabel sl = new(nameof(Need_Food), Strings.HealthDetails);
+				ls.CheckboxLabeled(sl.TranslatedLabel(),
 					ref showDetails, sl.TranslatedTip());
 				if (!showDetails)
 					return;
@@ -96,8 +108,7 @@ namespace NeedBarOverflow.Needs
 				{
 					if (key != HealthName.Level)
 					{
-						sl = new SettingLabel(nameof(Need_Food), 
-							Strings.HealthEnable_ + key.ToString());
+						sl = new(nameof(Need_Food), Strings.HealthEnable_ + key.ToString());
 						float f1 = healthStats[(int)key, 0];
 						bool b1 = f1 >= 0f;
 						f1 = b1 ? f1 : -f1 - 1f;
@@ -116,9 +127,11 @@ namespace NeedBarOverflow.Needs
 					{
 						if (key != HealthName.Level &&
 							healthStats[(int)key, 0] < 0f)
+						{
 							continue;
-						sl = new SettingLabel(nameof(Need_Food), 
-							Strings.HealthStat_ + key.ToString());
+						}
+
+						sl = new(nameof(Need_Food), Strings.HealthStat_ + key.ToString());
 						float txt_min = dfltHealthStats[(int)key, 0];
 						float txt_max = dfltHealthStats[(int)key, 9];
 						txt_min = txt_min < 0f ? txt_min : -txt_min - 1f;
@@ -138,11 +151,11 @@ namespace NeedBarOverflow.Needs
 							float slider_min = Mathf.Log10(txt_min);
 							bool logSlider = txt_max == float.PositiveInfinity;
 							Utility.AddNumSetting(
-								ls, ref f1, logSlider, 
-								logSlider ? slider_min : txt_min, 
-								logSlider ? (slider_min + 1f) : txt_max, 
-								txt_min, txt_max, 
-								sl.label, null, 
+								ls, ref f1, logSlider,
+								logSlider ? slider_min : txt_min,
+								logSlider ? (slider_min + 1f) : txt_max,
+								txt_min, txt_max,
+								sl.label, null,
 								key != HealthName.VomitFreq);
 							healthStats[(int)key, i] = f1;
 						}
@@ -157,26 +170,27 @@ namespace NeedBarOverflow.Needs
 					}
 				}
 			}
+
 			public static void MigrateSettings()
 			{
 				const string name = "foodHealthStats_";
-				List<bool> foodOverflowEffects = new List<bool>(5);
-				List<float> foodHealthStats = new List<float>(10);
-				int[] arrIdxs = new int[6]
-				{
+				List<bool> foodOverflowEffects = new(5);
+				List<float> foodHealthStats = new(10);
+				int[] arrIdxs =
+				[
 					(int)HealthName.Level,
 					(int)HealthName.HungerFactor,
 					(int)HealthName.HealingFactor,
 					(int)HealthName.MovingOffset,
 					(int)HealthName.VomitFreq,
 					(int)HealthName.EatingOffset,
-				};
+				];
 				Buffer.BlockCopy(dfltHealthStats, 0, healthStats, 0,
 					6 * 10 * sizeof(float));
 				Scribe_Collections.Look(ref foodOverflowEffects, nameof(foodOverflowEffects), LookMode.Value);
 				for (int i = 0; i < 6; i++)
 				{
-					if (i > 0 && i <= foodOverflowEffects.Count && 
+					if (i > 0 && i <= foodOverflowEffects.Count &&
 						!foodOverflowEffects.NullOrEmpty())
 					{
 						bool b1 = foodOverflowEffects[i - 1];
@@ -198,6 +212,7 @@ namespace NeedBarOverflow.Needs
 				}
 				healthStats[(int)HealthName.Level, 1] = 1f;
 			}
+
 			public static void ApplyFoodHediffSettings()
 			{
 				if (!AffectHealth)
@@ -207,20 +222,18 @@ namespace NeedBarOverflow.Needs
 					HediffStage stage = ModDefOf.FoodOverflow.stages[i - 1];
 					stage.minSeverity = healthStats[(int)HealthName.Level, i] - 1f;
 					if (healthStats[(int)HealthName.HungerFactor, 0] >= 0f)
-						stage.hungerRateFactor 
-							= healthStats[(int)HealthName.HungerFactor, i];
+						stage.hungerRateFactor = healthStats[(int)HealthName.HungerFactor, i];
 					else
 						stage.hungerRateFactor = 1f;
 					if (healthStats[(int)HealthName.HealingFactor, 0] >= 0f)
-						stage.naturalHealingFactor 
-							= healthStats[(int)HealthName.HealingFactor, i];
+						stage.naturalHealingFactor = healthStats[(int)HealthName.HealingFactor, i];
 					else
 						stage.naturalHealingFactor = -1f;
 					stage.capMods.Clear();
 					float offset = -healthStats[(int)HealthName.MovingOffset, i];
 					if (healthStats[(int)HealthName.MovingOffset, 0] >= 0f && offset < 0f)
 					{
-						PawnCapacityModifier capMod = new PawnCapacityModifier
+						PawnCapacityModifier capMod = new()
 						{
 							capacity = PawnCapacityDefOf.Moving,
 							offset = offset
@@ -230,7 +243,7 @@ namespace NeedBarOverflow.Needs
 					offset = -healthStats[(int)HealthName.EatingOffset, i];
 					if (healthStats[(int)HealthName.EatingOffset, 0] >= 0f && offset < 0f)
 					{
-						PawnCapacityModifier capMod = new PawnCapacityModifier
+						PawnCapacityModifier capMod = new()
 						{
 							capacity = ModDefOf.Eating,
 							offset = offset

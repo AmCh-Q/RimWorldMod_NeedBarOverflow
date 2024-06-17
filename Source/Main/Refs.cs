@@ -1,60 +1,65 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
-using HarmonyLib;
+﻿//using System;
+//using System.Linq.Expressions;
+//using System.Reflection;
+//using HarmonyLib;
 using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow
 {
-    [DefOf]
-    public static class ModDefOf
-    {
-        public static TraitDef Gourmand;
-        public static PawnCapacityDef Eating;
-        public static HediffDef FoodOverflow;
-#if !v1_2 && !v1_3
-        [MayRequireBiotech]
-        public static ThoughtDef IngestedHemogenPack;
-#endif
-        static ModDefOf()
-            => DefOfHelper.EnsureInitializedInCtor(typeof(ModDefOf));
-    }
-
-    internal static class Refs
+	[DefOf]
+	public static class ModDefOf
 	{
-		public static bool initialized = false;
-        public static void Init()
-		{
-            initialized = true;
-        }
-        // public static Func<Thing, bool> VFEAncients_HasPower;
-        /*
+		public static TraitDef Gourmand;
+		public static PawnCapacityDef Eating;
+		public static HediffDef FoodOverflow;
+
+#if !v1_2 && !v1_3
+		[MayRequireBiotech]
+		public static ThoughtDef IngestedHemogenPack;
+#endif
+
+#pragma warning disable CS8618
+
+		static ModDefOf()
+			=> DefOfHelper.EnsureInitializedInCtor(typeof(ModDefOf));
+
+#pragma warning restore CS8618
+	}
+
+	internal static class Refs
+	{
+		public static bool initialized;
+
+		public static void Init() => initialized = true;
+
+		// public static Func<Thing, bool> VFEAncients_HasPower;
+		/*
 		private static void InitDef<T>(
-			ref T def, string defName, 
+			ref T def, string defName,
 			bool force = true) where T : Def
 		{
-			if (def == null)
+			if (def is null)
 			{
 				def = DefDatabase<T>.GetNamed(defName);
-				if (def == null && force)
+				if (def is null && force)
 					Debug.Warning(string.Concat(
-						"Reference ", typeof(T).Name, 
-						Strings.Space, defName, 
+						"Reference ", typeof(T).Name,
+						Strings.Space, defName,
 						" expected but failed to load."));
 			}
-        }
+		}
 		private static void VFEAncients()
 		{
 			// VFE-Ancients Compatibility
-			if (VFEAncients_HasPower != null)
+			if (VFEAncients_HasPower  is not null)
 				return;
 			if (!ModLister.HasActiveModWithName("Vanilla Factions Expanded - Ancients"))
 				return;
-			Type PowerWorker_Hunger 
+			Type PowerWorker_Hunger
 				= AccessTools.TypeByName("VFEAncients.PowerWorker_Hunger");
 #if !DEBUG
-			if (PowerWorker_Hunger == null)
+			if (PowerWorker_Hunger is null)
 				return;
 #endif
 			MethodInfo m_VFEAncients_HasPower = AccessTools.Method(
@@ -62,7 +67,7 @@ namespace NeedBarOverflow
 				new[] { typeof(Thing) },
 				new[] { PowerWorker_Hunger });
 #if !DEBUG
-			if (m_VFEAncients_HasPower == null)
+			if (m_VFEAncients_HasPower is null)
 				return;
 #endif
 			VFEAncients_HasPower = (Func<Thing, bool>)Delegate.CreateDelegate(
@@ -70,5 +75,5 @@ namespace NeedBarOverflow
 				null, m_VFEAncients_HasPower, false);
 		}
 		*/
-    }
+	}
 }

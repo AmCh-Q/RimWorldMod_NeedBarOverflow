@@ -8,6 +8,7 @@ namespace NeedBarOverflow
 			= BindingFlags.Instance | BindingFlags.Static
 			| BindingFlags.Public | BindingFlags.NonPublic;
 	}
+
 	public static class Strings
 	{
 		public const string

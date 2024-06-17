@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <!-- Framework properties
-    https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#framework-properties -->
-    <TargetFramework>net48</TargetFramework>
-    <!-- Language options
-    https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language -->
-    <DefineConstants Condition=" '$(Configuration)' != 'Debug' ">v1_4</DefineConstants>
-    <DefineConstants Condition=" '$(Configuration)' == 'Debug' ">DEBUG;v1_4</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.4.3901" />
-    <PackageReference Include="Lib.Harmony" Version="2.2.*" ExcludeAssets="runtime" />
-    <None Include="..\LICENSE" Pack="true" PackagePath=".." />
-  </ItemGroup>
+	<PropertyGroup>
+		<!-- Framework properties
+		https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#framework-properties -->
+		<TargetFramework>net48</TargetFramework>
+		<!-- Language options
+		https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language -->
+		<DefineConstants>$(DefineConstants);v1_4</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.4.*" />
+		<PackageReference Include="Lib.Harmony" Version="2.2.*" ExcludeAssets="runtime" />
+		<PackageReference Include="System.Collections.Immutable" Version="*" />
+		<None Include="..\LICENSE" Pack="true" PackagePath=".." />
+	</ItemGroup>
 </Project>

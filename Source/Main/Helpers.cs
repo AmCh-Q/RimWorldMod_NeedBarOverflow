@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace NeedBarOverflow
 	{
 		internal static MethodInfo Method(this Type type, string name)
 		{
-			MethodInfo method = type.GetMethod(name, Consts.bindingflags);
+			MethodInfo method = type
+				.GetMethod(name, Consts.bindingflags);
 			method.NotNull(name);
 			return method;
 		}
@@ -40,50 +42,50 @@ namespace NeedBarOverflow
 		}
 
 		internal static float SigFigScale(this float d, int numSigFig = 2)
-        {
-            if (float.IsInfinity(d) || float.IsNaN(d))
-                return 0f;
-            float scale = Mathf.Floor(Mathf.Log10(Mathf.Abs(d)));
-            scale = Mathf.Max(scale - numSigFig, -numSigFig);
-            return Mathf.Pow(10, scale);
-        }
+		{
+			if (float.IsInfinity(d) || float.IsNaN(d))
+				return 0f;
+			float scale = Mathf.Floor(Mathf.Log10(Mathf.Abs(d)));
+			scale = Mathf.Max(scale - numSigFig, -numSigFig);
+			return Mathf.Pow(10, scale);
+		}
 
 		internal static float RoundToMultiple(this float d, float roundTo)
-        {
-            if (float.IsInfinity(d) || roundTo == 0f)
-                return d;
-            if (float.IsNaN(d) || !float.IsFinite(roundTo))
-                return 0;
-            return roundTo * Mathf.Round(d / roundTo);
-        }
+		{
+			if (float.IsInfinity(d) || roundTo == 0f)
+				return d;
+			if (float.IsNaN(d) || !float.IsFinite(roundTo))
+				return 0;
+			return roundTo * Mathf.Round(d / roundTo);
+		}
 
-        internal static float RoundToSigFig(this float d, int numSigFig = 2)
-        {
-            if (float.IsInfinity(d))
-                return d;
-            if (float.IsNaN(d))
-                return 0;
-            return RoundToMultiple(d, SigFigScale(d, numSigFig));
-        }
+		internal static float RoundToSigFig(this float d, int numSigFig = 2)
+		{
+			if (float.IsInfinity(d))
+				return d;
+			if (!float.IsNaN(d))
+				return RoundToMultiple(d, SigFigScale(d, numSigFig));
+			return 0;
+		}
 
-        internal static string CustomToString(
+		internal static string CustomToString(
 			this float d, bool showAsPerc, bool translate)
 		{
 			if (!float.IsFinite(d))
-				return translate ? "∞" : d.ToString("F0");
+				return translate ? "∞" : d.ToString("F0", CultureInfo.InvariantCulture);
 			d = d.RoundToSigFig();
-            if (showAsPerc && !translate)
-                d *= 100f;
-            string formatStr;
-            if (showAsPerc && translate)
+			if (showAsPerc && !translate)
+				d *= 100f;
+			string formatStr;
+			if (showAsPerc && translate)
 				formatStr = "P0";
 			else if (Mathf.Abs(d) >= 9.95f)
-                formatStr = "F0";
+				formatStr = "F0";
 			else if (Mathf.Abs(d) >= 0.995f)
-                formatStr = "F1";
+				formatStr = "F1";
 			else
-                formatStr = "F2";
-			return d.ToString(formatStr);
+				formatStr = "F2";
+			return d.ToString(formatStr, CultureInfo.InvariantCulture);
 		}
 	}
 }

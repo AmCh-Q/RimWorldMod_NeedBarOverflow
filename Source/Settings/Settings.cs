@@ -1,28 +1,27 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using NeedBarOverflow.Needs;
 using RimWorld;
+using System.Collections.Generic;
+using UnityEngine;
 using Verse;
+using static NeedBarOverflow.Needs.Utility;
 
 namespace NeedBarOverflow
 {
-    using Needs;
-    using static Needs.Utility;
-    public class Settings : ModSettings
+	public class Settings : ModSettings
 	{
 		private static bool showHiddenSettings;
-		internal static int migrateSettings = 0;
+		internal static int migrateSettings;
 		private Vector2 settingsScrollPos;
-		public Settings()
-		{
-			Debug.Message("NeedBarOverflow_Settings constructor called");
-		}
+
+		public Settings() => Debug.Message("NeedBarOverflow_Settings constructor called");
+
 		public void DoWindowContents(Rect inRect)
 		{
-			Rect outRect = new Rect(0f, 0f, inRect.width, inRect.height);
-			Rect rect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, height));
+			Rect outRect = new(0f, 0f, inRect.width, inRect.height);
+			Rect rect = new(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, height));
 			GUI.BeginGroup(inRect);
 			Widgets.BeginScrollView(outRect, ref settingsScrollPos, rect);
-			Listing_Standard ls = new Listing_Standard();
+			Listing_Standard ls = new();
 			height = 0f;
 			ls.Begin(rect);
 			LsGap(ls);
@@ -40,12 +39,12 @@ namespace NeedBarOverflow
 			AddSimpleSetting(ls, typeof(Need_Chemical));
 			AddSimpleSetting(ls, typeof(Need_Chemical_Any));
 			AddSimpleSetting(ls, typeof(Need_Outdoors));
-#if (!v1_2)
+#if !v1_2
 			AddSimpleSetting(ls, typeof(Need_Indoors));
 			AddSimpleSetting(ls, typeof(Need_Suppression));
 #endif
 			AddSimpleSetting(ls, typeof(Need_RoomSize));
-#if (!v1_2 && !v1_3)
+#if !v1_2 && !v1_3
 			AddSimpleSetting(ls, typeof(Need_Deathrest));
 			if (AddSimpleSetting(ls, typeof(Need_KillThirst)))
 				OverflowStats<Need_KillThirst>.AddSettings(ls);
@@ -54,13 +53,13 @@ namespace NeedBarOverflow
 			AddSimpleSetting(ls, typeof(Need_Play));
 #endif
 			LsGap(ls);
-			SettingLabel settingLabel = new SettingLabel(string.Empty, Strings.ShowHiddenSettings);
+			SettingLabel settingLabel = new(string.Empty, Strings.ShowHiddenSettings);
 			ls.CheckboxLabeled(settingLabel.TranslatedLabel(), ref showHiddenSettings, settingLabel.TranslatedTip());
 			if (showHiddenSettings)
 			{
 				AddSimpleSetting(ls, typeof(Need));
 				AddSimpleSetting(ls, typeof(Need_Authority));
-#if (!v1_2)
+#if !v1_2
 				AddSimpleSetting(ls, typeof(Need_Sadism));
 #endif
 			}
@@ -74,45 +73,48 @@ namespace NeedBarOverflow
 		{
 			Debug.Message("ExposeData() called");
 			base.ExposeData();
-			Setting_Common common = new Setting_Common();
-			Setting_Food food = new Setting_Food();
-			OverflowStats<Need_Rest> rest = new OverflowStats<Need_Rest>();
-			OverflowStats<Need_Joy> joy = new OverflowStats<Need_Joy>();
-#if (!v1_2 && !v1_3)
-			OverflowStats<Need_KillThirst> killThirst = new OverflowStats<Need_KillThirst>();
+			Setting_Common common = new();
+			Setting_Food food = new();
+			OverflowStats<Need_Rest> rest = new();
+			OverflowStats<Need_Joy> joy = new();
+#if !v1_2 && !v1_3
+			OverflowStats<Need_KillThirst> killThirst = new();
 #endif
 			Scribe_Deep.Look(ref common, nameof(Setting_Common));
 			Scribe_Deep.Look(ref food, nameof(Need_Food));
 			Scribe_Deep.Look(ref rest, nameof(Need_Rest));
 			Scribe_Deep.Look(ref joy, nameof(Need_Joy));
-#if (!v1_2 && !v1_3)
+#if !v1_2 && !v1_3
 			Scribe_Deep.Look(ref killThirst, nameof(Need_KillThirst));
 #endif
 			if (Scribe.mode == LoadSaveMode.LoadingVars &&
 				migrateSettings == 1)
+			{
 				MigrateSettings();
-            if (Refs.initialized && 
-				(Scribe.mode == LoadSaveMode.PostLoadInit || 
+			}
+
+			if (Refs.initialized &&
+				(Scribe.mode == LoadSaveMode.PostLoadInit ||
 				Scribe.mode == LoadSaveMode.Saving))
+			{
 				Patches.PatchApplier.ApplyPatches();
+			}
 		}
 
-		internal static void MigrateSettings()
+		private static void MigrateSettings()
 		{
 			Debug.Message("MigrateSettings() called");
-			Dictionary<IntVec2, bool> enabledB = null;
-			Dictionary<IntVec2, float> statsB = null;
+			Dictionary<IntVec2, bool> enabledB = [];
+			Dictionary<IntVec2, float> statsB = [];
 			Scribe_Collections.Look(ref enabledB, nameof(enabledB), LookMode.Value, LookMode.Value);
 			Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
-			if (enabledB is null)
-				enabledB = new Dictionary<IntVec2, bool>();
-            if (statsB is null)
-                statsB = new Dictionary<IntVec2, float>();
-            Setting_Common.MigrateSettings(enabledB);
+			enabledB ??= [];
+			statsB ??= [];
+			Setting_Common.MigrateSettings(enabledB);
 			Setting_Food.MigrateSettings(enabledB, statsB);
 			OverflowStats<Need_Rest>.MigrateSettings(enabledB, statsB, 1);
 			OverflowStats<Need_Joy>.MigrateSettings(enabledB, statsB, 2);
-#if (!v1_2 && !v1_3)
+#if !v1_2 && !v1_3
 			OverflowStats<Need_KillThirst>.MigrateSettings(enabledB, statsB, 16);
 #endif
 			migrateSettings = 2;

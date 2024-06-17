@@ -1,33 +1,42 @@
 ﻿#if !v1_2 && !v1_3
+using HarmonyLib;
+using NeedBarOverflow.Needs;
+using RimWorld;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using RimWorld;
+using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches.Need_Learning_
 {
-	using static Utility;
-	using Needs;
 	public static class Learn
 	{
 		public static HarmonyPatchType? patched;
+
 		public static readonly MethodBase original
 			= typeof(Need_Learning)
 			.Method(nameof(Need_Learning.Learn));
+
 		private static readonly TransIL transpiler = Transpiler;
+
 		public static void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Learning)));
+
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
+			{
 				Patch(ref patched, original: original,
 					transpiler: transpiler);
+			}
 			else
+			{
 				Unpatch(ref patched, original: original);
+			}
 		}
+
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{

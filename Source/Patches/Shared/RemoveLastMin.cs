@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using HarmonyLib;
+using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches
 {
-	using static Utility;
 	public static class RemoveLastMin
 	{
-		public static readonly
-			TransIL transpiler = Transpiler;
-		public static IEnumerable<CodeInstruction> Transpiler(
+		public static readonly TransIL transpiler = Transpiler;
+
+		public static IEnumerable<CodeInstruction> TranspilerMethod(
+			IEnumerable<CodeInstruction> instructions)
+			=> Transpiler(instructions);
+
+		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();

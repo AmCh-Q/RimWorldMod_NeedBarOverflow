@@ -1,0 +1,29 @@
+[*.cs]
+indent_style = tab
+indent_size = tab
+tab_size = 4
+insert_final_newline = true
+
+# IDE0011: Add braces
+csharp_prefer_braces = when_multiline
+# IDE0021: Use expression body for constructors
+csharp_style_expression_bodied_constructors = when_on_single_line
+# IDE0022: Use expression body for methods
+csharp_style_expression_bodied_methods = when_on_single_line
+# IDE0023, IDE0024: Use expression body for operators
+csharp_style_expression_bodied_operators = when_on_single_line
+
+# IDE0005: Remove unnecessary using directives
+dotnet_diagnostic.IDE0005.severity = none
+# IDE0045: Use conditional expression for assignment
+dotnet_diagnostic.IDE0045.severity = none
+# IDE0046: Use conditional expression for return
+dotnet_diagnostic.IDE0046.severity = none
+# CA1000: Do not declare static members on generic types
+dotnet_diagnostic.CA1000.severity = none
+# CA1051: Do not declare visible instance fields
+dotnet_diagnostic.CA1051.severity = none
+# CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = none
+# CA2211: Non-constant fields should not be visible
+dotnet_diagnostic.CA2211.severity = none

@@ -1,18 +1,17 @@
 ﻿#if !v1_2 && !v1_3
+using HarmonyLib;
+using NeedBarOverflow.Needs;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using RimWorld;
+using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches.Need_KillThirst_
 {
-	using static Utility;
-	using Needs;
-	using System;
-
 	public static class Notify_KilledPawn
 	{
 		public static HarmonyPatchType? patched;
@@ -20,16 +19,23 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 			= typeof(Need_KillThirst)
 			.Method(nameof(Need_KillThirst.Notify_KilledPawn));
 		private static readonly TransIL transpiler = Transpiler;
+
 		public static void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_KillThirst)));
+
 		public static void Toggle(bool enabled)
 		{
 			if (enabled)
+			{
 				Patch(ref patched, original: original,
 				transpiler: transpiler);
+			}
 			else
+			{
 				Unpatch(ref patched, original: original);
+			}
 		}
+
 		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{
@@ -49,15 +55,17 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevel);
 					yield return codeInstruction;
 					yield return new CodeInstruction(OpCodes.Ldc_I4, (int)StatName_DG.SlowGain);
-					yield return new CodeInstruction(OpCodes.Call, 
-						((Func<int,float>)OverflowStats<Need_KillThirst>.EffectStat).Method);
+					yield return new CodeInstruction(OpCodes.Call,
+						((Func<int, float>)OverflowStats<Need_KillThirst>.EffectStat).Method);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevelPercentage);
 					yield return new CodeInstruction(OpCodes.Call, AdjustGain.adjust);
 					yield return new CodeInstruction(OpCodes.Add);
 				}
 				else
+				{
 					yield return codeInstruction;
+				}
 			}
 			Debug.CheckTranspiler(state, 1);
 		}

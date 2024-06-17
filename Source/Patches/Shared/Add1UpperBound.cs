@@ -1,21 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Emit;
-using HarmonyLib;
+using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches
 {
-    // In many parts of the game (especiall when drawing UI), the game expects Need.CurLevelPercentage to be between 0-1
-    // If Need.CurLevelPercentage > 1, the UI may be drawn out of the box
-    // This patch inserts a Mathf.Min(value,1f) call after Need.CurLevelPercentage to correct that
+	// In many parts of the game (especiall when drawing UI), the game expects Need.CurLevelPercentage to be between 0-1
+	// If Need.CurLevelPercentage > 1, the UI may be drawn out of the box
+	// This patch inserts a Mathf.Min(value,1f) call after Need.CurLevelPercentage to correct that
 
-    using static Utility;
 	public static class Add1UpperBound
 	{
-		public static readonly
-			TransIL transpiler = Transpiler;
-		public static IEnumerable<CodeInstruction> Transpiler(
+		public static readonly TransIL transpiler = Transpiler;
+
+		public static IEnumerable<CodeInstruction> TranspilerMethod(
+			IEnumerable<CodeInstruction> instructions)
+			=> Transpiler(instructions);
+
+		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
