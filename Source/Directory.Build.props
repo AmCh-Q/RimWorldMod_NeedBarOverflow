@@ -21,17 +21,13 @@ Additionally, the property BaseIntermediateOutputPath has to be set here, explan
     https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties -->
     <RootNamespace>NeedBarOverflow</RootNamespace>
     <AssemblyName>Need Bar Overflow</AssemblyName>
-    <OutputPath>..\$(MSBuildProjectName)\Assemblies</OutputPath>
+    <OutDir>..\$(MSBuildProjectName)\Assemblies</OutDir>
     <BaseIntermediateOutputPath>obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <!-- Assembly attribute properties
     https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#assembly-attribute-properties -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-    <!-- Publish-related properties
-    https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#publish-related-properties -->
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <!-- Code analysis properties
     https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#code-analysis-properties -->
     <AnalysisLevel>preview-recommended</AnalysisLevel>
