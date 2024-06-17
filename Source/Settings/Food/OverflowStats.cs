@@ -50,7 +50,7 @@ namespace NeedBarOverflow.Needs
 				bool b1 = f1 >= 0f;
 				f1 = b1 ? f1 : -f1 - 1f;
 				ls.CheckboxLabeled(sl.TranslatedLabel(
-					f1.ToStringPercent()), ref b1, sl.TranslatedTip(f1.ToStringPercent()));
+					f1.CustomToString(true, true)), ref b1, sl.TranslatedTip(f1.CustomToString(true, true)));
 				if (b1)
 				{
 					Utility.AddNumSetting(ls, ref f1, true,

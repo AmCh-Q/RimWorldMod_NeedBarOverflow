@@ -141,9 +141,8 @@ namespace NeedBarOverflow.Needs
 						{
 							healthStats[(int)key, i] = 1f;
 							ls.Label(sl.label
-								.MyTranslate(healthStats[(int)key, i]
-								.CustomToString(true, false)));
-							ls.Gap(Text.LineHeight * 1.2f - ls.verticalSpacing * 0.6f);
+								.MyTranslate(1f.CustomToString(true, true)));
+							//ls.Gap(Text.LineHeight * 1.2f - ls.verticalSpacing * 0.6f);
 						}
 						else if (txt_min < txt_max)
 						{
@@ -164,7 +163,7 @@ namespace NeedBarOverflow.Needs
 							healthStats[(int)key, i] = Mathf.Clamp(healthStats[(int)key, i], txt_max, txt_min);
 							ls.Label(sl.label
 								.MyTranslate(healthStats[(int)key, i]
-								.CustomToString(true, false)));
+								.CustomToString(true, true)));
 							ls.Gap(Text.LineHeight * 1.2f - ls.verticalSpacing * 0.6f);
 						}
 					}

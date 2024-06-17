@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Reflection;
 using UnityEngine;
+using Verse;
 
 namespace NeedBarOverflow
 {
@@ -69,23 +70,27 @@ namespace NeedBarOverflow
 		}
 
 		internal static string CustomToString(
-			this float d, bool showAsPerc, bool translate)
+			this float d, bool showAsPerc, bool localize)
 		{
 			if (!float.IsFinite(d))
-				return translate ? "∞" : d.ToString("F0", CultureInfo.InvariantCulture);
-			d = d.RoundToSigFig();
-			if (showAsPerc && !translate)
+				return localize ? "∞" : d.ToString("F0", CultureInfo.InvariantCulture);
+			if (showAsPerc)
 				d *= 100f;
-			string formatStr;
-			if (showAsPerc && translate)
-				formatStr = "P0";
-			else if (Mathf.Abs(d) >= 9.95f)
-				formatStr = "F0";
-			else if (Mathf.Abs(d) >= 0.995f)
-				formatStr = "F1";
+			d = d.RoundToSigFig();
+			string result;
+			if (Mathf.Abs(d) >= 9.95f)
+			{
+				result = Mathf.RoundToInt(d).ToStringCached();
+			}
 			else
-				formatStr = "F2";
-			return d.ToString(formatStr, CultureInfo.InvariantCulture);
+			{
+				CultureInfo culture = localize ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
+				string formatStr = Mathf.Abs(d) >= 0.995f ? "F1" : "F2";
+				result = d.ToString(formatStr, culture);
+			}
+			if (showAsPerc && localize)
+				result += "%";
+			return result;
 		}
 	}
 }
