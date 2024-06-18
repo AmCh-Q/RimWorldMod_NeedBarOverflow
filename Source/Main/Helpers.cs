@@ -77,13 +77,13 @@ namespace NeedBarOverflow
 				return localize ? "∞" : d.ToString("F0", CultureInfo.InvariantCulture);
 			if (showAsPerc)
 				d *= 100f;
-			d = d.RoundToSigFig();
 			float abs = Mathf.Abs(d);
 			string result;
 			CultureInfo culture = localize ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
 			if (abs >= 5000)
 			{
-				result = d.ToString(culture);
+				// Need to avoid scientific notation
+				result = d.ToString("F0", culture);
 			}
 			else if (showAsPerc || abs >= 9.95f)
 			{
@@ -94,7 +94,7 @@ namespace NeedBarOverflow
 			else
 			{
 				string formatStr = abs >= 0.995f ? "F1" : "F2";
-				result = d.ToString(formatStr, culture);
+				result = d.RoundToSigFig().ToString(formatStr, culture);
 			}
 			if (showAsPerc && localize)
 				result += "%";
