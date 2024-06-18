@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
+using Verse;
 
 namespace NeedBarOverflow.Patches
 {

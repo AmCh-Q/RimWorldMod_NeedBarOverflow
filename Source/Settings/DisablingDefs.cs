@@ -15,16 +15,27 @@ namespace NeedBarOverflow.Needs
 
 	public sealed partial class Setting_Common : IExposable
 	{
-		private static readonly AccessTools.FieldRef<Need, Pawn>
+		public static readonly AccessTools.FieldRef<Need, Pawn>
 			fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>("pawn");
 
-		public static bool CanOverflow(Need n)
-			=> DisablingDefs.CanOverflow(fr_needPawn(n));
+		public static bool CanOverflow(Need need)
+			=> CanOverflow(need, fr_needPawn(need));
 
-		public static bool CanOverflow(Pawn p)
-			=> DisablingDefs.CanOverflow(p);
+		public static bool CanOverflow(Need need, Pawn pawn)
+		{
+			return DisablingDefs.PawnCanOverflow(pawn)
+				&& (need is not Need_Food
+				|| Refs.VFEAncients_HasPower is null
+				|| !Refs.VFEAncients_HasPower(pawn));
+		}
 
-		public static class DisablingDefs
+		public static void LoadDisabledDefs()
+			=> DisablingDefs.LoadDisabledDefs();
+
+		public static void AddSettings(Listing_Standard ls)
+			=> DisablingDefs.AddSettings(ls);
+
+		private static class DisablingDefs
 		{
 			private static readonly string suffix = "DISABLED";
 
@@ -50,15 +61,13 @@ namespace NeedBarOverflow.Needs
 			private static int pawnIdCached = -1;
 			private static bool canOverflowCached;
 
-			public static bool CanOverflow(Pawn p)
+			public static bool PawnCanOverflow(Pawn p)
 			{
 				int thingId = p.thingIDNumber;
 				if (thingId == pawnIdCached)
 					return canOverflowCached;
 				pawnIdCached = thingId;
 				canOverflowCached =
-					//	(Refs.VFEAncients_HasPower is null ||
-					//	!Refs.VFEAncients_HasPower(p)) &&
 					CheckPawnRace(p) &&
 					CheckPawnApparel(p) &&
 					CheckPawnHealth(p);
@@ -70,8 +79,8 @@ namespace NeedBarOverflow.Needs
 				HashSet<Def> defs = disablingDefs[(int)StatName_DisableType.Race];
 				if (defs.Count == 0)
 					return true;
-				if (p.kindDef?.race is Def thingDef)
-					return !defs.Contains(thingDef);
+				if (p.kindDef?.race is Def def)
+					return !defs.Contains(def);
 				return true;
 			}
 

@@ -26,7 +26,7 @@ namespace NeedBarOverflow
 			ls.Begin(rect);
 			LsGap(ls);
 			ls.Label(Strings.RestartNReq.MyTranslate());
-			Setting_Common.DisablingDefs.AddSettings(ls);
+			Setting_Common.AddSettings(ls);
 			if (AddSimpleSetting(ls, typeof(Need_Food)))
 				Setting_Food.AddSettings(ls);
 			if (AddSimpleSetting(ls, typeof(Need_Rest)))

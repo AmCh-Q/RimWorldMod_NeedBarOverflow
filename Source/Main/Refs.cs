@@ -1,7 +1,7 @@
-﻿//using System;
-//using System.Linq.Expressions;
-//using System.Reflection;
-//using HarmonyLib;
+﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 
@@ -31,9 +31,13 @@ namespace NeedBarOverflow
 	{
 		public static bool initialized;
 
-		public static void Init() => initialized = true;
+		public static void Init()
+		{
+			VFEAncients();
+			initialized = true;
+		}
 
-		// public static Func<Thing, bool> VFEAncients_HasPower;
+		public static Func<Thing, bool>? VFEAncients_HasPower;
 		/*
 		private static void InitDef<T>(
 			ref T def, string defName,
@@ -48,7 +52,7 @@ namespace NeedBarOverflow
 						Strings.Space, defName,
 						" expected but failed to load."));
 			}
-		}
+		}*/
 		private static void VFEAncients()
 		{
 			// VFE-Ancients Compatibility
@@ -64,16 +68,16 @@ namespace NeedBarOverflow
 #endif
 			MethodInfo m_VFEAncients_HasPower = AccessTools.Method(
 				"VFEAncients.HarmonyPatches.Helpers:HasPower",
-				new[] { typeof(Thing) },
-				new[] { PowerWorker_Hunger });
+				[typeof(Thing)], [PowerWorker_Hunger]);
 #if !DEBUG
 			if (m_VFEAncients_HasPower is null)
 				return;
 #endif
-			VFEAncients_HasPower = (Func<Thing, bool>)Delegate.CreateDelegate(
-				Expression.GetFuncType(new[] { typeof(Thing), typeof(bool) }),
-				null, m_VFEAncients_HasPower, false);
+			VFEAncients_HasPower = Delegate.CreateDelegate(
+				typeof(Func<Thing, bool>),
+				m_VFEAncients_HasPower, false)
+				as Func<Thing, bool>;
+			VFEAncients_HasPower.NotNull<Func<Thing, bool>>(nameof(VFEAncients_HasPower));
 		}
-		*/
 	}
 }

@@ -42,18 +42,18 @@ namespace NeedBarOverflow.Patches.Need_
 			}
 		}
 
-		private static float Adjusted_MaxLevel(Need n)
+		public static float Adjusted_MaxLevel(Need need)
 		{
-			float m = n.MaxLevel;
-			if (!Setting_Common.CanOverflow(n))
-				return m;
-			Type type = n.GetType();
+			float originalMax = need.MaxLevel;
+			if (!Setting_Common.CanOverflow(need))
+				return originalMax;
+			Type type = need.GetType();
 			float mult = Setting_Common.GetOverflow(type);
 			if (mult < 1)
-				return m;
+				return originalMax;
 			if (type == typeof(Need_Food))
-				return Mathf.Max(m * mult, m + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
-			return m * mult;
+				return Mathf.Max(originalMax * mult, originalMax + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
+			return originalMax * mult;
 		}
 
 		private static IEnumerable<CodeInstruction> Transpiler(

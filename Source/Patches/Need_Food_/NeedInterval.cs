@@ -115,7 +115,8 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			Settings s = PatchApplier.s;
 			Pawn_HealthTracker health = pawn.health;
 			Hediff hediff;
-			if (newValue <= need.MaxLevel || !Setting_Common.CanOverflow(pawn))
+			if (newValue <= need.MaxLevel
+				|| !Setting_Common.CanOverflow(need, pawn))
 			{
 				if (newValue > need.MaxLevel)
 					need.CurLevel = need.MaxLevel;
