@@ -48,6 +48,7 @@ namespace NeedBarOverflow.Patches.FoodUtility_
 #if !v1_2 && !v1_3
 				&& thingDef.ingestible.specialThoughtDirect != ModDefOf.IngestedHemogenPack
 #endif
+				&& !thingDef.IsDrug
 				&& !Need_Food_.Utility.CanConsumeMoreFood(pawn)
 				)
 			{

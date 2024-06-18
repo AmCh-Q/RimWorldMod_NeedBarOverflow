@@ -2,6 +2,7 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
@@ -112,6 +113,16 @@ namespace NeedBarOverflow.Patches
 			harmony.Unpatch(original, (HarmonyPatchType)patched, harmony.Id);
 			if (updateState)
 				patched = null;
+		}
+
+		// Get children methods which the input method uses
+		public static IEnumerable<MethodInfo> GetInternalMethods(
+			MethodBase method, params OpCode[] targetOpCodes)
+		{
+			return PatchProcessor.ReadMethodBody(method)
+				.Where(x => targetOpCodes.Length == 0 || targetOpCodes.Contains(x.Key))
+				.Select(x => x.Value)
+				.OfType<MethodInfo>();
 		}
 	}
 }
