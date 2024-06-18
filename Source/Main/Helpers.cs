@@ -10,7 +10,7 @@ namespace NeedBarOverflow
 	{
 		internal static MethodInfo Method(this Type type, string name)
 		{
-			MethodInfo method = type
+			MethodInfo? method = type
 				.GetMethod(name, Consts.bindingflags);
 			method.NotNull(name);
 			return method;
@@ -18,7 +18,7 @@ namespace NeedBarOverflow
 
 		internal static MethodInfo Getter(this Type type, string name)
 		{
-			MethodInfo getter = type
+			MethodInfo? getter = type
 				.GetProperty(name, Consts.bindingflags)
 				.GetGetMethod(true);
 			getter.NotNull(name);
@@ -27,7 +27,7 @@ namespace NeedBarOverflow
 
 		internal static MethodInfo Setter(this Type type, string name)
 		{
-			MethodInfo setter = type
+			MethodInfo? setter = type
 				.GetProperty(name, Consts.bindingflags)
 				.GetSetMethod(true);
 			setter.NotNull(name);
@@ -36,7 +36,7 @@ namespace NeedBarOverflow
 
 		internal static FieldInfo Field(this Type type, string name)
 		{
-			FieldInfo field = type
+			FieldInfo? field = type
 				.GetField(name, Consts.bindingflags);
 			field.NotNull(name);
 			return field;

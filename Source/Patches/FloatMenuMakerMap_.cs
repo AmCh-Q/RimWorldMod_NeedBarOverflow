@@ -31,6 +31,9 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 		{
 			if (enabled)
 			{
+				targetOptionMethod
+					??= GetInternalMethods(original, OpCodes.Ldftn)
+					.Where(IsIngestJobMethod).First();
 				Patch(ref patched, original: original,
 					postfix: postfix);
 			}
@@ -47,9 +50,7 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 				&& field == typeof(JobDefOf).Field(nameof(JobDefOf.Ingest)));
 		}
 
-		private static readonly MethodInfo targetOptionMethod
-			= GetInternalMethods(original, OpCodes.Ldftn)
-			.Where(IsIngestJobMethod).FirstOrDefault();
+		private static MethodInfo? targetOptionMethod;
 
 		private static void Postfix(
 			Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
