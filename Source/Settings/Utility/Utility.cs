@@ -140,7 +140,7 @@ namespace NeedBarOverflow.Needs
 			float mult = showAsPerc ? 100f : 1f;
 			float invMult = showAsPerc ? 0.01f : 1f;
 			float val = num * mult;
-			string buffer = val.CustomToString(false, false);
+			string buffer = num.CustomToString(showAsPerc, false);
 			Widgets.TextFieldNumeric(rectNum, ref val, ref buffer, txt_min * mult, txt_max * mult);
 			return val * invMult;
 		}

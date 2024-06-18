@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Verse;
 
@@ -12,7 +13,7 @@ namespace NeedBarOverflow
 		{
 			MethodInfo? method = type
 				.GetMethod(name, Consts.bindingflags);
-			method.NotNull(name);
+			method.NotNull<MethodInfo>(name);
 			return method;
 		}
 
@@ -21,7 +22,7 @@ namespace NeedBarOverflow
 			MethodInfo? getter = type
 				.GetProperty(name, Consts.bindingflags)
 				.GetGetMethod(true);
-			getter.NotNull(name);
+			getter.NotNull<MethodInfo>(name);
 			return getter;
 		}
 
@@ -30,7 +31,7 @@ namespace NeedBarOverflow
 			MethodInfo? setter = type
 				.GetProperty(name, Consts.bindingflags)
 				.GetSetMethod(true);
-			setter.NotNull(name);
+			setter.NotNull<MethodInfo>(name);
 			return setter;
 		}
 
@@ -38,7 +39,7 @@ namespace NeedBarOverflow
 		{
 			FieldInfo? field = type
 				.GetField(name, Consts.bindingflags);
-			field.NotNull(name);
+			field.NotNull<FieldInfo>(name);
 			return field;
 		}
 
@@ -77,15 +78,22 @@ namespace NeedBarOverflow
 			if (showAsPerc)
 				d *= 100f;
 			d = d.RoundToSigFig();
+			float abs = Mathf.Abs(d);
 			string result;
-			if (showAsPerc || Mathf.Abs(d) >= 9.95f)
+			CultureInfo culture = localize ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
+			if (abs >= 5000)
 			{
+				result = d.ToString(culture);
+			}
+			else if (showAsPerc || abs >= 9.95f)
+			{
+				// Note: if the number is outside the range of int
+				// RoundToInt will return int.MinValue 
 				result = Mathf.RoundToInt(d).ToStringCached();
 			}
 			else
 			{
-				CultureInfo culture = localize ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
-				string formatStr = Mathf.Abs(d) >= 0.995f ? "F1" : "F2";
+				string formatStr = abs >= 0.995f ? "F1" : "F2";
 				result = d.ToString(formatStr, culture);
 			}
 			if (showAsPerc && localize)

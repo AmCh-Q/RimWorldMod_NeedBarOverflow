@@ -101,7 +101,6 @@ namespace NeedBarOverflow.Needs
 			overflowStats = (float[])dfltStats.Clone();
 		}
 
-		public OverflowStats()
-		{ }
+		public OverflowStats() { }
 	}
 }

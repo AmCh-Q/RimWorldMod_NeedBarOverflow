@@ -48,10 +48,14 @@ namespace NeedBarOverflow
 
 		[Conditional("DEBUG")]
 		internal static void NotNull<T>(
-			this T obj, string name) where T : MemberInfo?
+			this object? obj, string name)
 		{
-			if (obj is null)
-				Log.Error("MemberInfo " + name + " is null");
+			if (obj is T)
+				return;
+			Log.Error(string.Concat(
+				"Object ", name,
+				" is null or not of type ",
+				typeof(T).Name));
 		}
 	}
 }

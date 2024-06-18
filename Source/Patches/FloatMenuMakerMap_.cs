@@ -57,7 +57,7 @@ namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
 		{
 			if (Need_Food_.Utility.CanConsumeMoreFood(pawn))
 				return;
-			targetOptionMethod.NotNull(nameof(targetOptionMethod));
+			targetOptionMethod.NotNull<MethodInfo>(nameof(targetOptionMethod));
 			foreach (FloatMenuOption opt in opts)
 			{
 				// Skip if the option's action method does not match the target method
