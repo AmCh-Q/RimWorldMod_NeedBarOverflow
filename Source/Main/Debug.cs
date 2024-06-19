@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using Verse;
 
@@ -7,6 +8,7 @@ namespace NeedBarOverflow
 	internal static class Debug
 	{
 		private const string prefix = "[Need Bar Overflow]: ";
+		private static Stopwatch? watch;
 
 		[Conditional("DEBUG")]
 		internal static void Message(string s)
@@ -47,6 +49,17 @@ namespace NeedBarOverflow
 		}
 
 		[Conditional("DEBUG")]
+		internal static void Assert(
+			this bool assert, string name)
+		{
+			if (assert)
+				return;
+			Log.Error(string.Concat(
+				"Assertion [",
+				name, "] failed"));
+		}
+
+		[Conditional("DEBUG")]
 		internal static void NotNull<T>(
 			this object? obj, string name)
 		{
@@ -56,6 +69,42 @@ namespace NeedBarOverflow
 				"Object ", name,
 				" is null or not of type ",
 				typeof(T).Name));
+		}
+
+		[Conditional("DEBUG")]
+		internal static void WatchStart(string message = "")
+		{
+			if (!message.NullOrEmpty())
+				Message(message);
+			if (watch is null)
+				watch = Stopwatch.StartNew();
+			else
+				watch.Restart();
+		}
+
+		[Conditional("DEBUG")]
+		internal static void WatchLog(string name, string message = "")
+		{
+			Message(string.Concat(
+				name, ": ",
+				watch?.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture)
+				?? "Unknown",
+				" ms"));
+			if (watch is null)
+				watch = Stopwatch.StartNew();
+			else
+				watch.Restart();
+			if (!message.NullOrEmpty())
+				Message(message);
+		}
+
+		[Conditional("DEBUG")]
+		internal static void WatchStop(string message = "")
+		{
+			if (!message.NullOrEmpty())
+				Message(message);
+			watch?.Stop();
+			watch = null;
 		}
 	}
 }

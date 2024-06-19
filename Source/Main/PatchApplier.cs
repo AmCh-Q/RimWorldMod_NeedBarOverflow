@@ -1,23 +1,61 @@
-﻿using NeedBarOverflow.Patches.ModCompat;
+﻿using System;
+using System.Timers;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using HarmonyLib;
+using NeedBarOverflow.Patches.ModCompat;
+using Verse;
 
 namespace NeedBarOverflow.Patches
 {
 	public static class PatchApplier
 	{
 		public static Settings? s;
+		public static List<Patch_Single> Patches { get; }
+		static PatchApplier()
+		{
+			Debug.WatchStart("static PatchApplier()");
+			IEnumerable<Patch_Single> patchesCandidate = GenTypes
+				.AllTypes
+				.AsParallel()
+				.Where(type =>
+				!type.IsAbstract &&
+				type.IsSubclassOf(typeof(Patch_Single)))
+				.Select(type => Activator.CreateInstance(type))
+				.Cast<Patch_Single>()
+				.Where(patch => patch.Original is not null);
+			HashSet<Patch_Single> patchesSet = [];
+			foreach (Patch_Single patch in patchesCandidate)
+			{
+				if (patchesSet.Add(patch))
+				{
+					Debug.Warning("Adding Patch " + patch.Original?.Name);
+					continue;
+				}
+				patchesSet.TryGetValue(patch, out Patch_Single existing);
+				Debug.Error(string.Concat(
+					"Multiple patches to method ",
+					patch.Original?.Name, ": [",
+					patch.GetType().Name, "], [",
+					existing.GetType().Name, "]."));
+			}
+			Patches = [.. patchesSet];
+			Debug.WatchLog("static PatchApplier()");
+		}
 
 		public static void ApplyPatches()
 		{
 			if (s is null)
 				return;
-			Debug.Message("Applying Patches...");
+			Debug.WatchStart("Applying static Patches...");
 			//General Patches
 			SavedGameLoaderNow_.LoadGameFromSaveFileNow.Toggle();
 			GenUI_.BottomPart.Toggle();
 			GenUI_.DrawStatusLevel.Toggle();
 			Need_.CurLevel.Toggle();
 			Need_.DrawOnGUI.Toggle();
-			BeautyUtility_.AverageBeautyPerceptible.Toggle();
+			//BeautyUtility_.AverageBeautyPerceptible.Toggle();
 			//Setting_Food
 			Need_Food_.NutritionWanted.Toggle();
 			FloatMenuMakerMap_.AddHumanlikeOrders.Toggle();
@@ -32,7 +70,7 @@ namespace NeedBarOverflow.Patches
 			Need_Joy_.GainJoy_Gain.Toggle();
 			//Mood
 			Need_Mood_.CurInstantLevel.Toggle();
-			ColonistBarColonistDrawer_.DrawColonist.Toggle();
+			//ColonistBarColonistDrawer_.DrawColonist.Toggle();
 			InspectPaneFiller_.DrawMood.Toggle();
 			InspirationHandler_.StartInspirationMTBDays.Toggle();
 			//Beauty
@@ -59,8 +97,13 @@ namespace NeedBarOverflow.Patches
 			//Need_Play
 			Need_Play_.Play.Toggle();
 #endif
+			Debug.WatchLog("static Patches...", "Applying PatchList Patches.");
+			foreach (Patch_Single patch in Patches)
+				patch.Toggle();
+			Debug.WatchLog("PatchList Patches...", "Applying Mod Patches.");
 			ApplyModPatches();
-			Debug.Message("Done Applying Patches.");
+			Debug.WatchLog("Mod Patches...");
+			Debug.WatchStop("Done Applying Patches.");
 		}
 
 		//CM Color Coded Mood Bar [1.1+]

@@ -10,10 +10,8 @@ namespace NeedBarOverflow.Patches.ModCompat
 	{
 		public static HarmonyPatchType? patched;
 
-#pragma warning disable CS8601
-		public static MethodBase original
+		public static MethodBase? original
 			= AccessTools.TypeByName("ColoredMoodBar13.MoodCache")?.Method("DoMood");
-#pragma warning restore CS8601
 
 		public static void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Mood)));

@@ -20,10 +20,8 @@ namespace NeedBarOverflow
 #endif
 
 #pragma warning disable CS8618
-
 		static ModDefOf()
 			=> DefOfHelper.EnsureInitializedInCtor(typeof(ModDefOf));
-
 #pragma warning restore CS8618
 	}
 
@@ -38,21 +36,7 @@ namespace NeedBarOverflow
 		}
 
 		public static Func<Thing, bool>? VFEAncients_HasPower;
-		/*
-		private static void InitDef<T>(
-			ref T def, string defName,
-			bool force = true) where T : Def
-		{
-			if (def is null)
-			{
-				def = DefDatabase<T>.GetNamed(defName);
-				if (def is null && force)
-					Debug.Warning(string.Concat(
-						"Reference ", typeof(T).Name,
-						Strings.Space, defName,
-						" expected but failed to load."));
-			}
-		}*/
+
 		private static void VFEAncients()
 		{
 			// VFE-Ancients Compatibility

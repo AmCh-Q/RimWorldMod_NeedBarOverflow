@@ -1,0 +1,47 @@
+﻿using NeedBarOverflow.Needs;
+using RimWorld;
+using System.Collections.Generic;
+using Verse;
+
+namespace NeedBarOverflow.Patches
+{
+	// BeautyUtility.AverageBeautyPerceptible gets called whenever the instant beauty value is needed
+	// But it is slow due to needing to search many cells
+	// We cache the value for every 12 ticks (5 updates per second) to improve performance
+	// This patch is automatically disabled if Performance Optimizer mod is active
+	public sealed class BeautyUtility_AverageBeautyPerceptible() : Patch_Single(
+		original: typeof(BeautyUtility)
+			.Method(nameof(BeautyUtility.AverageBeautyPerceptible)),
+		prefix: PrefixMethod,
+		postfix: PostfixMethod)
+	{
+		private static readonly Dictionary<Pair<IntVec3, int>, float> cache = [];
+		private static int lastCheckTick = -1;
+		private static bool PrefixMethod(
+			IntVec3 root, Map map, out Pair<IntVec3, int> __state, ref float __result)
+		{
+			__state = new(root, map.ConstantRandSeed);
+			int currentTick = Find.TickManager.TicksGame;
+			if (currentTick - lastCheckTick >= 12)
+			{
+				cache.Clear();
+				lastCheckTick = currentTick;
+				return true;
+			}
+			return !cache.TryGetValue(__state, out __result);
+		}
+		private static void PostfixMethod(Pair<IntVec3, int> __state, float __result)
+			=> cache[__state] = __result;
+		public override void Toggle()
+		{
+			Toggle(Setting_Common.AnyEnabled
+				&& !ModLister.HasActiveModWithName("Performance Optimizer"));
+		}
+		public override void Toggle(bool enable)
+		{
+			base.Toggle(enable);
+			lastCheckTick = -1;
+			cache.Clear();
+		}
+	}
+}
