@@ -55,8 +55,12 @@ namespace NeedBarOverflow.Needs
 			private static readonly Dictionary<string, Def>[]
 				defsByDisableTypeCache = [[], [], []];
 
-			private static readonly Dictionary<StatName_DisableType, Pair<string, string>>
-				colorizeCache = [];
+			private static readonly string[,] colorizeCache = new string[3, 2]
+			{
+				{ string.Empty, string.Empty },
+				{ string.Empty, string.Empty },
+				{ string.Empty, string.Empty },
+			};
 
 			private static int pawnIdCached = -1;
 			private static bool canOverflowCached;
@@ -141,12 +145,8 @@ namespace NeedBarOverflow.Needs
 
 			private static string ColorizeDefsByType(StatName_DisableType defType, string defsStr)
 			{
-				if (colorizeCache.TryGetValue(
-					defType, out Pair<string, string> pair) &&
-					defsStr == pair.First)
-				{
-					return pair.Second;
-				}
+				if (defsStr == colorizeCache[(int)defType, 0])
+					return colorizeCache[(int)defType, 1];
 
 				string[] strArr = defsStr.Split(',');
 				Dictionary<string, Def> defDict = GetDefDict(defType);
@@ -162,7 +162,8 @@ namespace NeedBarOverflow.Needs
 					}
 				}
 				string colorized = string.Join(",", strArr);
-				colorizeCache[defType] = new Pair<string, string>(defsStr, colorized);
+				colorizeCache[(int)defType, 0] = defsStr;
+				colorizeCache[(int)defType, 1] = colorized;
 				return colorized;
 			}
 
