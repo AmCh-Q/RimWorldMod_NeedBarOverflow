@@ -1,8 +1,5 @@
-﻿using HarmonyLib;
-using NeedBarOverflow.Needs;
+﻿using NeedBarOverflow.Needs;
 using RimWorld;
-using System.Reflection;
-using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches
 {

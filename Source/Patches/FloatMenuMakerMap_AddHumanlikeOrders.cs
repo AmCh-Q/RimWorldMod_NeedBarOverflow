@@ -1,58 +1,36 @@
-﻿using HarmonyLib;
-using NeedBarOverflow.Needs;
+﻿using NeedBarOverflow.Needs;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
-using static NeedBarOverflow.Patches.Utility;
 
-namespace NeedBarOverflow.Patches.FloatMenuMakerMap_
+namespace NeedBarOverflow.Patches
 {
 	// Disable right click option to consume food if pawn is too full on food
-	public static class AddHumanlikeOrders
+	public class FloatMenuMakerMap_AddHumanlikeOrders() : Patch_Single(
+		original: typeof(FloatMenuMakerMap).Method("AddHumanlikeOrders"),
+		postfix: PostfixMethod)
 	{
-		public static HarmonyPatchType? patched;
-
-		public static readonly MethodBase original
-			= typeof(FloatMenuMakerMap)
-			.Method("AddHumanlikeOrders");
-
-		private static readonly Action<Vector3, Pawn, List<FloatMenuOption>>
-				postfix = Postfix;
-
-		public static void Toggle()
+		private static MethodInfo? targetOptionMethod;
+		public override void Toggle()
 			=> Toggle(Setting_Food.EffectEnabled(StatName_Food.DisableEating));
-
-		public static void Toggle(bool enabled)
+		public override void Toggle(bool enable)
 		{
-			if (enabled)
-			{
-				targetOptionMethod
-					??= GetInternalMethods(original, OpCodes.Ldftn)
-					.Where(IsIngestJobMethod).First();
-				Patch(ref patched, original: original,
-					postfix: postfix);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
+			Original.NotNull<MethodInfo>("Patch Original " + nameof(FloatMenuMakerMap_AddHumanlikeOrders));
+			targetOptionMethod
+				??= Utility.GetInternalMethods(Original!, System.Reflection.Emit.OpCodes.Ldftn)
+				.Where(IsIngestJobMethod).First();
+			base.Toggle(enable);
 		}
-
 		private static bool IsIngestJobMethod(MethodInfo method)
 		{
-			return PatchProcessor.ReadMethodBody(method)
+			return HarmonyLib.PatchProcessor.ReadMethodBody(method)
 				.Any(x => x.Value is FieldInfo field
 				&& field == typeof(JobDefOf).Field(nameof(JobDefOf.Ingest)));
 		}
-
-		private static MethodInfo? targetOptionMethod;
-
-		private static void Postfix(
+		private static void PostfixMethod(
 			Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
 		{
 			if (Need_Food_.Utility.CanConsumeMoreFood(pawn))

@@ -58,8 +58,8 @@ namespace NeedBarOverflow.Patches
 			//BeautyUtility_.AverageBeautyPerceptible.Toggle();
 			//Setting_Food
 			Need_Food_.NutritionWanted.Toggle();
-			FloatMenuMakerMap_.AddHumanlikeOrders.Toggle();
-			FoodUtility_.WillIngestFromInventoryNow.Toggle();
+			//FloatMenuMakerMap_.AddHumanlikeOrders.Toggle();
+			//FoodUtility_.WillIngestFromInventoryNow.Toggle();
 			Need_Food_.NeedInterval.Toggle();
 			TraitSet_.GainTrait.Toggle();
 			//Rest
@@ -91,7 +91,7 @@ namespace NeedBarOverflow.Patches
 			Need_KillThirst_.NeedInterval_Drain.Toggle();
 			//Need_Learning
 			Need_Learning_.Learn.Toggle();
-			Gizmo_GrowthTier_.DrawLearning.Toggle();
+			//Gizmo_GrowthTier_.DrawLearning.Toggle();
 			//Need_MechEnergy
 			InspectPaneFiller_.DrawMechEnergy.Toggle();
 			//Need_Play
