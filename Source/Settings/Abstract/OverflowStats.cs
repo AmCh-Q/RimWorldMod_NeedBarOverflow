@@ -27,6 +27,9 @@ namespace NeedBarOverflow.Needs
 		public virtual void ExposeData()
 		{
 			Array Enums = Enum.GetValues(typeof(StatName_DG));
+			// Needs to be a Dictionary with Enum as key here
+			// (instead of an array)
+			// so that Scribe_Collections can save the Enum by name
 			Dictionary<StatName_DG, float> dict = [];
 			if (Scribe.mode == LoadSaveMode.Saving)
 			{

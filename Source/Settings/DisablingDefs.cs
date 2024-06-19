@@ -52,8 +52,8 @@ namespace NeedBarOverflow.Needs
 			private static readonly string[] disablingDefs_str = [.. dfltDisablingDefNames];
 			public static readonly HashSet<Def>[] disablingDefs = [[], [], []];
 
-			private static readonly Dictionary<string, Def>[]
-				defsByDisableTypeCache = [[], [], []];
+			private static readonly Dictionary<string, Def>?[]
+				defsByDisableTypeCache = [null, null, null];
 
 			private static readonly string[,] colorizeCache = new string[3, 2]
 			{
@@ -117,13 +117,14 @@ namespace NeedBarOverflow.Needs
 					Debug.Warning("GetDefDict: Refs not initialized");
 					return [];
 				}
-				Dictionary<string, Def> defDict = defsByDisableTypeCache[(int)statName];
-				if (defDict != default)
+				int statIdx = (int)statName;
+				Dictionary<string, Def>? defDict = defsByDisableTypeCache[statIdx];
+				if (defDict is not null)
 					return defDict;
-				defDict = defsByDisableTypeCache[(int)statName] = [];
+				defDict = [];
 				foreach (Def defItem in
 					GenDefDatabase.GetAllDefsInDatabaseForDef(
-						dfltDisablingDefTypes[(int)statName]))
+						dfltDisablingDefTypes[statIdx]))
 				{
 					if (defItem is ThingDef thingDef &&
 						((statName == StatName_DisableType.Race && thingDef.race is null) ||
@@ -140,6 +141,7 @@ namespace NeedBarOverflow.Needs
 						defDict.TryAdd(defLabel, defItem);
 				}
 				Debug.Message("GetDefDict() Loaded " + statName.ToString());
+				defsByDisableTypeCache[statIdx] = defDict;
 				return defDict;
 			}
 
@@ -170,6 +172,9 @@ namespace NeedBarOverflow.Needs
 			public static void ExposeData()
 			{
 				Debug.Message("DisablingDefs.ExposeData() called");
+				// Needs to be a Dictionary with Enum as key here
+				// (instead of an array)
+				// so that Scribe_Collections can save the Enum by name
 				Dictionary<StatName_DisableType, string> scribeDefDict = [];
 				if (Scribe.mode == LoadSaveMode.Saving)
 				{

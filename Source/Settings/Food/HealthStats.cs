@@ -47,6 +47,9 @@ namespace NeedBarOverflow.Needs
 			public static void ExposeData()
 			{
 				Array Enums = Enum.GetValues(typeof(HealthName));
+				// Needs to be a Dictionary with Enum as key here
+				// (instead of an array)
+				// so that Scribe_Collections can save the Enum by name
 				Dictionary<HealthName, string> healthStat_strs = [];
 				if (Scribe.mode == LoadSaveMode.Saving)
 				{
@@ -55,7 +58,10 @@ namespace NeedBarOverflow.Needs
 						IEnumerable<string> statStr()
 						{
 							for (int i = 0; i < 9; i++)
-								yield return healthStats[(int)key, i].ToString(CultureInfo.InvariantCulture);
+							{
+								yield return healthStats[(int)key, i]
+									.ToString(CultureInfo.InvariantCulture);
+							}
 						}
 						healthStat_strs[key] = string.Join(Strings.Space, statStr());
 					}
