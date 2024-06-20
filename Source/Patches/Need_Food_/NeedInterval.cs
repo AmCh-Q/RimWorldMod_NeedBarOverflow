@@ -8,49 +8,34 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
-using static NeedBarOverflow.Patches.Utility;
 
-namespace NeedBarOverflow.Patches.Need_Food_
+namespace NeedBarOverflow.Patches
 {
-	public static class NeedInterval
+	public sealed class Need_Food_NeedInterval() : Patch_Single(
+		original: typeof(Need_Food).Method(nameof(Need_Food.NeedInterval)),
+		transpiler: TranspilerMethod)
 	{
-		public static HarmonyPatchType? patched;
-
-		public static readonly MethodBase original
-			= typeof(Need_Food)
-			.Method(nameof(Need_Food.NeedInterval));
-
-		private static readonly TransIL transpiler = Transpiler;
-
 		public static readonly Dictionary<Pawn, float> pawnsWithFoodOverflow = [];
 
-		public static void Toggle()
+#if v1_2 || v1_3 || v1_4
+		private static readonly AccessTools.FieldRef<Hediff, bool>
+			fr_visible = AccessTools.FieldRefAccess<Hediff, bool>(
+			typeof(Hediff).GetField("visible", Consts.bindingflags));
+#endif
+
+		public override void Toggle()
 			=> Toggle(Setting_Food.AffectHealth);
-
-		public static void Toggle(bool enabled)
+		public override void Toggle(bool enable)
 		{
-			if (enabled)
-			{
-				Patch(ref patched, original: original,
-					transpiler: transpiler);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
-
+			base.Toggle(enable);
 			if (Current.ProgramState == ProgramState.Playing)
 				ResetHediff();
 		}
-
 		public static void ResetHediff()
 		{
 			pawnsWithFoodOverflow.Clear();
-			foreach (Pawn pawn in Find.WorldPawns.AllPawnsAliveOrDead)
-			{
-				if (HasHediff(pawn))
-					pawnsWithFoodOverflow.TryAdd(pawn, -1);
-			}
+			foreach (Pawn pawn in Find.WorldPawns.AllPawnsAliveOrDead.Where(HasHediff))
+				pawnsWithFoodOverflow.TryAdd(pawn, -1);
 
 			foreach (Map map in Find.Maps)
 			{
@@ -59,7 +44,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			}
 
 			Pawn[] pawnArr = [.. pawnsWithFoodOverflow.Keys];
-			if (patched.HasValue)
+			if (PatchApplier.Patched(typeof(Need_Food_NeedInterval)))
 			{
 				foreach (Pawn pawn in pawnArr)
 					UpdateHediff(pawn);
@@ -71,10 +56,8 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				pawnsWithFoodOverflow.Clear();
 			}
 		}
-
 		private static bool HasHediff(Pawn pawn)
 			=> pawn.health?.hediffSet.HasHediff(ModDefOf.FoodOverflow) ?? false;
-
 		private static void RemoveHediff(Pawn pawn, bool removeFromList = true)
 		{
 #if v1_2 || v1_3 || v1_4
@@ -88,7 +71,6 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			if (removeFromList)
 				pawnsWithFoodOverflow.Remove(pawn);
 		}
-
 		public static void UpdateHediff(Pawn pawn)
 		{
 			if (pawn.needs?.food is not Need_Food need
@@ -100,13 +82,6 @@ namespace NeedBarOverflow.Patches.Need_Food_
 			pawnsWithFoodOverflow[pawn] = -1f;
 			UpdateHediff(need.CurLevel, need, pawn);
 		}
-
-#if v1_2 || v1_3 || v1_4
-		private static readonly AccessTools.FieldRef<Hediff, bool>
-			fr_visible = AccessTools.FieldRefAccess<Hediff, bool>(
-			typeof(Hediff).GetField("visible", Consts.bindingflags));
-#endif
-
 		private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
 		{
@@ -151,8 +126,7 @@ namespace NeedBarOverflow.Patches.Need_Food_
 #endif
 			}
 		}
-
-		private static IEnumerable<CodeInstruction> Transpiler(
+		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions)
 		{
 			MethodInfo m_UpdateHediff = ((Action<float, Need_Food, Pawn>)UpdateHediff).Method;
@@ -164,14 +138,14 @@ namespace NeedBarOverflow.Patches.Need_Food_
 				// In this case, we've reached the portion of code to patch
 				if (state == 0 && i >= 1 &&        // Haven't patched yet
 					instructionList[i - 1].opcode == OpCodes.Sub &&
-					codeInstruction.Calls(set_CurLevel)) // Vanilla is going to set updated CurLevel
+					codeInstruction.Calls(Utility.set_CurLevel)) // Vanilla is going to set updated CurLevel
 				{
 					state = 1;
 					// Do checks in UpdateHediff() and apply hediff
 					yield return new CodeInstruction(OpCodes.Dup);    // get a copy of new value
 					yield return new CodeInstruction(OpCodes.Ldarg_0);  // get need
 					yield return new CodeInstruction(OpCodes.Dup);
-					yield return new CodeInstruction(OpCodes.Ldfld, f_needPawn);    // Get need.pawn
+					yield return new CodeInstruction(OpCodes.Ldfld, Utility.f_needPawn);    // Get need.pawn
 					yield return new CodeInstruction(OpCodes.Call, m_UpdateHediff); // UpdateHediff
 				}
 				yield return codeInstruction;

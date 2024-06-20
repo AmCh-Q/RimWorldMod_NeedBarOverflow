@@ -4,7 +4,7 @@ using RimWorld;
 
 namespace NeedBarOverflow.Patches
 {
-	public class Gizmo_GrowthTier_DrawLearning() : Patch_Single(
+	public sealed class Gizmo_GrowthTier_DrawLearning() : Patch_Single(
 		original: typeof(Gizmo_GrowthTier).Method("DrawLearning"),
 		transpiler: Add1UpperBound.transpiler)
 	{

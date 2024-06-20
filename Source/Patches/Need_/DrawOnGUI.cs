@@ -8,39 +8,18 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
-using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches.Need_
 {
-	public static class DrawOnGUI
+	public sealed class DrawOnGUI() : Patch_Single(
+		original: typeof(Need).Method(nameof(Need.DrawOnGUI)),
+		prefix: PrefixMethod,
+		transpiler: TranspilerMethod)
 	{
-		public static HarmonyPatchType? patched;
-
-		public static readonly MethodBase original
-			= typeof(Need)
-			.Method(nameof(Need.DrawOnGUI));
-
-		private static readonly Func<bool> prefix = Prefix;
-		private static readonly TransILG transpiler = Transpiler;
-
-		public static void Toggle()
+		public override void Toggle()
 			=> Toggle(Setting_Common.AnyEnabled);
-
-		public static void Toggle(bool enable)
-		{
-			if (enable)
-			{
-				Patch(ref patched, original: original,
-					prefix: prefix,
-					transpiler: transpiler);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
-		}
-
-		private static bool Prefix() => Event.current.type != EventType.Layout;
+		private static bool PrefixMethod()
+			=> Event.current.type != EventType.Layout;
 
 		// Need.DrawOnGUI usually expects the need level percentage to be between 0 and 1
 		//   and may overflow otherwise
@@ -60,7 +39,7 @@ namespace NeedBarOverflow.Patches.Need_
 		//	 Case 2.1: MaxLevel < 1 unit of nutrition < CurLevel
 		//	 Case 2.2: 1 unit of nutrition <= MaxLevel < CurLevel
 		//	 Case 3: MaxLevel < CurLevel <= 1 unit of nutrition
-		private static IEnumerable<CodeInstruction> Transpiler(
+		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			MethodInfo
@@ -107,12 +86,12 @@ namespace NeedBarOverflow.Patches.Need_
 					// Case 1: MaxLevel >= CurLevel, skip and set mult to 1f
 					//1	float max = n.MaxLevel;
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Callvirt, get_MaxLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, Utility.get_MaxLevel);
 					yield return new CodeInstruction(OpCodes.Dup);  // consumed at #Bge_Un_S
 					yield return new CodeInstruction(OpCodes.Stloc_S, max.LocalIndex);
 					//2	float cur = n.CurLevel;
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, Utility.get_CurLevel);
 					yield return new CodeInstruction(OpCodes.Dup);  // consumed at #Bge_Un_S
 					yield return new CodeInstruction(OpCodes.Stloc_S, cur.LocalIndex);
 					//3	if (max < cur)				#Bge_Un_S
@@ -160,7 +139,7 @@ namespace NeedBarOverflow.Patches.Need_
 				}
 				if (state > 1 &&
 					codeInstruction.opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 1].Calls(get_MaxLevel))
+					instructionList[i + 1].Calls(Utility.get_MaxLevel))
 				{
 					// Stage 2+
 					// Once max is calculated, whenever accessing MaxLevel;
@@ -172,7 +151,7 @@ namespace NeedBarOverflow.Patches.Need_
 				}
 				if (state > 1 &&
 					codeInstruction.opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 1].Calls(get_CurLevelPercentage))
+					instructionList[i + 1].Calls(Utility.get_CurLevelPercentage))
 				{
 					// Stage 2+
 					// Once max is calculated, whenever accessing CurLevelPercentage;
@@ -236,7 +215,7 @@ namespace NeedBarOverflow.Patches.Need_
 					//	if (n.def.scaleBar && max < 1f)
 					//  if (def.showUnitTicks)
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Callvirt, get_MaxLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, Utility.get_MaxLevel);
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
 					yield return new CodeInstruction(OpCodes.Beq_S, jumpLabels[3]);
 					// If MaxLevel == 1f, jump straight into the draw unit ticks section
@@ -250,14 +229,14 @@ namespace NeedBarOverflow.Patches.Need_
 				}
 				if (state == 5 && i > 0 &&
 					instructionList[i - 2].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i - 1].Calls(get_MaxLevel) &&
+					instructionList[i - 1].Calls(Utility.get_MaxLevel) &&
 					codeInstruction.opcode == OpCodes.Blt_S)
 				{
 					// Stage 6
 					state = 6;
 					// Limit the number of showUnitTicks to 10 max
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 11f);
-					yield return new CodeInstruction(OpCodes.Call, m_Min);
+					yield return new CodeInstruction(OpCodes.Call, Utility.m_Min);
 					yield return codeInstruction;
 					continue;
 				}
@@ -271,7 +250,7 @@ namespace NeedBarOverflow.Patches.Need_
 					//	resulting in drawn > 1, so we cap it
 					//	m_DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.ModifyClamp01(curInstantLevelPercentage * mult) });
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-					yield return new CodeInstruction(OpCodes.Call, m_Min);
+					yield return new CodeInstruction(OpCodes.Call, Utility.m_Min);
 					yield return codeInstruction;
 					continue;
 				}

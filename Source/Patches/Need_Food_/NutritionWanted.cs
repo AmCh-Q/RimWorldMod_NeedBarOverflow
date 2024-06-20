@@ -1,33 +1,13 @@
-﻿using HarmonyLib;
-using NeedBarOverflow.Needs;
+﻿using NeedBarOverflow.Needs;
 using RimWorld;
-using System.Reflection;
-using static NeedBarOverflow.Patches.Utility;
 
-namespace NeedBarOverflow.Patches.Need_Food_
+namespace NeedBarOverflow.Patches
 {
-	public static class NutritionWanted
+	public sealed class Need_Food_NutritionWanted() : Patch_Single(
+		original: typeof(Need_Food).Getter(nameof(Need_Food.NutritionWanted)),
+		postfix: Add0LowerBound.postfix)
 	{
-		public static HarmonyPatchType? patched;
-
-		public static readonly MethodBase original
-			= typeof(Need_Food)
-			.Getter(nameof(Need_Food.NutritionWanted));
-
-		public static void Toggle()
+		public override void Toggle()
 			=> Toggle(Setting_Food.Enabled);
-
-		public static void Toggle(bool enabled)
-		{
-			if (enabled)
-			{
-				Patch(ref patched, original: original,
-					postfix: Add0LowerBound.postfix);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
-		}
 	}
 }

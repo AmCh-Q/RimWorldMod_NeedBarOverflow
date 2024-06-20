@@ -8,40 +8,18 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
-using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches.Need_
 {
 	// Need.CurLevel setter method usually clamps the level between 0 and Need.MaxLevel
 	// This patch adjusts the apparent Need.MaxLevel fed to the clamp
 	// This method is what allows for need bars overflowing
-
-	public static class CurLevel
+	public sealed class CurLevel() : Patch_Single(
+		original: typeof(Need).Setter(nameof(Need.CurLevel)),
+		transpiler: TranspilerMethod)
 	{
-		public static HarmonyPatchType? patched;
-
-		public static readonly MethodBase original
-			= typeof(Need)
-			.Setter(nameof(Need.CurLevel));
-
-		private static readonly TransILG transpiler = Transpiler;
-
-		public static void Toggle()
+		public override void Toggle()
 			=> Toggle(Setting_Common.AnyEnabled);
-
-		public static void Toggle(bool enable)
-		{
-			if (enable)
-			{
-				Patch(ref patched, original: original,
-					transpiler: transpiler);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
-		}
-
 		public static float Adjusted_MaxLevel(Need need)
 		{
 			float originalMax = need.MaxLevel;
@@ -55,8 +33,7 @@ namespace NeedBarOverflow.Patches.Need_
 				return Mathf.Max(originalMax * mult, originalMax + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
 			return originalMax * mult;
 		}
-
-		private static IEnumerable<CodeInstruction> Transpiler(
+		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			MethodInfo m_Adjusted_MaxLevel
@@ -77,9 +54,9 @@ namespace NeedBarOverflow.Patches.Need_
 					codeInstruction.LoadsConstant(0d) &&
 					// The vanilla method would load MaxLevel
 					instructionList[i + 1].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 2].Calls(get_MaxLevel) &&
+					instructionList[i + 2].Calls(Utility.get_MaxLevel) &&
 					// The vanilla method would call Clamp(new value, 0f, MaxLevel)
-					instructionList[i + 3].Calls(m_Clamp) &&
+					instructionList[i + 3].Calls(Utility.m_Clamp) &&
 					// There is an instruction after everything is done
 					//   (It's stfld but what it is doesn't matter)
 					instructionList.Count > i + 4)
@@ -88,7 +65,7 @@ namespace NeedBarOverflow.Patches.Need_
 					// First check if f_curLevelInt < new value
 					// Load f_curLevelInt
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Ldfld, f_curLevelInt);
+					yield return new CodeInstruction(OpCodes.Ldfld, Utility.f_curLevelInt);
 					// Load new value
 					yield return new CodeInstruction(OpCodes.Ldarg_1);
 					// Jump if f_curLevelInt < new value
@@ -98,7 +75,7 @@ namespace NeedBarOverflow.Patches.Need_
 					//   that means the new value did not increase
 					yield return codeInstruction; // Load 0f
 												  // Get Max(the new value, 0f) on stack
-					yield return new CodeInstruction(OpCodes.Call, m_Max);
+					yield return new CodeInstruction(OpCodes.Call, Utility.m_Max);
 					// Skip to end
 					yield return new CodeInstruction(OpCodes.Br_S, skipAdjustLabel);
 
@@ -108,7 +85,7 @@ namespace NeedBarOverflow.Patches.Need_
 					yield return new CodeInstruction(OpCodes.Ldarg_0).WithLabels(needAdjustLabel);
 					yield return new CodeInstruction(OpCodes.Call, m_Adjusted_MaxLevel);
 					// Get Min(the new value, adjusted MaxLevel)
-					yield return new CodeInstruction(OpCodes.Call, m_Min);
+					yield return new CodeInstruction(OpCodes.Call, Utility.m_Min);
 
 					// Done, this is the instruction after everything is done
 					yield return instructionList[i + 4].WithLabels(skipAdjustLabel);

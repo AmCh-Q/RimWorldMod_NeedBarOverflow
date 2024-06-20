@@ -5,39 +5,17 @@ using RimWorld;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
-using static NeedBarOverflow.Patches.Utility;
 
-namespace NeedBarOverflow.Patches.Need_Play_
+namespace NeedBarOverflow.Patches
 {
-	public static class Play
+	public sealed class Need_Play_Play() : Patch_Single(
+		original: typeof(Need_Play).Method(nameof(Need_Play.Play)),
+		transpiler: TranspilerMethod)
 	{
-		public static HarmonyPatchType? patched;
-
-		public static readonly MethodBase original
-			= typeof(Need_Play)
-			.Method(nameof(Need_Play.Play));
-
-		private static readonly TransILG transpiler = Transpiler;
-
-		public static void Toggle()
+		public override void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Play)));
-
-		public static void Toggle(bool enabled)
-		{
-			if (enabled)
-			{
-				Patch(ref patched, original: original,
-					transpiler: transpiler);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
-		}
-
-		private static IEnumerable<CodeInstruction> Transpiler(
+		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
@@ -50,13 +28,13 @@ namespace NeedBarOverflow.Patches.Need_Play_
 				if (state == 0 && i < instructionList.Count - 5 &&
 					codeInstruction.opcode == OpCodes.Ldarg_0 &&
 					instructionList[i + 1].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 2].Calls(get_CurLevelPercentage) &&
-					instructionList[i + 3].Calls(m_Clamp01) &&
-					instructionList[i + 4].Calls(set_CurLevelPercentage))
+					instructionList[i + 2].Calls(Utility.get_CurLevelPercentage) &&
+					instructionList[i + 3].Calls(Utility.m_Clamp01) &&
+					instructionList[i + 4].Calls(Utility.set_CurLevelPercentage))
 				{
 					state = 1;
 					yield return codeInstruction;
-					yield return new CodeInstruction(OpCodes.Call, m_CanOverflow);
+					yield return new CodeInstruction(OpCodes.Call, Utility.m_CanOverflow);
 					yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabel);
 					yield return instructionList[i + 1];
 					yield return new CodeInstruction(OpCodes.Dup);

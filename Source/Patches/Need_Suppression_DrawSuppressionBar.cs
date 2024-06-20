@@ -7,42 +7,23 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using static NeedBarOverflow.Patches.Utility;
 
-namespace NeedBarOverflow.Patches.Need_Suppression_
+namespace NeedBarOverflow.Patches
 {
-	public static class DrawSuppressionBar
+	public sealed class Need_Suppression_DrawSuppressionBar() : Patch_Single(
+		original: typeof(Need_Suppression)
+			.Method(nameof(Need_Suppression.DrawSuppressionBar)),
+		transpiler: TranspilerMethod)
 	{
-		public static HarmonyPatchType? patched;
-
-		public static readonly MethodBase original
-			= typeof(Need_Suppression)
-			.Method(nameof(Need_Suppression.DrawSuppressionBar));
-
-		private static readonly TransILG transpiler = Transpiler;
-
-		public static void Toggle()
+		public override void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Suppression)));
-
-		public static void Toggle(bool enabled)
-		{
-			if (enabled)
-			{
-				Patch(ref patched, original: original,
-					transpiler: transpiler);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
-		}
-
-		private static IEnumerable<CodeInstruction> Transpiler(
+		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			MethodInfo m_DrawBarThreshold
 				= typeof(Need).Method("DrawBarThreshold");
-			ReadOnlyCollection<CodeInstruction> instructionList = Add1UpperBound.TranspilerMethod(instructions).ToList().AsReadOnly();
+			ReadOnlyCollection<CodeInstruction> instructionList
+				= Add1UpperBound.TranspilerMethod(instructions).ToList().AsReadOnly();
 			int state = 0;
 			Label end = ilg.DefineLabel();
 			LocalBuilder perc = ilg.DeclareLocal(typeof(float));
@@ -50,14 +31,14 @@ namespace NeedBarOverflow.Patches.Need_Suppression_
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				if (state == 0 && i > 0 &&
-					instructionList[i - 1].Calls(get_CurLevelPercentage))
+					instructionList[i - 1].Calls(Utility.get_CurLevelPercentage))
 				{
 					state = 1;
 					// Optain the shrink factor for the SuppressionBar
 					// perc = 1f / Mathf.Max(1f, CurLevelPercentage)
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-					yield return new CodeInstruction(OpCodes.Call, m_Max);
+					yield return new CodeInstruction(OpCodes.Call, Utility.m_Max);
 					yield return new CodeInstruction(OpCodes.Stloc_S, perc.LocalIndex);
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
 					yield return new CodeInstruction(OpCodes.Ldloc_S, perc.LocalIndex);

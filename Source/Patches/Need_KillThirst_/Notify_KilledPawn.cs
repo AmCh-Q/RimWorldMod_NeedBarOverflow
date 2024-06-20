@@ -6,37 +6,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
-using static NeedBarOverflow.Patches.Utility;
 
-namespace NeedBarOverflow.Patches.Need_KillThirst_
+namespace NeedBarOverflow.Patches
 {
-	public static class Notify_KilledPawn
+	public sealed class Need_KillThirst_Notify_KilledPawn() : Patch_Single(
+		original: typeof(Need_KillThirst)
+			.Method(nameof(Need_KillThirst.Notify_KilledPawn)),
+		transpiler: TranspilerMethod)
 	{
-		public static HarmonyPatchType? patched;
-		public static readonly MethodBase original
-			= typeof(Need_KillThirst)
-			.Method(nameof(Need_KillThirst.Notify_KilledPawn));
-		private static readonly TransIL transpiler = Transpiler;
-
-		public static void Toggle()
+		public override void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_KillThirst)));
-
-		public static void Toggle(bool enabled)
-		{
-			if (enabled)
-			{
-				Patch(ref patched, original: original,
-				transpiler: transpiler);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
-		}
-
-		private static IEnumerable<CodeInstruction> Transpiler(
+		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions)
 		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
@@ -48,17 +29,17 @@ namespace NeedBarOverflow.Patches.Need_KillThirst_
 				if (state == 0 && i > 0 && i < instructionList.Count - 1 &&
 					instructionList[i - 1].opcode == OpCodes.Ldarg_0 &&
 					codeInstruction.LoadsConstant(1f) &&
-					instructionList[i + 1].Calls(set_CurLevel))
+					instructionList[i + 1].Calls(Utility.set_CurLevel))
 				{
 					state++;
 					yield return new CodeInstruction(OpCodes.Dup);
-					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, Utility.get_CurLevel);
 					yield return codeInstruction;
 					yield return new CodeInstruction(OpCodes.Ldc_I4, (int)StatName_DG.SlowGain);
 					yield return new CodeInstruction(OpCodes.Call,
 						((Func<int, float>)OverflowStats<Need_KillThirst>.EffectStat).Method);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Callvirt, get_CurLevelPercentage);
+					yield return new CodeInstruction(OpCodes.Callvirt, Utility.get_CurLevelPercentage);
 					yield return new CodeInstruction(OpCodes.Call, AdjustGain.adjust);
 					yield return new CodeInstruction(OpCodes.Add);
 				}

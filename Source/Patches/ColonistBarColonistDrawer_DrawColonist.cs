@@ -3,7 +3,7 @@ using RimWorld;
 
 namespace NeedBarOverflow.Patches
 {
-	public class ColonistBarColonistDrawer_DrawColonist() : Patch_Single(
+	public sealed class ColonistBarColonistDrawer_DrawColonist() : Patch_Single(
 		original: typeof(ColonistBarColonistDrawer)
 			.Method(nameof(ColonistBarColonistDrawer.DrawColonist)),
 		transpiler: Add1UpperBound.transpiler)

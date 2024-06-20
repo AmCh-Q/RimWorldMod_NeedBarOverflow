@@ -49,7 +49,7 @@ namespace NeedBarOverflow.Patches.TraitSet_
 		private static void Postfix(Pawn ___pawn, Trait trait)
 		{
 			if (trait.def == ModDefOf.Gourmand)
-				Need_Food_.NeedInterval.UpdateHediff(___pawn);
+				Need_Food_NeedInterval.UpdateHediff(___pawn);
 		}
 	}
 }

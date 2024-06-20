@@ -65,7 +65,7 @@ namespace NeedBarOverflow.Patches
 		public MethodInfo? Postfix => Patches.Postfix;
 		public MethodInfo? Transpiler => Patches.Transpiler;
 		public MethodInfo? Finalizer => Patches.Finalizer;
-		private bool Patched
+		public bool Patched
 			=> PatchProcessor.GetPatchInfo(Original) is HarmonyLib.Patches patches
 			&& (Prefix is not null && patches.Prefixes.Any(p => p.owner == harmony.Id)
 			|| Postfix is not null && patches.Postfixes.Any(p => p.owner == harmony.Id)
@@ -96,15 +96,15 @@ namespace NeedBarOverflow.Patches
 		public abstract void Toggle();
 		public virtual void Toggle(bool enable)
 		{
+			if (enable == Patched)
+				return;
 			if (enable)
 				Patch();
 			else
 				Unpatch();
 		}
-		private void Patch()
+		protected virtual void Patch()
 		{
-			if (Patched)
-				return;
 			Original.NotNull<MethodInfo>("Patch Original " + GetType().Name);
 			Debug.Message("Patching Method "
 				+ Original!.DeclaringType.Name
@@ -120,10 +120,8 @@ namespace NeedBarOverflow.Patches
 				transpiler: h_transpiler,
 				finalizer: h_finalizer);
 		}
-		private void Unpatch()
+		protected virtual void Unpatch()
 		{
-			if (!Patched)
-				return;
 			Original.NotNull<MethodInfo>("Patch Original " + GetType().Name);
 			Debug.Message("Unpatching Method "
 				+ Original!.DeclaringType.Name

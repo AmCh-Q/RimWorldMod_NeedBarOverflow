@@ -1,34 +1,15 @@
 ﻿#if !v1_2 && !v1_3
-using HarmonyLib;
 using NeedBarOverflow.Needs;
 using RimWorld;
-using System.Reflection;
-using static NeedBarOverflow.Patches.Utility;
 
-namespace NeedBarOverflow.Patches.InspectPaneFiller_
+namespace NeedBarOverflow.Patches
 {
-	public static class DrawMechEnergy
+	public sealed class InspectPaneFiller_DrawMechEnergy() : Patch_Single(
+		original: typeof(InspectPaneFiller).Method("DrawMechEnergy"),
+		transpiler: Add1UpperBound.transpiler)
 	{
-		public static HarmonyPatchType? patched;
-		public static readonly MethodBase original
-			= typeof(InspectPaneFiller)
-			.Method("DrawMechEnergy");
-
-		public static void Toggle()
+		public override void Toggle()
 			=> Toggle(Setting_Common.Enabled(typeof(Need_MechEnergy)));
-
-		public static void Toggle(bool enabled)
-		{
-			if (enabled)
-			{
-				Patch(ref patched, original: original,
-					transpiler: Add1UpperBound.transpiler);
-			}
-			else
-			{
-				Unpatch(ref patched, original: original);
-			}
-		}
 	}
 }
 #endif

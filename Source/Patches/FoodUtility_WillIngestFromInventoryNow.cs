@@ -5,7 +5,7 @@ using Verse;
 namespace NeedBarOverflow.Patches
 {
 	// Disable option to consume food if pawn is too full on food
-	public class FoodUtility_WillIngestFromInventoryNow() : Patch_Single(
+	public sealed class FoodUtility_WillIngestFromInventoryNow() : Patch_Single(
 		original: typeof(FoodUtility)
 			.Method(nameof(FoodUtility.WillIngestFromInventoryNow)),
 		postfix: PostfixMethod)
