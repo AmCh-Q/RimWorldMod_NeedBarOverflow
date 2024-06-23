@@ -4,9 +4,18 @@ namespace NeedBarOverflow
 {
 	public static class Consts
 	{
-		internal const BindingFlags bindingflags
-			= BindingFlags.Instance | BindingFlags.Static
-			| BindingFlags.Public | BindingFlags.NonPublic;
+		internal const BindingFlags
+			bindAll
+				= BindingFlags.Instance | BindingFlags.Static
+				| BindingFlags.Public | BindingFlags.NonPublic,
+			bindPublicInstance
+				= BindingFlags.Instance | BindingFlags.Public,
+			bindPublicStatic
+				= BindingFlags.Static | BindingFlags.Public,
+			bindNonpubInstance
+				= BindingFlags.Instance | BindingFlags.NonPublic,
+			bindNonPubStatic
+				= BindingFlags.Static | BindingFlags.NonPublic;
 	}
 
 	public static class Strings

@@ -10,8 +10,7 @@ namespace NeedBarOverflow.Patches
 	// We cache the value for every 12 ticks (5 updates per second) to improve performance
 	// This patch is automatically disabled if Performance Optimizer mod is active
 	public sealed class BeautyUtility_AverageBeautyPerceptible() : Patch_Single(
-		original: typeof(BeautyUtility)
-			.Method(nameof(BeautyUtility.AverageBeautyPerceptible)),
+		original: BeautyUtility.AverageBeautyPerceptible,
 		prefix: PrefixMethod,
 		postfix: PostfixMethod)
 	{
@@ -33,13 +32,11 @@ namespace NeedBarOverflow.Patches
 		{
 			__state = new(root, map.uniqueID);
 			int currentTick = Find.TickManager.TicksGame;
-			if (currentTick - lastCheckTick >= 12)
-			{
-				cache.Clear();
-				lastCheckTick = currentTick;
-				return true;
-			}
-			return !cache.TryGetValue(__state, out __result);
+			if (currentTick - lastCheckTick < 12)
+				return !cache.TryGetValue(__state, out __result);
+			cache.Clear();
+			lastCheckTick = currentTick;
+			return true;
 		}
 		private static void PostfixMethod(Pair<IntVec3, int> __state, float __result)
 			=> cache[__state] = __result;

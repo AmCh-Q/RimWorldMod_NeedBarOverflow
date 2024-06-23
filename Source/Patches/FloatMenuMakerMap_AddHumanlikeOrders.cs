@@ -21,26 +21,25 @@ namespace NeedBarOverflow.Patches
 			=> Toggle(Setting_Food.EffectEnabled(StatName_Food.DisableEating));
 		public override void Toggle(bool enable)
 		{
-			Original.NotNull<MethodInfo>("Patch Original "
-				+ nameof(FloatMenuMakerMap_AddHumanlikeOrders));
-			targetOptionMethod ??= Utility
+			targetOptionMethod ??= Helpers
 				.GetInternalMethods(Original!, OpCodes.Ldftn)
 				.Where(IsIngestJobMethod)
-				.First();
+				.First()
+				.NotNull("Patch FloatMenuMakerMap_AddHumanlikeOrders.targetOptionMethod");
 			base.Toggle(enable);
 		}
 		private static bool IsIngestJobMethod(MethodInfo method)
 		{
-			return HarmonyLib.PatchProcessor
+			bool result = HarmonyLib.PatchProcessor
 				.ReadMethodBody(method)
 				.Any(x => f_Ingest.Equals(x.Value));
+			return result;
 		}
 		private static void PostfixMethod(
 			Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
 		{
-			if (Need_Food_.Utility.CanConsumeMoreFood(pawn))
+			if (Need_Food_Utility.CanConsumeMoreFood(pawn))
 				return;
-			targetOptionMethod.NotNull<MethodInfo>(nameof(targetOptionMethod));
 			foreach (FloatMenuOption opt in opts)
 			{
 				// Skip if the option's action method does not match the target method

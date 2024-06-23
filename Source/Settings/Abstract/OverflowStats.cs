@@ -63,8 +63,8 @@ namespace NeedBarOverflow.Needs
 			{
 				Utility.AddNumSetting(ls,
 					ref f1, true,
-					-2.002f, 2.002f,
-					0f, float.PositiveInfinity,
+					-2.002f, 1f,
+					0f, 10f,
 					null, sl.tip, true);
 			}
 			overflowStats[(int)settingName] = b1 ? f1 : -f1 - 1f;

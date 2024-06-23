@@ -2,9 +2,9 @@
 using RimWorld;
 using Verse;
 
-namespace NeedBarOverflow.Patches.Need_Food_
+namespace NeedBarOverflow.Patches
 {
-	public static class Utility
+	public static class Need_Food_Utility
 	{
 		public static bool CanConsumeMoreFood(Pawn pawn)
 		{

@@ -6,8 +6,7 @@ namespace NeedBarOverflow.Patches
 {
 	// Disable option to consume food if pawn is too full on food
 	public sealed class FoodUtility_WillIngestFromInventoryNow() : Patch_Single(
-		original: typeof(FoodUtility)
-			.Method(nameof(FoodUtility.WillIngestFromInventoryNow)),
+		original: FoodUtility.WillIngestFromInventoryNow,
 		postfix: PostfixMethod)
 	{
 		public override void Toggle()
@@ -26,7 +25,7 @@ namespace NeedBarOverflow.Patches
 				&& thingDef.ingestible.specialThoughtDirect != ModDefOf.IngestedHemogenPack
 #endif
 				&& !thingDef.IsDrug
-				&& !Need_Food_.Utility.CanConsumeMoreFood(pawn)
+				&& !Need_Food_Utility.CanConsumeMoreFood(pawn)
 				)
 			{
 				__result = false;

@@ -9,6 +9,6 @@ namespace NeedBarOverflow.Needs
 		public static float MaxValue => Setting_Common.GetOverflow(typeof(T));
 
 		public static readonly MethodInfo
-			MaxValue_get = typeof(Setting<T>).Getter(nameof(MaxValue));
+			mget_MaxValue = typeof(Setting<T>).Getter(nameof(MaxValue))!;
 	}
 }

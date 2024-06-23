@@ -31,14 +31,14 @@ namespace NeedBarOverflow.Patches
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				if (state == 0 && i > 0 &&
-					instructionList[i - 1].Calls(Utility.get_CurLevelPercentage))
+					instructionList[i - 1].Calls(Refs.get_CurLevelPercentage))
 				{
 					state = 1;
 					// Optain the shrink factor for the SuppressionBar
 					// perc = 1f / Mathf.Max(1f, CurLevelPercentage)
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-					yield return new CodeInstruction(OpCodes.Call, Utility.m_Max);
+					yield return new CodeInstruction(OpCodes.Call, Refs.m_Max);
 					yield return new CodeInstruction(OpCodes.Stloc_S, perc.LocalIndex);
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
 					yield return new CodeInstruction(OpCodes.Ldloc_S, perc.LocalIndex);

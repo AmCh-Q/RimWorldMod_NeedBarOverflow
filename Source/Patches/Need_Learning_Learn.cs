@@ -28,9 +28,9 @@ namespace NeedBarOverflow.Patches
 					codeInstruction.opcode == OpCodes.Ldarg_1 &&
 					instructionList[i + 1].LoadsConstant(1d) &&
 					instructionList[i + 2].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 3].Calls(Utility.get_CurLevel) &&
+					instructionList[i + 3].Calls(Refs.get_CurLevel) &&
 					instructionList[i + 4].opcode == OpCodes.Sub &&
-					instructionList[i + 5].Calls(Utility.m_Min) &&
+					instructionList[i + 5].Calls(Refs.m_Min) &&
 					instructionList[i + 6].opcode == OpCodes.Starg_S &&
 					instructionList[i + 7].opcode == OpCodes.Ldarg_0)
 				{
@@ -40,11 +40,11 @@ namespace NeedBarOverflow.Patches
 					continue;
 				}
 				if (state == 1 &&
-					codeInstruction.StoresField(Utility.f_curLevelInt) &&
+					codeInstruction.StoresField(Refs.f_curLevelInt) &&
 					instructionList[i - 1].opcode == OpCodes.Add)
 				{
 					state = 2;
-					yield return new CodeInstruction(OpCodes.Callvirt, Utility.set_CurLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, Refs.set_CurLevel);
 					continue;
 				}
 				yield return codeInstruction;

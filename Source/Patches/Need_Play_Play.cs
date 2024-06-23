@@ -28,13 +28,13 @@ namespace NeedBarOverflow.Patches
 				if (state == 0 && i < instructionList.Count - 5 &&
 					codeInstruction.opcode == OpCodes.Ldarg_0 &&
 					instructionList[i + 1].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 2].Calls(Utility.get_CurLevelPercentage) &&
-					instructionList[i + 3].Calls(Utility.m_Clamp01) &&
-					instructionList[i + 4].Calls(Utility.set_CurLevelPercentage))
+					instructionList[i + 2].Calls(Refs.get_CurLevelPercentage) &&
+					instructionList[i + 3].Calls(Refs.m_Clamp01) &&
+					instructionList[i + 4].Calls(Refs.set_CurLevelPercentage))
 				{
 					state = 1;
 					yield return codeInstruction;
-					yield return new CodeInstruction(OpCodes.Call, Utility.m_CanOverflow);
+					yield return new CodeInstruction(OpCodes.Call, Refs.m_CanOverflow);
 					yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabel);
 					yield return instructionList[i + 1];
 					yield return new CodeInstruction(OpCodes.Dup);

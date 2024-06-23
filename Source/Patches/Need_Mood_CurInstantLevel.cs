@@ -15,7 +15,7 @@ namespace NeedBarOverflow.Patches
 			=> Toggle(Setting_Common.Enabled(typeof(Need_Mood)));
 		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
-			=> ModifyClamp01.Transpiler(instructions, ilg,
-				Setting<Need_Mood>.MaxValue_get);
+			=> ModifyClamp01.TranspilerMethod(instructions, ilg,
+				Setting<Need_Mood>.mget_MaxValue);
 	}
 }

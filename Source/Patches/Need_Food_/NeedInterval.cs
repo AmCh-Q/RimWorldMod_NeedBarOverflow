@@ -20,7 +20,7 @@ namespace NeedBarOverflow.Patches
 #if v1_2 || v1_3 || v1_4
 		private static readonly AccessTools.FieldRef<Hediff, bool>
 			fr_visible = AccessTools.FieldRefAccess<Hediff, bool>(
-			typeof(Hediff).GetField("visible", Consts.bindingflags));
+			typeof(Hediff).GetField("visible", Consts.bindAll));
 #endif
 
 		public override void Toggle()
@@ -85,9 +85,8 @@ namespace NeedBarOverflow.Patches
 		private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
 		{
-			if (PatchApplier.s is null)
+			if (PatchApplier.settings is not Settings s)
 				return;
-			Settings s = PatchApplier.s;
 			Pawn_HealthTracker health = pawn.health;
 			Hediff hediff;
 			if (newValue <= need.MaxLevel
@@ -138,14 +137,14 @@ namespace NeedBarOverflow.Patches
 				// In this case, we've reached the portion of code to patch
 				if (state == 0 && i >= 1 &&        // Haven't patched yet
 					instructionList[i - 1].opcode == OpCodes.Sub &&
-					codeInstruction.Calls(Utility.set_CurLevel)) // Vanilla is going to set updated CurLevel
+					codeInstruction.Calls(Refs.set_CurLevel)) // Vanilla is going to set updated CurLevel
 				{
 					state = 1;
 					// Do checks in UpdateHediff() and apply hediff
 					yield return new CodeInstruction(OpCodes.Dup);    // get a copy of new value
 					yield return new CodeInstruction(OpCodes.Ldarg_0);  // get need
 					yield return new CodeInstruction(OpCodes.Dup);
-					yield return new CodeInstruction(OpCodes.Ldfld, Utility.f_needPawn);    // Get need.pawn
+					yield return new CodeInstruction(OpCodes.Ldfld, Refs.f_needPawn);    // Get need.pawn
 					yield return new CodeInstruction(OpCodes.Call, m_UpdateHediff); // UpdateHediff
 				}
 				yield return codeInstruction;

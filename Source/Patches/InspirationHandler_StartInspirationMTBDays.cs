@@ -24,11 +24,11 @@ namespace NeedBarOverflow.Patches
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				yield return codeInstruction;
-				if (codeInstruction.Calls(Utility.get_CurLevel))
+				if (codeInstruction.Calls(Refs.get_CurLevel))
 				{
 					state++;
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-					yield return new CodeInstruction(OpCodes.Call, Utility.m_Min);
+					yield return new CodeInstruction(OpCodes.Call, Refs.m_Min);
 				}
 			}
 			Debug.CheckTranspiler(state, state > 0);

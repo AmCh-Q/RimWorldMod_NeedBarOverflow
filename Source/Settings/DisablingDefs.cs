@@ -16,7 +16,7 @@ namespace NeedBarOverflow.Needs
 	public sealed partial class Setting_Common : IExposable
 	{
 		public static readonly AccessTools.FieldRef<Need, Pawn>
-			fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>("pawn");
+			fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>(Refs.f_needPawn);
 
 		public static bool CanOverflow(Need need)
 			=> CanOverflow(need, fr_needPawn(need));
@@ -29,8 +29,8 @@ namespace NeedBarOverflow.Needs
 				|| !Refs.VFEAncients_HasPower(pawn));
 		}
 
-		public static void LoadDisabledDefs()
-			=> DisablingDefs.LoadDisabledDefs();
+		public static void LoadDisablingDefs()
+			=> DisablingDefs.LoadDisablingDefs();
 
 		public static void AddSettings(Listing_Standard ls)
 			=> DisablingDefs.AddSettings(ls);
@@ -112,11 +112,8 @@ namespace NeedBarOverflow.Needs
 
 			private static Dictionary<string, Def> GetDefDict(StatName_DisableType statName)
 			{
-				if (!Refs.initialized)
-				{
-					Debug.Warning("GetDefDict: Refs not initialized");
+				if (!NeedBarOverflow.Initialized)
 					return [];
-				}
 				int statIdx = (int)statName;
 				Dictionary<string, Def>? defDict = defsByDisableTypeCache[statIdx];
 				if (defDict is not null)
@@ -180,7 +177,7 @@ namespace NeedBarOverflow.Needs
 				{
 					foreach (StatName_DisableType key in Enum.GetValues(typeof(StatName_DisableType)))
 						scribeDefDict.Add(key, disablingDefs_str[(int)key]);
-					LoadDisabledDefs();
+					LoadDisablingDefs();
 				}
 				Scribe_Collections.Look(
 					ref scribeDefDict,
@@ -223,19 +220,16 @@ namespace NeedBarOverflow.Needs
 				}
 			}
 
-			public static void LoadDisabledDefs()
+			public static void LoadDisablingDefs()
 			{
-				Debug.Message("DisablingDefs.LoadDisabledDefs() called");
-				if (!Refs.initialized)
-				{
-					Debug.Warning("LoadDisabledDefs: Refs not initialized");
+				if (!NeedBarOverflow.Initialized)
 					return;
-				}
+				Debug.Message("DisablingDefs.LoadDisabledDefs() called");
 				foreach (StatName_DisableType key in Enum.GetValues(typeof(StatName_DisableType)))
-					ParseDisabledDefs(key, disablingDefs_str[(int)key]);
+					ParseDisablingDefs(key, disablingDefs_str[(int)key]);
 			}
 
-			private static void ParseDisabledDefs(StatName_DisableType defType, string defNameStr)
+			private static void ParseDisablingDefs(StatName_DisableType defType, string defNameStr)
 			{
 				disablingDefs[(int)defType].Clear();
 				if (!AnyEnabled ||

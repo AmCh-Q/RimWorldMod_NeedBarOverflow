@@ -93,7 +93,7 @@ namespace NeedBarOverflow
 				MigrateSettings();
 			}
 
-			if (Refs.initialized &&
+			if (NeedBarOverflow.Initialized &&
 				(Scribe.mode == LoadSaveMode.PostLoadInit ||
 				Scribe.mode == LoadSaveMode.Saving))
 			{

@@ -29,18 +29,18 @@ namespace NeedBarOverflow.Patches
 				if (state == 0 && i > 0 && i < instructionList.Count - 1 &&
 					instructionList[i - 1].opcode == OpCodes.Ldarg_0 &&
 					codeInstruction.LoadsConstant(1f) &&
-					instructionList[i + 1].Calls(Utility.set_CurLevel))
+					instructionList[i + 1].Calls(Refs.set_CurLevel))
 				{
 					state++;
 					yield return new CodeInstruction(OpCodes.Dup);
-					yield return new CodeInstruction(OpCodes.Callvirt, Utility.get_CurLevel);
+					yield return new CodeInstruction(OpCodes.Callvirt, Refs.get_CurLevel);
 					yield return codeInstruction;
 					yield return new CodeInstruction(OpCodes.Ldc_I4, (int)StatName_DG.SlowGain);
 					yield return new CodeInstruction(OpCodes.Call,
 						((Func<int, float>)OverflowStats<Need_KillThirst>.EffectStat).Method);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Callvirt, Utility.get_CurLevelPercentage);
-					yield return new CodeInstruction(OpCodes.Call, AdjustGain.adjust);
+					yield return new CodeInstruction(OpCodes.Callvirt, Refs.get_CurLevelPercentage);
+					yield return new CodeInstruction(OpCodes.Call, AdjustGain.m_adjust);
 					yield return new CodeInstruction(OpCodes.Add);
 				}
 				else

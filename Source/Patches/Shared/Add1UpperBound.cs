@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System;
 using System.Linq;
 using System.Reflection.Emit;
-using static NeedBarOverflow.Patches.Utility;
 
 namespace NeedBarOverflow.Patches
 {
@@ -13,13 +13,8 @@ namespace NeedBarOverflow.Patches
 
 	public static class Add1UpperBound
 	{
-		public static readonly TransIL transpiler = Transpiler;
-
+		public static readonly Delegate d_transpiler = TranspilerMethod;
 		public static IEnumerable<CodeInstruction> TranspilerMethod(
-			IEnumerable<CodeInstruction> instructions)
-			=> Transpiler(instructions);
-
-		private static IEnumerable<CodeInstruction> Transpiler(
 			IEnumerable<CodeInstruction> instructions)
 		{
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
@@ -28,11 +23,11 @@ namespace NeedBarOverflow.Patches
 			{
 				CodeInstruction codeInstruction = instructionList[i];
 				yield return codeInstruction;
-				if (state == 0 && codeInstruction.Calls(get_CurLevelPercentage))
+				if (state == 0 && codeInstruction.Calls(Refs.get_CurLevelPercentage))
 				{
 					state = 1;
 					yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-					yield return new CodeInstruction(OpCodes.Call, m_Min);
+					yield return new CodeInstruction(OpCodes.Call, Refs.m_Min);
 				}
 			}
 			Debug.CheckTranspiler(state, 1);

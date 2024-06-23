@@ -38,6 +38,11 @@ namespace NeedBarOverflow.Needs
 	#endif
 		};
 
+		public static Dictionary<string, Type> AllNeedTypesByName { get; }
+			= GenTypes.AllTypes
+			.Where(type => type.IsSubclassOf(typeof(Need)))
+			.ToDictionary(type => type.FullName);
+
 		// Add Name and default setting of needs here
 		private static readonly Dictionary<string, float> modsOverflow = [];
 
@@ -81,18 +86,15 @@ namespace NeedBarOverflow.Needs
 			DisablingDefs.ExposeData();
 			if (Scribe.mode != LoadSaveMode.LoadingVars)
 				return;
-			Dictionary<string, Type> typesByName = [];
-			foreach (Type type in AccessTools.AllTypes())
-				typesByName[type.FullName] = type;
 			overflow = new(dfltOverflow);
 			foreach (KeyValuePair<string, float> need in modsOverflow)
 			{
-				if (typesByName.TryGetValue(need.Key, out Type needType))
+				if (AllNeedTypesByName.TryGetValue(need.Key, out Type needType))
 					overflow[needType] = need.Value;
 			}
 			foreach (KeyValuePair<string, float> need in vanillaOverflow)
 			{
-				if (typesByName.TryGetValue(need.Key, out Type needType))
+				if (AllNeedTypesByName.TryGetValue(need.Key, out Type needType))
 					overflow[needType] = need.Value;
 			}
 		}

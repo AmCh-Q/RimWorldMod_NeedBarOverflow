@@ -93,7 +93,7 @@ namespace NeedBarOverflow.Needs
 					}
 					healthStats[(int)HealthName.Level, 1] = 1f;
 				}
-				if (Refs.initialized &&
+				if (NeedBarOverflow.Initialized &&
 					(Scribe.mode == LoadSaveMode.PostLoadInit ||
 					Scribe.mode == LoadSaveMode.Saving))
 				{

@@ -1,46 +1,76 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Verse;
+using static HarmonyLib.Code;
+using Verse.Noise;
 
 namespace NeedBarOverflow
 {
 	internal static class Helpers
 	{
-		internal static MethodInfo Method(this Type type, string name)
+		internal static Type? TypeByName(string tostringname)
 		{
-			MethodInfo? method = type
-				.GetMethod(name, Consts.bindingflags);
-			method.NotNull<MethodInfo>(name);
-			return method;
+			return GenTypes
+				.AllTypes
+				.Where(type => type.ToString() == tostringname)
+				.FirstOrDefault();
 		}
 
-		internal static MethodInfo Getter(this Type type, string name)
+		internal static MethodInfo Method(this Type type,
+			string name,
+			BindingFlags flags = Consts.bindAll,
+			Type[]? parameters = null,
+			Type[]? generics = null)
 		{
-			MethodInfo? getter = type
-				.GetProperty(name, Consts.bindingflags)
-				.GetGetMethod(true);
-			getter.NotNull<MethodInfo>(name);
-			return getter;
+			MethodInfo? methodInfo;
+			if (parameters is null)
+				methodInfo = type.GetMethod(name, flags);
+			else
+				methodInfo = type.GetMethod(name, flags, null, parameters, null);
+			if (generics is not null)
+				methodInfo = methodInfo.MakeGenericMethod(generics);
+			return methodInfo.NotNull(type.FullName + ":" + name);
 		}
 
-		internal static MethodInfo Setter(this Type type, string name)
+		internal static MethodInfo Getter(this Type type,
+			string name, BindingFlags flags = Consts.bindAll)
 		{
-			MethodInfo? setter = type
-				.GetProperty(name, Consts.bindingflags)
-				.GetSetMethod(true);
-			setter.NotNull<MethodInfo>(name);
-			return setter;
+			return (type.GetProperty(name, flags)
+				?.GetGetMethod(true))
+				.NotNull(type.FullName + ":" + name);
 		}
 
-		internal static FieldInfo Field(this Type type, string name)
+		internal static MethodInfo Setter(this Type type,
+			string name, BindingFlags flags = Consts.bindAll)
 		{
-			FieldInfo? field = type
-				.GetField(name, Consts.bindingflags);
-			field.NotNull<FieldInfo>(name);
-			return field;
+			return (type.GetProperty(name, flags)
+				?.GetSetMethod(true))
+				.NotNull(type.FullName + ":" + name);
+		}
+
+		internal static FieldInfo Field(this Type type,
+			string name, BindingFlags flags = Consts.bindAll)
+		{
+			return type.GetField(name, flags)
+				.NotNull(type.FullName + ":" + name);
+		}
+
+		// Get children methods which the input method uses
+		public static IEnumerable<MethodInfo> GetInternalMethods(
+			MethodBase method, params OpCode[] targetOpCodes)
+		{
+			return PatchProcessor.ReadMethodBody(method)
+				.Where(x => targetOpCodes.Length == 0 || targetOpCodes.Contains(x.Key))
+				.Select(x => x.Value)
+				.OfType<MethodInfo>();
 		}
 
 		internal static float SigFigScale(this float d, int numSigFig = 2)
@@ -100,5 +130,14 @@ namespace NeedBarOverflow
 				result += "%";
 			return result;
 		}
+
+		internal static bool CtrlDown =>
+			Input.GetKey(KeyCode.RightControl) ||
+			Input.GetKey(KeyCode.LeftControl) ||
+			Input.GetKey(KeyCode.RightCommand) ||
+			Input.GetKey(KeyCode.LeftCommand);
+		internal static bool ShiftDown =>
+			Input.GetKey(KeyCode.RightShift) ||
+			Input.GetKey(KeyCode.LeftShift);
 	}
 }

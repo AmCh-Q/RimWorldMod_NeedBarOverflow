@@ -3,8 +3,7 @@
 namespace NeedBarOverflow.Patches
 {
 	public sealed class SavedGameLoaderNow_LoadGameFromSaveFileNow() : Patch_Single(
-		original: typeof(SavedGameLoaderNow)
-			.Method(nameof(SavedGameLoaderNow.LoadGameFromSaveFileNow)),
+		original: SavedGameLoaderNow.LoadGameFromSaveFileNow,
 		postfix: PostfixMethod)
 	{
 		public override void Toggle()
