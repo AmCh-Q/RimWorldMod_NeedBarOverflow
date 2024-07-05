@@ -13,12 +13,10 @@ namespace NeedBarOverflow
 				GenText.SanitizeFilename($"Mod_{content.FolderName}_NeedBarOverflow.xml"));
 			if (!File.Exists(settingsFilePath))
 				return;
-			XmlDocument doc = new() { XmlResolver = null };
-			XmlReader reader = XmlReader.Create(
-				new StreamReader(settingsFilePath),
-				new XmlReaderSettings() { XmlResolver = null }
-			);
-			doc.Load(reader);
+			XmlDocument doc = new();
+			StreamReader streamReader = new(settingsFilePath);
+			doc.Load(XmlReader.Create(streamReader));
+			streamReader.Dispose();
 			XmlNode? Node_ModSettings = doc["SettingsBlock"]?["ModSettings"];
 			if (Node_ModSettings is null)
 				return;
