@@ -8,25 +8,28 @@ namespace NeedBarOverflow.Patches
 {
 	public abstract class Patch_Multi : Patch<MethodBase[]>
 	{
-		public Patch_Multi(
+		protected Patch_Multi(
 			IEnumerable<MethodBase> original,
 			Delegate? prefix = null,
 			Delegate? postfix = null,
 			Delegate? transpiler = null,
 			Delegate? finalizer = null)
-			: base(
-				  [.. original.Where(p => p is not null).OrderBy(p => p!.Name)],
-				  prefix, postfix, transpiler, finalizer)
+			: base([.. original
+					.Where(m => m is not null)
+					.OrderBy(m => m!.Name)],
+				new Patches(prefix, postfix, transpiler, finalizer))
 		{ }
-		public Patch_Multi(
+		protected Patch_Multi(
 			IEnumerable<Delegate> original,
 			Delegate? prefix = null,
 			Delegate? postfix = null,
 			Delegate? transpiler = null,
 			Delegate? finalizer = null)
-			: base(
-				  [.. original.OfType<Delegate>().Select(d => d.Method).OrderBy(p => p!.Name)],
-				  prefix, postfix, transpiler, finalizer)
+			: base([.. original
+					.Where(d => d is not null)
+					.Select(d => d.Method)
+					.OrderBy(m => m!.Name)],
+				new Patches(prefix, postfix, transpiler, finalizer))
 		{ }
 		public override bool Patchable
 			=> Original.Length != 0;
@@ -36,12 +39,16 @@ namespace NeedBarOverflow.Patches
 		{
 			if (Patches != other.Patches)
 				return false;
-			if (other is Patch<MethodBase?> patchSingle)
-				return Original.Contains(patchSingle.Original);
-			if (other is Patch<MethodBase?[]> patchMulti)
-				return Original.Intersect(patchMulti.Original).Any();
-			Debug.Error("Not Implmented");
-			return false;
+			switch (other)
+			{
+				case Patch<MethodBase?> patchSingle:
+					return Original.Contains(patchSingle.Original);
+				case Patch<MethodBase?[]> patchMulti:
+					return Original.Intersect(patchMulti.Original).Any();
+				default:
+					Debug.Error("Not Implemented");
+					return false;
+			}
 		}
 		public override int GetHashCode()
 		{

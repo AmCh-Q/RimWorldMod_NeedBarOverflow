@@ -20,16 +20,16 @@ namespace NeedBarOverflow.Patches
 			=> !lhs.Equals(rhs);
 		public static bool operator ==(Patches lhs, Patches rhs)
 			=> lhs.Equals(rhs);
-		public override readonly bool Equals(object obj)
+		public override bool Equals(object? obj)
 			=> obj is Patches other && Equals(other);
-		public readonly bool Equals(Patches other)
+		public bool Equals(Patches other)
 		{
 			return Prefix is not null && Prefix.method == other.Prefix?.method
 				|| Postfix is not null && Postfix.method == other.Postfix?.method
 				|| Transpiler is not null && Transpiler.method == other.Transpiler?.method
 				|| Finalizer is not null && Finalizer.method == other.Finalizer?.method;
 		}
-		public override readonly int GetHashCode()
+		public override int GetHashCode()
 		{
 			return Prefix?.method.GetHashCode()
 				?? Postfix?.method.GetHashCode()
@@ -69,7 +69,7 @@ namespace NeedBarOverflow.Patches
 			=> !lhs.Equals(rhs);
 		public static bool operator ==(Patch lhs, Patch rhs)
 			=> lhs.Equals(rhs);
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 			=> obj is Patch other && Equals(other);
 		public abstract bool Equals(Patch other);
 		public override int GetHashCode()
@@ -79,15 +79,26 @@ namespace NeedBarOverflow.Patches
 		protected abstract void Dopatch();
 		protected abstract void Unpatch();
 	}
-	public abstract class Patch<T>(
-		T original,
-		Delegate? prefix = null,
-		Delegate? postfix = null,
-		Delegate? transpiler = null,
-		Delegate? finalizer = null) : Patch
+	public abstract class Patch<T> : Patch
 	{
 		public override Patches Patches { get; }
-			= new Patches(prefix, postfix, transpiler, finalizer);
-		public T Original { get; } = original;
+		public T Original { get; }
+		protected Patch(
+			T original,
+			Patches patches)
+		{
+			Original = original;
+			Patches = patches;
+		}
+		protected Patch(
+			T original,
+			Delegate? prefix = null,
+			Delegate? postfix = null,
+			Delegate? transpiler = null,
+			Delegate? finalizer = null)
+		{
+			Original = original;
+			Patches = new Patches(prefix, postfix, transpiler, finalizer);
+		}
 	}
 }

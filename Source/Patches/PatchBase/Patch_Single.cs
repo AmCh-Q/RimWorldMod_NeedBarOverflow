@@ -5,42 +5,24 @@ using System.Reflection;
 
 namespace NeedBarOverflow.Patches
 {
-	public abstract class Patch_Single(
-		MethodBase original,
-		Delegate? prefix = null,
-		Delegate? postfix = null,
-		Delegate? transpiler = null,
-		Delegate? finalizer = null)
-		: Patch<MethodBase?>(original, prefix, postfix, transpiler, finalizer)
+	public abstract class Patch_Single : Patch<MethodBase?>
 	{
-		public Patch_Single(
+		protected Patch_Single(
+			MethodBase original,
+			Delegate? prefix = null,
+			Delegate? postfix = null,
+			Delegate? transpiler = null,
+			Delegate? finalizer = null)
+			: base(original, new Patches(prefix, postfix, transpiler, finalizer))
+		{ }
+		protected Patch_Single(
 			Delegate original,
 			Delegate? prefix = null,
 			Delegate? postfix = null,
 			Delegate? transpiler = null,
 			Delegate? finalizer = null)
-			: this(
-				  original.Method,
-				  prefix,
-				  postfix,
-				  transpiler,
-				  finalizer)
+			: base(original.Method, new Patches(prefix, postfix, transpiler, finalizer))
 		{ }
-		//public Patch_Single(
-		//	Expression original,
-		//	Delegate? prefix = null,
-		//	Delegate? postfix = null,
-		//	Delegate? transpiler = null,
-		//	Delegate? finalizer = null)
-		//	: this(
-		//		  null!,
-		//		  prefix?.Method,
-		//		  postfix?.Method,
-		//		  transpiler?.Method,
-		//		  finalizer?.Method)
-		//{
-		//	Original = null;
-		//}
 		public override bool Patchable
 			=> Original is not null;
 		public override bool Patched
@@ -49,12 +31,16 @@ namespace NeedBarOverflow.Patches
 		{
 			if (Patches != other.Patches || Original is null)
 				return false;
-			if (other is Patch<MethodBase?> patchSingle)
-				return Original == patchSingle.Original;
-			if (other is Patch<MethodBase?[]> patchMulti)
-				return patchMulti.Original.Contains(Original);
-			Debug.Error("Not Implmented");
-			return false;
+			switch (other)
+			{
+				case Patch<MethodBase?> patchSingle:
+					return Original == patchSingle.Original;
+				case Patch<MethodBase?[]> patchMulti:
+					return patchMulti.Original.Contains(Original);
+				default:
+					Debug.Error("Not Implemented");
+					return false;
+			}
 		}
 		public override int GetHashCode()
 			=> Original?.GetHashCode() ?? 0;
