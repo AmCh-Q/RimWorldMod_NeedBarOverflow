@@ -6,6 +6,7 @@ namespace NeedBarOverflow
 {
 	internal static class Savefilebackcompat
 	{
+		// Old settings file compatibility, will be removed for 1.6
 		public static void ModifySettingFileClass(ModContentPack content)
 		{
 			string settingsFilePath = Path.Combine(

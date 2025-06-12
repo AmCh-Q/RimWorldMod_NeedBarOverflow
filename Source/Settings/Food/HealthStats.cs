@@ -25,6 +25,16 @@ namespace NeedBarOverflow.Needs
 				VomitFreq = 5,
 			}
 
+			// The first value of each row does two things:
+			//   1. Its sign encodes whether the effects are enabled by default
+			//	    negative sign -> disabled by default
+			//   2. Its value (if non-negative) or its negation minus one (if negative)
+			//	    encodes the minimum configurable value when toggled on
+			// For example, -1f means "This effect is disabled by default,"
+			//   "but when toggled on, the minimum configurable value is 0"
+			//   (Since -(-1f) - 1 = 0)
+			// The last value of each row encodes the maxmimum configurable value
+			// The rest of the values in the middle are the defaults for each stage
 			public static readonly float[,] dfltHealthStats = new float[6, 10]
 			{
 				{ -0.5f, 1f, 1.2f, 1.4f, 1.6f, 1.8f, 2f, 3f, 5f, float.PositiveInfinity }, // HealthName.Level
@@ -176,6 +186,10 @@ namespace NeedBarOverflow.Needs
 				}
 			}
 
+			// Old settings used hard-coded integer values for each effect
+			//   this is bad for future expandability
+			//   if those values exist, we copy them over to new settings
+			// This migration method will be removed for 1.6
 			public static void MigrateSettings()
 			{
 				const string name = "foodHealthStats_";

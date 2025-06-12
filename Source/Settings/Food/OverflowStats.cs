@@ -94,6 +94,10 @@ namespace NeedBarOverflow.Needs
 				overflowStats[(int)stat] = f1;
 			}
 
+			// Old settings used IntVec2 to save settings
+			//   this is bad for future expandability
+			//   if those values exist, we copy them over to new settings
+			// This migration method will be removed for 1.6
 			public static void MigrateSettings(
 				Dictionary<IntVec2, bool> enabledB,
 				Dictionary<IntVec2, float> statsB)

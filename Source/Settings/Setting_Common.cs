@@ -135,6 +135,10 @@ namespace NeedBarOverflow.Needs
 #endif
 		];
 
+		// Old settings used hardcoded indices to save settings
+		//   this is bad for future expandability
+		//   if these settings exist, we copy them over to new settings
+		// This migration method will be removed for 1.6
 		internal static void MigrateSettings(
 			Dictionary<IntVec2, bool> enabledB)
 		{

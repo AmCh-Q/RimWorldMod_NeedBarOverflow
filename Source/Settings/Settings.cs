@@ -87,6 +87,9 @@ namespace NeedBarOverflow
 #if !v1_2 && !v1_3
 			Scribe_Deep.Look(ref killThirst, nameof(Need_KillThirst));
 #endif
+			// Old settings have issues
+			//   so we call this method to copy old settings to new
+			// This call will be removed for 1.6
 			if (Scribe.mode == LoadSaveMode.LoadingVars &&
 				migrateSettings == 1)
 			{
@@ -101,6 +104,9 @@ namespace NeedBarOverflow
 			}
 		}
 
+		// Old settings have issues (see comments under methods below)
+		//   so we had this method to copy old settings to new
+		// These migration method will be removed for 1.6
 		private static void MigrateSettings()
 		{
 			Debug.Message("MigrateSettings() called");

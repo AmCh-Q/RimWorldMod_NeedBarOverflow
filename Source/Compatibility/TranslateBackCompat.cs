@@ -3,6 +3,7 @@ using Verse;
 
 namespace NeedBarOverflow
 {
+	// Old translations file compatibility, will be removed for 1.6
 	internal static class TranslateBackCompat
 	{
 		private static readonly Dictionary<string, string> backUpKeys = new()
