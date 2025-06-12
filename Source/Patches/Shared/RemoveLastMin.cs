@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace NeedBarOverflow.Patches
 {
+	// Some methods call Mathf.Min() to clamp values
+	// Use this transpiler to remove it
 	public static class RemoveLastMin
 	{
 		public static readonly Delegate d_transpiler = TranspilerMethod;

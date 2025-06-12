@@ -14,8 +14,13 @@ namespace NeedBarOverflow.Patches
 	//   Use this patch to nerf any further gains
 	public static class AdjustGain
 	{
+		// Primarily for use in TranspilerMethod under this class
+		//   Can also be used if external methods increments/decrements a need
 		public static readonly MethodInfo
 			m_adjust = ((Delegate)AdjustMethod).Method;
+
+		// Formula to adjust the offset
+		//   Higher percentage -> lower offset gain
 		public static float AdjustMethod(float m, float multiplier, float curLevelPercentage)
 			=> m / Mathf.Max((curLevelPercentage - 1f) * multiplier + 1f, 1f);
 
@@ -50,7 +55,6 @@ namespace NeedBarOverflow.Patches
 				}
 				yield return codeInstruction;
 			}
-
 			// Check that the patch has been applied at least once
 			Debug.CheckTranspiler(state, state > 0);
 		}

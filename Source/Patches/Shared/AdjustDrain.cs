@@ -14,9 +14,13 @@ namespace NeedBarOverflow.Patches
 	//   Use this patch to boost the drain (decrease) rate
 	public static class AdjustDrain
 	{
+		// Primarily for use in TranspilerMethod under this class
+		//   Can also be used if external methods increments/decrements a need
 		public static readonly MethodInfo
 			m_adjust = ((Delegate)AdjustMethod).Method;
 
+		// Formula to adjust the offset
+		//   Higher percentage -> higher offset drain
 		public static float AdjustMethod(float m, float multiplier, float curLevelPercentage)
 			=> m * Mathf.Max((curLevelPercentage - 1f) * multiplier + 1f, 1f);
 

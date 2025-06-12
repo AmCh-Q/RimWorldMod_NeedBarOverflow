@@ -32,11 +32,10 @@ namespace NeedBarOverflow.Patches
 				}
 				// In this case, we've reached the portion of code to patch
 				// This patch may be repeated
+				state++; // increment counter of how many times the patch ran
 
 				// stackTop, before ops: the value to be clamped
-				// vanilla, after ops: value clamped to 0-1
-				// patched, after ops: value clamped to 0-MaxValue
-				state++;
+				// value = CanOverflow(this) ? Clamp(value, 0f, MaxValue) : Clamp01(value)
 				yield return new CodeInstruction(OpCodes.Ldarg_0);
 				yield return new CodeInstruction(OpCodes.Call, Refs.m_CanOverflow);
 				yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabels[0]);
@@ -48,6 +47,7 @@ namespace NeedBarOverflow.Patches
 				yield return instructionList[i + 1].WithLabels(jumpLabels[1]);
 				i++;
 			}
+			// Check that the patch has been applied at least once
 			Debug.CheckTranspiler(state, state > 0);
 		}
 	}

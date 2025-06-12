@@ -7,9 +7,11 @@ using System.Reflection.Emit;
 
 namespace NeedBarOverflow.Patches
 {
-	// In many parts of the game (especiall when drawing UI), the game expects Need.CurLevelPercentage to be between 0-1
+	// In many parts of the game (especiall when drawing UI)
+	//   the game expects Need.CurLevelPercentage to be between 0-1
 	// If Need.CurLevelPercentage > 1, the UI may be drawn out of the box
-	// This patch inserts a Mathf.Min(value,1f) call after Need.CurLevelPercentage to correct that
+	// This patch inserts a Mathf.Min(value,1f) call
+	//   after Need.CurLevelPercentage to correct that
 	public static class Add1UpperBound
 	{
 		public static readonly Delegate d_transpiler = TranspilerMethod;

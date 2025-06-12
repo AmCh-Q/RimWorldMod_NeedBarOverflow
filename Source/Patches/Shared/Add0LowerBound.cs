@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace NeedBarOverflow.Patches
 {
-	// Some methods give unwanted negative results, we add postfix to adjust them to zero
+	// Some methods give unwanted negative results
+	//   we add postfix to adjust them to zero
 	public static class Add0LowerBound
 	{
 		public static readonly Delegate
