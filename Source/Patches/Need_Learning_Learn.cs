@@ -1,4 +1,4 @@
-﻿#if !v1_2 && !v1_3
+﻿#if g1_4
 using HarmonyLib;
 using NeedBarOverflow.Needs;
 using RimWorld;

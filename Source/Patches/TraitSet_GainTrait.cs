@@ -7,7 +7,7 @@ namespace NeedBarOverflow.Patches
 	public sealed class TraitSet_GainTrait() : Patch_Multi(
 		original: [
 				typeof(TraitSet).Method(nameof(TraitSet.GainTrait)),
-#if !v1_2
+#if g1_3
 				typeof(TraitSet).Method(nameof(TraitSet.RemoveTrait))
 #endif
 		],

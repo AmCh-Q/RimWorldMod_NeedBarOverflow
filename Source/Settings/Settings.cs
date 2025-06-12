@@ -39,12 +39,12 @@ namespace NeedBarOverflow
 			AddSimpleSetting(ls, typeof(Need_Chemical));
 			AddSimpleSetting(ls, typeof(Need_Chemical_Any));
 			AddSimpleSetting(ls, typeof(Need_Outdoors));
-#if !v1_2
+#if g1_3
 			AddSimpleSetting(ls, typeof(Need_Indoors));
 			AddSimpleSetting(ls, typeof(Need_Suppression));
 #endif
 			AddSimpleSetting(ls, typeof(Need_RoomSize));
-#if !v1_2 && !v1_3
+#if g1_4
 			AddSimpleSetting(ls, typeof(Need_Deathrest));
 			if (AddSimpleSetting(ls, typeof(Need_KillThirst)))
 				OverflowStats<Need_KillThirst>.AddSettings(ls);
@@ -59,7 +59,7 @@ namespace NeedBarOverflow
 			{
 				AddSimpleSetting(ls, typeof(Need));
 				AddSimpleSetting(ls, typeof(Need_Authority));
-#if !v1_2
+#if g1_3
 				AddSimpleSetting(ls, typeof(Need_Sadism));
 #endif
 			}
@@ -77,14 +77,14 @@ namespace NeedBarOverflow
 			Setting_Food food = new();
 			OverflowStats<Need_Rest> rest = new();
 			OverflowStats<Need_Joy> joy = new();
-#if !v1_2 && !v1_3
+#if g1_4
 			OverflowStats<Need_KillThirst> killThirst = new();
 #endif
 			Scribe_Deep.Look(ref common, nameof(Setting_Common));
 			Scribe_Deep.Look(ref food, nameof(Need_Food));
 			Scribe_Deep.Look(ref rest, nameof(Need_Rest));
 			Scribe_Deep.Look(ref joy, nameof(Need_Joy));
-#if !v1_2 && !v1_3
+#if g1_4
 			Scribe_Deep.Look(ref killThirst, nameof(Need_KillThirst));
 #endif
 			// Old settings have issues
@@ -120,7 +120,7 @@ namespace NeedBarOverflow
 			Setting_Food.MigrateSettings(enabledB, statsB);
 			OverflowStats<Need_Rest>.MigrateSettings(enabledB, statsB, 1);
 			OverflowStats<Need_Joy>.MigrateSettings(enabledB, statsB, 2);
-#if !v1_2 && !v1_3
+#if g1_4
 			OverflowStats<Need_KillThirst>.MigrateSettings(enabledB, statsB, 16);
 #endif
 			migrateSettings = 2;

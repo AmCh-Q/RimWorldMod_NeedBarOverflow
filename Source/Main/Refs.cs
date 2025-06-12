@@ -15,7 +15,7 @@ namespace NeedBarOverflow
 		public static PawnCapacityDef Eating;
 		public static HediffDef FoodOverflow;
 
-#if !v1_2 && !v1_3
+#if g1_4
 		[MayRequireBiotech]
 		public static ThoughtDef IngestedHemogenPack;
 #endif

@@ -105,7 +105,7 @@ namespace NeedBarOverflow.Patches
 					continue;
 				}
 #endif
-#if !v1_2 && !v1_3
+#if g1_4
 				if (codeInstruction.opcode == OpCodes.Ldstr &&
 					codeInstruction.operand.Equals("+ 10%"))
 				{

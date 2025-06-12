@@ -11,7 +11,7 @@ namespace NeedBarOverflow.Patches.ModCompat
 	// Character Editor
 	// https://steamcommunity.com/sharedfiles/filedetails/?id=1874644848
 	public sealed class Character_Editor_AFullNeeds() : Patch_Single(
-#if v1_2 || v1_3 || v1_4
+#if l1_4
 		original: Helpers
 			.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
 			.Method(name: "AFullNeeds", parameters: [])!,

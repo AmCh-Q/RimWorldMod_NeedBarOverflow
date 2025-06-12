@@ -1,4 +1,5 @@
-﻿using NeedBarOverflow.Needs;
+﻿#if l1_5
+using NeedBarOverflow.Needs;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace NeedBarOverflow.Patches
 					continue;
 				ThingDef thingDef = opt.revalidateClickTarget.def;
 				if (thingDef.IsNutritionGivingIngestible
-#if !v1_2 && !v1_3
+#if g1_4
 					&& thingDef.ingestible.specialThoughtDirect != ModDefOf.IngestedHemogenPack
 #endif
 					&& !thingDef.IsDrug)
@@ -59,3 +60,4 @@ namespace NeedBarOverflow.Patches
 		}
 	}
 }
+#endif

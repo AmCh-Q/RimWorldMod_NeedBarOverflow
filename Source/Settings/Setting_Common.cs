@@ -24,12 +24,12 @@ namespace NeedBarOverflow.Needs
 			{ typeof(Need_Chemical_Any), -2f },
 			{ typeof(Need_Authority), -2f },
 			{ typeof(Need_RoomSize), -2f },
-	#if !v1_2
+	#if g1_3
 			{ typeof(Need_Indoors), -2f },
 			{ typeof(Need_Sadism), -2f },
 			{ typeof(Need_Suppression), -2f },
 	#endif
-	#if !v1_2 && !v1_3
+	#if g1_4
 			{ typeof(Need_Deathrest), -2f },
 			{ typeof(Need_KillThirst), -2f },
 			{ typeof(Need_Learning), -2f },
@@ -124,7 +124,7 @@ namespace NeedBarOverflow.Needs
 			typeof(Need_Sadism),
 			typeof(Need_Suppression),
 #endif
-#if v1_2 || v1_3
+#if l1_3
 			null,null,null,null,null,
 #else
 			typeof(Need_Deathrest),

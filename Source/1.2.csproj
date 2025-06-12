@@ -6,7 +6,7 @@
 		<TargetFramework>net472</TargetFramework>
 		<!-- Language options
 		https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language -->
-		<DefineConstants>$(DefineConstants);v1_2</DefineConstants>
+		<DefineConstants>$(DefineConstants);g1_2;v1_2;l1_2;l1_3;l1_4;l1_5;l1_6;l1_7;l1_8;l1_9;</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.2.3062" />

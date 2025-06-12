@@ -77,7 +77,7 @@ namespace NeedBarOverflow.Needs
 					num_pow = slider_max;
 				else
 					num_pow = Mathf.Log10(num);
-#if v1_2 || v1_3
+#if l1_3
 				// Obsolete as of 1.4
 				num_pow = Widgets.HorizontalSlider(
 					rectSlider, num_pow,
@@ -108,7 +108,7 @@ namespace NeedBarOverflow.Needs
 			}
 			else
 			{
-#if v1_2 || v1_3
+#if l1_3
 				// Obsolete as of 1.4
 				num = Widgets.HorizontalSlider(
 					rectSlider, num,
