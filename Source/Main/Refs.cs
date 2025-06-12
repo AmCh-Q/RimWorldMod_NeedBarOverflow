@@ -48,7 +48,7 @@ namespace NeedBarOverflow
 
 		public static void Init()
 		{
-			VFEAncients_HasPower = VFEAncients();
+			LoadDelegate_VFEAncients();
 			Needs.Setting_Common.LoadDisablingDefs();
 			Needs.Setting_Food.ApplyFoodHediffSettings();
 			Patches.PatchApplier.ApplyPatches();
@@ -56,7 +56,7 @@ namespace NeedBarOverflow
 				Patches.PatchApplier.settings!.Write();
 		}
 
-		private static Func<Thing, bool>? VFEAncients()
+		private static Func<Thing, bool>? LoadDelegate_VFEAncients()
 		{
 			// VFE-Ancients Compatibility
 			if (VFEAncients_HasPower is not null)
@@ -64,30 +64,31 @@ namespace NeedBarOverflow
 			if (!ModLister.HasActiveModWithName("Vanilla Factions Expanded - Ancients"))
 				return null;
 
-			Type t_PowerWorker_Hunger
-				= Helpers.TypeByName("VFEAncients.PowerWorker_Hunger")
-				.NotNull(nameof(t_PowerWorker_Hunger));
-
-			Type t_VFEAncients_HarmonyPatches_Helpers
-				= Helpers.TypeByName("VFEAncients.HarmonyPatches.Helpers")
-				.NotNull(nameof(t_VFEAncients_HarmonyPatches_Helpers));
-
-			if (t_PowerWorker_Hunger is null ||
-				t_VFEAncients_HarmonyPatches_Helpers is null)
+			Type? t_PowerWorker_Hunger
+				= Helpers.TypeByName("VFEAncients.PowerWorker_Hunger");
+			if (t_PowerWorker_Hunger is null)
 				return null;
 
-			MethodInfo m_VFEAncients_HasPower
+			Type? t_VFEAncients_HarmonyPatches_Helpers
+				= Helpers.TypeByName("VFEAncients.HarmonyPatches.Helpers");
+			if (t_VFEAncients_HarmonyPatches_Helpers is null)
+				return null;
+
+			MethodInfo? m_VFEAncients_HasPower
 				= t_VFEAncients_HarmonyPatches_Helpers
-				.Method("HasPower",
+				.MethodNullable("HasPower",
 					parameters: [typeof(Thing)],
 					generics: [t_PowerWorker_Hunger]);
 			if (m_VFEAncients_HasPower is null)
 				return null;
 
-			return Delegate.CreateDelegate(
+			VFEAncients_HasPower
+				= (Func<Thing, bool>)
+				Delegate.CreateDelegate(
 				typeof(Func<Thing, bool>),
-				m_VFEAncients_HasPower, false)
-				.NotNull<Func<Thing, bool>>(nameof(VFEAncients_HasPower));
+				m_VFEAncients_HasPower, false);
+			VFEAncients_HasPower.NotNull(nameof(VFEAncients_HasPower));
+			return VFEAncients_HasPower;
 		}
 	}
 }

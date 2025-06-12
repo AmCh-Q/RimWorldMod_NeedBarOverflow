@@ -9,7 +9,7 @@ namespace NeedBarOverflow.Patches
 	public abstract class Patch_Multi : Patch<MethodBase[]>
 	{
 		protected Patch_Multi(
-			IEnumerable<MethodBase> original,
+			IEnumerable<MethodBase?> original,
 			Delegate? prefix = null,
 			Delegate? postfix = null,
 			Delegate? transpiler = null,
@@ -20,14 +20,15 @@ namespace NeedBarOverflow.Patches
 				new Patches(prefix, postfix, transpiler, finalizer))
 		{ }
 		protected Patch_Multi(
-			IEnumerable<Delegate> original,
+			IEnumerable<Delegate?> original,
 			Delegate? prefix = null,
 			Delegate? postfix = null,
 			Delegate? transpiler = null,
 			Delegate? finalizer = null)
 			: base([.. original
 					.Where(d => d is not null)
-					.Select(d => d.Method)
+					.Select(d => d!.Method)
+					.Where(m => m is not null)
 					.OrderBy(m => m!.Name)],
 				new Patches(prefix, postfix, transpiler, finalizer))
 		{ }
@@ -43,7 +44,7 @@ namespace NeedBarOverflow.Patches
 			{
 				case Patch<MethodBase?> patchSingle:
 					return Original.Contains(patchSingle.Original);
-				case Patch<MethodBase?[]> patchMulti:
+				case Patch<MethodBase[]> patchMulti:
 					return Original.Intersect(patchMulti.Original).Any();
 				default:
 					Debug.Error("Not Implemented");

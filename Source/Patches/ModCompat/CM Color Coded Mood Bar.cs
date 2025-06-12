@@ -8,7 +8,7 @@ namespace NeedBarOverflow.Patches.ModCompat
 	public sealed class CM_Color_Coded_Mood_Bar() : Patch_Single(
 		original: Helpers
 			.TypeByName("ColoredMoodBar13.MoodCache")?
-			.Method("DoMood")!,
+			.MethodNullable("DoMood"),
 		transpiler: Add1UpperBound.d_transpiler)
 	{
 		public override void Toggle()

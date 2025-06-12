@@ -22,7 +22,7 @@ namespace NeedBarOverflow
 		internal static void Error(string s)
 			=> Log.Error(prefix + s);
 
-		//[Conditional("DEBUG")]
+		[Conditional("DEBUG")]
 		internal static void CheckTranspiler(
 			int state, bool assertResult,
 			string transpilerName = "Unknown")
@@ -35,7 +35,7 @@ namespace NeedBarOverflow
 				")"));
 		}
 
-		//[Conditional("DEBUG")]
+		[Conditional("DEBUG")]
 		internal static void CheckTranspiler(
 			int state, int expectedState,
 			string transpilerName = "Unknown")
@@ -48,7 +48,7 @@ namespace NeedBarOverflow
 				" < ", expectedState, ")"));
 		}
 
-		//[Conditional("DEBUG")]
+		[Conditional("DEBUG")]
 		internal static void Assert(
 			this bool assert, string name)
 		{
@@ -59,30 +59,16 @@ namespace NeedBarOverflow
 				name, "] failed"));
 		}
 
-		//[Conditional("DEBUG")]
-		internal static T NotNull<T>(
-			this object? obj, string name = "Unknown")
+		[Conditional("DEBUG")]
+		internal static void NotNull<T>(
+			this T obj, string name)
 		{
-			if (obj is T item)
-				return item;
+			if (obj is not null)
+				return;
 			Log.Error(string.Concat(
 				"Object ", name,
-				" is null or not of type ",
+				" is null, supposed to be of type ",
 				typeof(T).Name));
-			return default!;
-		}
-
-		//[Conditional("DEBUG")]
-		internal static T NotNull<T>(
-			this T? obj, string name)
-		{
-			if (obj is T item)
-				return item;
-			Log.Error(string.Concat(
-				"Object ", name,
-				" is null or not of type ",
-				typeof(T).Name));
-			return default!;
 		}
 
 		[Conditional("DEBUG")]

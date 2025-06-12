@@ -25,8 +25,8 @@ namespace NeedBarOverflow.Patches
 			targetOptionMethod ??= Helpers
 				.GetInternalMethods(Original!, OpCodes.Ldftn)
 				.Where(IsIngestJobMethod)
-				.First()
-				.NotNull("Patch FloatMenuMakerMap_AddHumanlikeOrders.targetOptionMethod");
+				.FirstOrDefault();
+			targetOptionMethod.NotNull("Patch FloatMenuMakerMap_AddHumanlikeOrders.targetOptionMethod");
 			base.Toggle(enable);
 		}
 		private static bool IsIngestJobMethod(MethodInfo method)

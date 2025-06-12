@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Timers;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using HarmonyLib;
-using NeedBarOverflow.Patches.ModCompat;
 using Verse;
 
 namespace NeedBarOverflow.Patches

@@ -14,11 +14,11 @@ namespace NeedBarOverflow.Patches.ModCompat
 #if l1_4
 		original: Helpers
 			.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-			.Method(name: "AFullNeeds", parameters: [])!,
+			.MethodNullable(name: "AFullNeeds", parameters: []),
 #else
 		original: Helpers
 			.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
-			.Method(name: "a", parameters: [])!,
+			.MethodNullable(name: "a", parameters: []),
 #endif
 		transpiler: TranspilerMethod)
 	{

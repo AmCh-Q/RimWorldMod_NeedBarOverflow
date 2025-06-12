@@ -15,16 +15,16 @@ namespace NeedBarOverflow.Patches.ModCompat
 #if l1_4
 		original: [
 			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-			.Method(name: "AAddNeed", parameters: [typeof(Need)])!,
+			.MethodNullable(name: "AAddNeed", parameters: [typeof(Need)]),
 			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-			.Method(name: "ASubNeed", parameters: [typeof(Need)])!
+			.MethodNullable(name: "ASubNeed", parameters: [typeof(Need)])
 		],
 #else
 		original: [
 			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
-			.Method(name: "a", parameters: [typeof(Need)])!,
+			.MethodNullable(name: "a", parameters: [typeof(Need)]),
 			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
-			.Method(name: "b", parameters: [typeof(Need)])!
+			.MethodNullable(name: "b", parameters: [typeof(Need)])
 		],
 #endif
 		transpiler: TranspilerMethod)

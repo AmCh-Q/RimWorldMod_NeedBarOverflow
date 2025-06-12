@@ -20,7 +20,7 @@ namespace NeedBarOverflow
 				.FirstOrDefault();
 		}
 
-		internal static MethodInfo Method(this Type type,
+		internal static MethodInfo? MethodNullable(this Type type,
 			string name,
 			BindingFlags flags = Consts.bindAll,
 			Type[]? parameters = null,
@@ -33,30 +33,46 @@ namespace NeedBarOverflow
 				methodInfo = type.GetMethod(name, flags, null, parameters, null);
 			if (generics is not null)
 				methodInfo = methodInfo.MakeGenericMethod(generics);
-			return methodInfo.NotNull(type.FullName + ":" + name);
+			return methodInfo;
+		}
+
+		internal static MethodInfo Method(this Type type,
+			string name,
+			BindingFlags flags = Consts.bindAll,
+			Type[]? parameters = null,
+			Type[]? generics = null)
+		{
+			MethodInfo methodInfo = type.MethodNullable(name, flags, parameters, generics)!;
+			methodInfo.NotNull(nameof(methodInfo) + " " + name);
+			return methodInfo;
 		}
 
 		internal static MethodInfo Getter(this Type type,
 			string name, BindingFlags flags = Consts.bindAll)
 		{
-			return (type.GetProperty(name, flags)
-				?.GetGetMethod(true))
-				.NotNull(type.FullName + ":" + name);
+			MethodInfo getMethod
+				= type.GetProperty(name, flags)
+				?.GetGetMethod(true)!;
+			getMethod.NotNull(type.FullName + ":" + name);
+			return getMethod;
 		}
 
 		internal static MethodInfo Setter(this Type type,
 			string name, BindingFlags flags = Consts.bindAll)
 		{
-			return (type.GetProperty(name, flags)
-				?.GetSetMethod(true))
-				.NotNull(type.FullName + ":" + name);
+			MethodInfo setMethod
+				= type.GetProperty(name, flags)
+				?.GetSetMethod(true)!;
+			setMethod.NotNull(type.FullName + ":" + name);
+			return setMethod;
 		}
 
 		internal static FieldInfo Field(this Type type,
 			string name, BindingFlags flags = Consts.bindAll)
 		{
-			return type.GetField(name, flags)
-				.NotNull(type.FullName + ":" + name);
+			FieldInfo field = type.GetField(name, flags);
+			field.NotNull(type.FullName + ":" + name);
+			return field;
 		}
 
 		// Get children methods which the input method uses

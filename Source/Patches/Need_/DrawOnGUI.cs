@@ -76,8 +76,8 @@ namespace NeedBarOverflow.Patches
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			MethodInfo
-				m_DrawBarThreshold = typeof(Need).Method("DrawBarThreshold"),
-				m_DrawBarInstantMarkerAt = typeof(Need).Method("DrawBarInstantMarkerAt");
+				m_DrawBarThreshold = typeof(Need).Method("DrawBarThreshold")!,
+				m_DrawBarInstantMarkerAt = typeof(Need).Method("DrawBarInstantMarkerAt")!;
 			FieldInfo
 				f_needDef = typeof(Need).Field(nameof(Need.def)),
 				f_scaleBar = typeof(NeedDef).Field(nameof(NeedDef.scaleBar));

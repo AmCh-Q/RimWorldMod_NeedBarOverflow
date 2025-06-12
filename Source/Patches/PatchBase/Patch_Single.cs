@@ -8,20 +8,22 @@ namespace NeedBarOverflow.Patches
 	public abstract class Patch_Single : Patch<MethodBase?>
 	{
 		protected Patch_Single(
-			MethodBase original,
+			MethodBase? original,
 			Delegate? prefix = null,
 			Delegate? postfix = null,
 			Delegate? transpiler = null,
 			Delegate? finalizer = null)
-			: base(original, new Patches(prefix, postfix, transpiler, finalizer))
+			: base(original,
+				  new Patches(prefix, postfix, transpiler, finalizer))
 		{ }
 		protected Patch_Single(
-			Delegate original,
+			Delegate? original,
 			Delegate? prefix = null,
 			Delegate? postfix = null,
 			Delegate? transpiler = null,
 			Delegate? finalizer = null)
-			: base(original.Method, new Patches(prefix, postfix, transpiler, finalizer))
+			: base(original?.Method,
+				  new Patches(prefix, postfix, transpiler, finalizer))
 		{ }
 		public override bool Patchable
 			=> Original is not null;
@@ -35,7 +37,7 @@ namespace NeedBarOverflow.Patches
 			{
 				case Patch<MethodBase?> patchSingle:
 					return Original == patchSingle.Original;
-				case Patch<MethodBase?[]> patchMulti:
+				case Patch<MethodBase[]> patchMulti:
 					return patchMulti.Original.Contains(Original);
 				default:
 					Debug.Error("Not Implemented");
@@ -55,7 +57,11 @@ namespace NeedBarOverflow.Patches
 		}
 		protected override void Dopatch()
 		{
-			Original.NotNull("Patch Original " + GetType().Name);
+			if (Original is null)
+			{
+				Debug.Warning("Patch " + GetType().Name + " has null original");
+				return;
+			}
 			Debug.Message("Patching Method "
 				+ Original!.DeclaringType.Name
 				+ ":" + Original.Name);
@@ -67,7 +73,11 @@ namespace NeedBarOverflow.Patches
 		}
 		protected override void Unpatch()
 		{
-			Original.NotNull("Patch Original " + GetType().Name);
+			if (Original is null)
+			{
+				Debug.Warning("Patch " + GetType().Name + " has null original");
+				return;
+			}
 			Debug.Message("Unpatching Method "
 				+ Original!.DeclaringType.Name
 				+ ":" + Original.Name);
