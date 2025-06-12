@@ -9,8 +9,7 @@
 		<DefineConstants>$(DefineConstants);v1_5</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*-*" />
+		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.4409" />
 		<PackageReference Include="Lib.Harmony" Version="2.3.*" ExcludeAssets="runtime" />
-		<None Include="..\LICENSE" Pack="true" PackagePath=".." />
 	</ItemGroup>
 </Project>
