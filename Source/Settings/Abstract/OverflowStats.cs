@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using Verse;
 
 namespace NeedBarOverflow.Needs
@@ -61,8 +62,8 @@ namespace NeedBarOverflow.Needs
 				sl.TranslatedTip(f1.CustomToString(true, true)));
 			if (b1)
 			{
-				Utility.AddNumSetting(ls,
-					ref f1, true,
+				f1 = Utility.AddNumSetting(ls,
+					f1, true,
 					-2.002f, 1f,
 					0f, 10f,
 					null, sl.tip, true);

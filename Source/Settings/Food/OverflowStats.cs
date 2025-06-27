@@ -44,7 +44,7 @@ namespace NeedBarOverflow.Needs
 				StatName_Food stat = StatName_Food.OverflowBonus;
 				SettingLabel sl = new(nameof(Need_Food), stat.ToString());
 				float f1 = overflowStats[(int)stat];
-				Utility.AddNumSetting(ls, ref f1, sl);
+				f1 = Utility.AddNumSetting(ls, f1, sl);
 				overflowStats[(int)stat] = f1;
 
 				stat = StatName_Food.DisableEating;
@@ -56,7 +56,7 @@ namespace NeedBarOverflow.Needs
 					f1.CustomToString(true, true)), ref b1, sl.TranslatedTip(f1.CustomToString(true, true)));
 				if (b1)
 				{
-					Utility.AddNumSetting(ls, ref f1, true,
+					f1 = Utility.AddNumSetting(ls, f1, true,
 						Mathf.Log10(0.5f), 1f, 0.5f, 10f,
 						null, sl.tip,
 						showAsPerc: true);
@@ -68,30 +68,25 @@ namespace NeedBarOverflow.Needs
 			public static void AddSettingsForHealthStats(Listing_Standard ls)
 			{
 				Utility.LsGap(ls);
+
 				StatName_Food stat = StatName_Food.NonHumanMult;
 				SettingLabel sl = new(nameof(Need_Food), stat.ToString());
-				float f1 = overflowStats[(int)stat];
-				Utility.AddNumSetting(
-					ls, ref f1, sl, false,
+				overflowStats[(int)stat] = Utility.AddNumSetting(
+					ls, overflowStats[(int)stat], sl, false,
 					0f, 1f, 0f, 1f, true);
-				overflowStats[(int)stat] = f1;
 
 				stat = StatName_Food.GourmandMult;
 				sl = new(nameof(Need_Food), stat.ToString());
-				f1 = overflowStats[(int)stat];
-				Utility.AddNumSetting(
-					ls, ref f1, sl, false,
+				overflowStats[(int)stat] = Utility.AddNumSetting(
+					ls, overflowStats[(int)stat], sl, false,
 					0f, 1f, 0f, 1f, true);
-				overflowStats[(int)stat] = f1;
 
 				stat = StatName_Food.ShowHediffLvl;
 				sl = new(nameof(Need_Food), stat.ToString());
-				f1 = overflowStats[(int)stat];
-				Utility.AddNumSetting(
-					ls, ref f1, sl, true,
+				overflowStats[(int)stat] = Utility.AddNumSetting(
+					ls, overflowStats[(int)stat], sl, true,
 					0f, 2.002f,
 					1f, float.PositiveInfinity, true);
-				overflowStats[(int)stat] = f1;
 			}
 
 			// Old settings used IntVec2 to save settings

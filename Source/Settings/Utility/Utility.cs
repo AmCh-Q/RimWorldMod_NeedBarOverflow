@@ -17,20 +17,20 @@ namespace NeedBarOverflow.Needs
 				height = ls.CurHeight;
 		}
 
-		public static void AddNumSetting(Listing_Standard ls,
-			ref float num, SettingLabel settingLabel, bool logSlider = true,
+		public static float AddNumSetting(Listing_Standard ls,
+			float num, SettingLabel settingLabel, bool logSlider = true,
 			float slider_min = -2.002f, float slider_max = 2.002f,
 			float txt_min = 0f, float txt_max = float.PositiveInfinity,
 			bool showAsPerc = false)
-			=> AddNumSetting(ls, ref num, logSlider,
+			=> AddNumSetting(ls, num, logSlider,
 				slider_min, slider_max, txt_min, txt_max,
 				settingLabel.label, settingLabel.tip, showAsPerc);
 
-		public static void AddNumSetting(Listing_Standard ls,
-				ref float num, bool logSlider = true,
-				float slider_min = -2.002f, float slider_max = 2.002f,
-				float txt_min = 0f, float txt_max = float.PositiveInfinity,
-				string? name = null, string? tip = null, bool showAsPerc = false)
+		public static float AddNumSetting(Listing_Standard ls,
+			float num, bool logSlider = true,
+			float slider_min = -2.002f, float slider_max = 2.002f,
+			float txt_min = 0f, float txt_max = float.PositiveInfinity,
+			string? name = null, string? tip = null, bool showAsPerc = false)
 		{
 			AddLabelTip(ls, num, name, tip, showAsPerc);
 
@@ -47,8 +47,8 @@ namespace NeedBarOverflow.Needs
 			else
 				num = AddLinearSlider(rectSlider, num, txt_min, txt_max, showAsPerc);
 
-			num = num.RoundToSigFig();
 			ls.Gap(ls.verticalSpacing * 1.5f + Text.LineHeight);
+			return num.RoundToSigFig();
 		}
 
 		private static void AddLabelTip(
@@ -129,7 +129,7 @@ namespace NeedBarOverflow.Needs
 			else if (num_pow == slider_max)
 				return txt_max;
 			else
-				return Mathf.Pow(10f, num_pow);
+				return Mathf.Min(Mathf.Pow(10f, num_pow), txt_max);
 		}
 
 		private static float AddLinearSlider(Rect rectSlider, float num,
@@ -173,7 +173,7 @@ namespace NeedBarOverflow.Needs
 			ls.Gap(ls.verticalSpacing * -0.5f);
 			if (b1)
 			{
-				AddNumSetting(ls, ref f1, true,
+				f1 = AddNumSetting(ls, f1, true,
 					0f, 2.002f, 1f, float.PositiveInfinity, null, sl.tip, true);
 			}
 			Setting_Common.SetOverflow(needType, b1 ? f1 : -f1 - 1f);

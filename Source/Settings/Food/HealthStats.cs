@@ -165,8 +165,8 @@ namespace NeedBarOverflow.Needs
 							float f1 = healthStats[(int)key, i];
 							float slider_min = Mathf.Log10(txt_min);
 							bool logSlider = txt_max == float.PositiveInfinity;
-							Utility.AddNumSetting(
-								ls, ref f1, logSlider,
+							f1 = Utility.AddNumSetting(
+								ls, f1, logSlider,
 								logSlider ? slider_min : txt_min,
 								logSlider ? (slider_min + 1f) : txt_max,
 								txt_min, txt_max,
