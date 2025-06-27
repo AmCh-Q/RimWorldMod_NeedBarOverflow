@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if l1_5
+using System.IO;
 using System.Xml;
 using Verse;
 
@@ -6,7 +7,7 @@ namespace NeedBarOverflow
 {
 	internal static class Savefilebackcompat
 	{
-		// Old settings file compatibility, will be removed for 1.6
+		// Old settings file compatibility, removed for 1.6
 		public static void ModifySettingFileClass(ModContentPack content)
 		{
 			string settingsFilePath = Path.Combine(
@@ -34,3 +35,4 @@ namespace NeedBarOverflow
 		}
 	}
 }
+#endif

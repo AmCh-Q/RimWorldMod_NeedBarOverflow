@@ -14,8 +14,10 @@ namespace NeedBarOverflow
 		public NeedBarOverflow(ModContentPack content) : base(content)
 		{
 			Debug.Message("NeedBarOverflow constructor called");
-			// Old settings file compatibility, will be removed for 1.6
+#if l1_5
+			// Old settings file compatibility, removed for 1.6
 			Savefilebackcompat.ModifySettingFileClass(content);
+#endif
 			PatchApplier.settings = GetSettings<Settings>();
 			LongEventHandler.QueueLongEvent(Refs.Init,
 				"NeedBarOverflow.Mod.ctor", false, null);

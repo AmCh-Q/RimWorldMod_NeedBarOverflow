@@ -7,16 +7,16 @@ namespace NeedBarOverflow.Needs
 		public readonly string name, label, tip;
 
 		public string TranslatedLabel()
-		  => label.MyTranslate();
+		  => label.Translate();
 
 		public string TranslatedLabel(NamedArgument arg)
-		  => label.MyTranslate(arg);
+		  => label.Translate(arg);
 
 		public string TranslatedTip()
-		  => tip.MyTranslate();
+		  => tip.Translate();
 
 		public string TranslatedTip(NamedArgument arg)
-		  => tip.MyTranslate(arg);
+		  => tip.Translate(arg);
 
 		public SettingLabel(string typeName, string settingsName)
 		{

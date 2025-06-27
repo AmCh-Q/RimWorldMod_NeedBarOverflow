@@ -37,13 +37,13 @@ namespace NeedBarOverflow.Needs
 			string txt_max_str = txt_max.CustomToString(showAsPerc, true);
 			if (name is not null && name.Length != 0)
 			{
-				string labeltxt = name.MyTranslate(numString);
+				string labeltxt = name.Translate(numString);
 				if (tip is not null && tip.Length != 0)
 				{
 					TooltipHandler.TipRegion(new Rect(
 						0f, ls.CurHeight, ls.ColumnWidth,
 						Text.LineHeight * 1.2f + Text.CalcHeight(labeltxt, ls.ColumnWidth)),
-						tip.MyTranslate(numString));
+						tip.Translate(numString));
 				}
 
 				ls.Label(labeltxt);
@@ -55,7 +55,7 @@ namespace NeedBarOverflow.Needs
 					TooltipHandler.TipRegion(new Rect(
 						0, ls.CurHeight, ls.ColumnWidth,
 						Text.LineHeight * 1.2f),
-						tip.MyTranslate(numString));
+						tip.Translate(numString));
 				}
 
 				ls.Gap(ls.verticalSpacing * 1.5f);
