@@ -1,9 +1,7 @@
-﻿using HarmonyLib;
-using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow.Needs
@@ -97,68 +95,6 @@ namespace NeedBarOverflow.Needs
 				if (AllNeedTypesByName.TryGetValue(need.Key, out Type needType))
 					overflow[needType] = need.Value;
 			}
-		}
-
-		private static readonly Type?[] migrationTypes =
-		[
-			typeof(Need_Food),
-			typeof(Need_Rest),
-			typeof(Need_Joy),
-			typeof(Need_Mood),
-			typeof(Need_Outdoors),
-#if v1_2
-			null,
-#else
-			typeof(Need_Indoors),
-#endif
-			typeof(Need_Comfort),
-			typeof(Need_Beauty),
-			typeof(Need_Chemical),
-			typeof(Need_Chemical_Any),
-			typeof(Need),
-			typeof(Need_Authority),
-			typeof(Need_RoomSize),
-#if v1_2
-			null,null,
-#else
-			typeof(Need_Sadism),
-			typeof(Need_Suppression),
-#endif
-#if l1_3
-			null,null,null,null,null,
-#else
-			typeof(Need_Deathrest),
-			typeof(Need_KillThirst),
-			typeof(Need_Learning),
-			typeof(Need_MechEnergy),
-			typeof(Need_Play)
-#endif
-		];
-
-		// Old settings used hardcoded indices to save settings
-		//   this is bad for future expandability
-		//   if these settings exist, we copy them over to new settings
-		// This migration method will be removed for 1.6
-		internal static void MigrateSettings(
-			Dictionary<IntVec2, bool> enabledB)
-		{
-			List<bool> enabledA = [];
-			List<float> statsA = [];
-			Scribe_Collections.Look(ref enabledA, nameof(enabledA), LookMode.Value);
-			Scribe_Collections.Look(ref statsA, nameof(statsA), LookMode.Value);
-			if (enabledA is not null && statsA is not null)
-			{
-				for (int i = 0; i < Mathf.Min(20, enabledA.Count, statsA.Count); i++)
-				{
-					Type? migrationType = migrationTypes[i];
-					if (migrationType is null)
-						continue;
-					float stat = Mathf.Max(statsA[i], 1f);
-					stat = enabledA[i] ? stat : -stat;
-					overflow[migrationType] = stat;
-				}
-			}
-			DisablingDefs.MigrateSettings(enabledB);
 		}
 	}
 }

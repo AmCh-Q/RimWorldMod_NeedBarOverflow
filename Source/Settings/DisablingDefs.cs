@@ -251,27 +251,6 @@ namespace NeedBarOverflow.Needs
 
 				Debug.Message("DisablingDefs.ParseDisabledDefs() parsed " + defType.ToString());
 			}
-
-			public static void MigrateSettings(
-				Dictionary<IntVec2, bool> enabledB)
-			{
-				List<string> foodDisablingDefs = [];
-				Scribe_Collections.Look(ref foodDisablingDefs,
-					nameof(foodDisablingDefs), LookMode.Value);
-				if (foodDisablingDefs.NullOrEmpty() || foodDisablingDefs[0].NullOrEmpty())
-					return;
-				string s1 = foodDisablingDefs[0];
-				if (!enabledB.TryGetValue(new IntVec2(0, 10), out bool b1) || !b1)
-					s1 += suffix;
-				disablingDefs_str[(int)StatName_DisableType.Race] = s1;
-
-				if (foodDisablingDefs.Count < 2 && foodDisablingDefs[1].NullOrEmpty())
-					return;
-				s1 = foodDisablingDefs[1];
-				if (!enabledB.TryGetValue(new IntVec2(0, 11), out b1) || !b1)
-					s1 += suffix;
-				disablingDefs_str[(int)StatName_DisableType.Hediff] = s1;
-			}
 		}
 	}
 }

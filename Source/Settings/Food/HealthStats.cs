@@ -186,52 +186,6 @@ namespace NeedBarOverflow.Needs
 				}
 			}
 
-			// Old settings used hard-coded integer values for each effect
-			//   this is bad for future expandability
-			//   if those values exist, we copy them over to new settings
-			// This migration method will be removed for 1.6
-			public static void MigrateSettings()
-			{
-				const string name = "foodHealthStats_";
-				List<bool> foodOverflowEffects = new(5);
-				List<float> foodHealthStats = new(10);
-				int[] arrIdxs =
-				[
-					(int)HealthName.Level,
-					(int)HealthName.HungerFactor,
-					(int)HealthName.HealingFactor,
-					(int)HealthName.MovingOffset,
-					(int)HealthName.VomitFreq,
-					(int)HealthName.EatingOffset,
-				];
-				Buffer.BlockCopy(dfltHealthStats, 0, healthStats, 0,
-					6 * 10 * sizeof(float));
-				Scribe_Collections.Look(ref foodOverflowEffects, nameof(foodOverflowEffects), LookMode.Value);
-				for (int i = 0; i < 6; i++)
-				{
-					if (i > 0 && i <= foodOverflowEffects.Count &&
-						!foodOverflowEffects.NullOrEmpty())
-					{
-						bool b1 = foodOverflowEffects[i - 1];
-						float f1 = healthStats[arrIdxs[i], 0];
-						if ((f1 >= 0) != b1)
-							healthStats[arrIdxs[i], 0] = -f1 - 1f;
-					}
-					Scribe_Collections.Look(ref foodHealthStats, name + i.ToStringCached(), LookMode.Value);
-					if (foodHealthStats.NullOrEmpty())
-						continue;
-					int lastIdx = Mathf.Min(9, foodHealthStats.Count);
-					for (int j = 1; j < lastIdx; j++)
-					{
-						healthStats[arrIdxs[i], j]
-							= Mathf.Clamp(foodHealthStats[j],
-							dfltHealthStats[arrIdxs[i], 0],
-							dfltHealthStats[arrIdxs[i], 9]);
-					}
-				}
-				healthStats[(int)HealthName.Level, 1] = 1f;
-			}
-
 			public static void ApplyFoodHediffSettings()
 			{
 				if (!AffectHealth)

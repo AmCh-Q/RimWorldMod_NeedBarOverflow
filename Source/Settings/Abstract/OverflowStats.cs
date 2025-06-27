@@ -71,31 +71,6 @@ namespace NeedBarOverflow.Needs
 			overflowStats[(int)settingName] = b1 ? f1 : -f1 - 1f;
 		}
 
-		// Old settings used hardcoded indices to save settings
-		//   (see caller of this method)
-		//   this is bad for future expandability
-		//   if these settings exist, we copy them over to new settings
-		// This migration method will be removed for 1.6
-		public static void MigrateSettings(
-			Dictionary<IntVec2, bool> enabledB,
-			Dictionary<IntVec2, float> statsB,
-			int idx)
-		{
-			int[] stats =
-			[
-				(int)StatName_DG.FastDrain,
-				(int)StatName_DG.SlowGain,
-			];
-			for (int i = 0; i < 2; i++)
-			{
-				IntVec2 v1 = new(idx, i + 1);
-				if (!statsB.TryGetValue(v1, out float f1))
-					continue;
-				bool b1 = enabledB.GetValueOrDefault(v1, overflowStats[stats[i]] >= 0);
-				overflowStats[stats[i]] = b1 ? f1 : -f1 - 1f;
-			}
-		}
-
 		static OverflowStats()
 		{
 			// StatName_Food.OverflowBonus

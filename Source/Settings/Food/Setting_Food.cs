@@ -30,16 +30,5 @@ namespace NeedBarOverflow.Needs
 			// Add settings UI of HealthStats.HealthName
 			HealthStats.AddSettings(ls);
 		}
-
-		// Old settings have issues (see comments under methods below)
-		//   so we had this method to copy old settings to new
-		// This migration method will be removed for 1.6
-		public static void MigrateSettings(
-			Dictionary<IntVec2, bool> enabledB,
-			Dictionary<IntVec2, float> statsB)
-		{
-			OverflowStats.MigrateSettings(enabledB, statsB);
-			HealthStats.MigrateSettings();
-		}
 	}
 }

@@ -52,8 +52,6 @@ namespace NeedBarOverflow
 			Needs.Setting_Common.LoadDisablingDefs();
 			Needs.Setting_Food.ApplyFoodHediffSettings();
 			Patches.PatchApplier.ApplyPatches();
-			if (Settings.migrateSettings == 2)
-				Patches.PatchApplier.settings!.Write();
 		}
 
 		private static Func<Thing, bool>? LoadDelegate_VFEAncients()

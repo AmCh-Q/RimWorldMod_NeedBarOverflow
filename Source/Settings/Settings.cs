@@ -10,7 +10,6 @@ namespace NeedBarOverflow
 	public class Settings : ModSettings
 	{
 		private static bool showHiddenSettings;
-		internal static int migrateSettings;
 		private Vector2 settingsScrollPos;
 
 		public Settings() => Debug.Message("NeedBarOverflow_Settings constructor called");
@@ -87,14 +86,6 @@ namespace NeedBarOverflow
 #if g1_4
 			Scribe_Deep.Look(ref killThirst, nameof(Need_KillThirst));
 #endif
-			// Old settings have issues
-			//   so we call this method to copy old settings to new
-			// This call will be removed for 1.6
-			if (Scribe.mode == LoadSaveMode.LoadingVars &&
-				migrateSettings == 1)
-			{
-				MigrateSettings();
-			}
 
 			if (NeedBarOverflow.Initialized &&
 				(Scribe.mode == LoadSaveMode.PostLoadInit ||
@@ -102,28 +93,6 @@ namespace NeedBarOverflow
 			{
 				Patches.PatchApplier.ApplyPatches();
 			}
-		}
-
-		// Old settings have issues (see comments under methods below)
-		//   so we had this method to copy old settings to new
-		// These migration method will be removed for 1.6
-		private static void MigrateSettings()
-		{
-			Debug.Message("MigrateSettings() called");
-			Dictionary<IntVec2, bool> enabledB = [];
-			Dictionary<IntVec2, float> statsB = [];
-			Scribe_Collections.Look(ref enabledB, nameof(enabledB), LookMode.Value, LookMode.Value);
-			Scribe_Collections.Look(ref statsB, nameof(statsB), LookMode.Value, LookMode.Value);
-			enabledB ??= [];
-			statsB ??= [];
-			Setting_Common.MigrateSettings(enabledB);
-			Setting_Food.MigrateSettings(enabledB, statsB);
-			OverflowStats<Need_Rest>.MigrateSettings(enabledB, statsB, 1);
-			OverflowStats<Need_Joy>.MigrateSettings(enabledB, statsB, 2);
-#if g1_4
-			OverflowStats<Need_KillThirst>.MigrateSettings(enabledB, statsB, 16);
-#endif
-			migrateSettings = 2;
 		}
 	}
 }
