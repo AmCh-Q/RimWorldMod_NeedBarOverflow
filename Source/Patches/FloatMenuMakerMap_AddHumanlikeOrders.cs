@@ -10,6 +10,7 @@ using Verse;
 
 namespace NeedBarOverflow.Patches
 {
+	// FloatMenuMakerMap is removed in 1.6
 	// Disable right click option to consume food if pawn is too full on food
 	public sealed class FloatMenuMakerMap_AddHumanlikeOrders() : Patch_Single(
 		original: typeof(FloatMenuMakerMap).Method("AddHumanlikeOrders"),

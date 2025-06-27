@@ -12,19 +12,20 @@ namespace NeedBarOverflow.Patches.ModCompat
 	// Character Editor
 	// https://steamcommunity.com/sharedfiles/filedetails/?id=1874644848
 	public sealed class Character_Editor_AAddNeed() : Patch_Multi(
-#if l1_4
-		original: [
-			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-			.MethodNullable(name: "AAddNeed", parameters: [typeof(Need)]),
-			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-			.MethodNullable(name: "ASubNeed", parameters: [typeof(Need)])
-		],
-#else
+#if v1_5
+		// Version 1.5 only -- Mod used obfuscated method name
 		original: [
 			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
 			.MethodNullable(name: "a", parameters: [typeof(Need)]),
 			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
 			.MethodNullable(name: "b", parameters: [typeof(Need)])
+		],
+#else
+		original: [
+			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
+			.MethodNullable(name: "AAddNeed", parameters: [typeof(Need)]),
+			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
+			.MethodNullable(name: "ASubNeed", parameters: [typeof(Need)])
 		],
 #endif
 		transpiler: TranspilerMethod)

@@ -11,14 +11,15 @@ namespace NeedBarOverflow.Patches.ModCompat
 	// Character Editor
 	// https://steamcommunity.com/sharedfiles/filedetails/?id=1874644848
 	public sealed class Character_Editor_AFullNeeds() : Patch_Single(
-#if l1_4
-		original: Helpers
-			.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-			.MethodNullable(name: "AFullNeeds", parameters: []),
-#else
+#if v1_5
+		// Version 1.5 only -- Mod used obfuscated method name
 		original: Helpers
 			.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
 			.MethodNullable(name: "a", parameters: []),
+#else
+		original: Helpers
+			.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
+			.MethodNullable(name: "AFullNeeds", parameters: []),
 #endif
 		transpiler: TranspilerMethod)
 	{
