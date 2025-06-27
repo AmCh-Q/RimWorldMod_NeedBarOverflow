@@ -22,7 +22,7 @@ namespace NeedBarOverflow.Needs
 		{
 			string text = typeName.NullOrEmpty() ? string.Empty : ".";
 			name = settingsName.Replace('_', '.');
-			label = "NBO." + typeName + text + name;
+			label = string.Concat("NBO.", typeName, text, name);
 			tip = label + "_Tip";
 		}
 	}

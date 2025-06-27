@@ -1,10 +1,5 @@
 ﻿#if g1_6
 using NeedBarOverflow.Needs;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using UnityEngine;
 using RimWorld;
 using Verse;
 
@@ -13,7 +8,10 @@ namespace NeedBarOverflow.Patches
 	// See FloatMenuMakerMap_AddHumanlikeOrders for 1.5 or earlier
 	// Disable right click option to consume food if pawn is too full on food
 	public sealed class FloatMenuOptionProvider_Ingest_GetSingleOptionFor() : Patch_Single(
-		original: typeof(FloatMenuOptionProvider_Ingest).Method("GetSingleOptionFor"),
+		original: typeof(FloatMenuOptionProvider_Ingest)
+			.Method("GetSingleOptionFor",
+			Consts.bindNonpubInstance,
+			[typeof(Thing), typeof(FloatMenuContext)]),
 		postfix: PostfixMethod)
 	{
 		public override void Toggle()

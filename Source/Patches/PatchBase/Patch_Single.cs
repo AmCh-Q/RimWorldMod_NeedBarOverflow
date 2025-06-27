@@ -17,7 +17,7 @@ namespace NeedBarOverflow.Patches
 				  new Patches(prefix, postfix, transpiler, finalizer))
 		{ }
 		protected Patch_Single(
-			Delegate? original,
+			Delegate original,
 			Delegate? prefix = null,
 			Delegate? postfix = null,
 			Delegate? transpiler = null,

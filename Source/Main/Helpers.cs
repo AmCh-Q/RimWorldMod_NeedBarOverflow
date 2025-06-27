@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using UnityEngine;
 using HarmonyLib;
 using Verse;
+using System.Runtime.InteropServices;
 
 namespace NeedBarOverflow
 {
@@ -20,17 +21,50 @@ namespace NeedBarOverflow
 				.FirstOrDefault();
 		}
 
-		internal static MethodInfo? MethodNullable(this Type type,
+		internal static bool MethodMatch(MethodInfo method, string name, Type[]? parameters)
+		{
+			if (method is null || name.NullOrEmpty())
+				return method is null != name.NullOrEmpty();
+			if (method.Name != name)
+				return false;
+			if (parameters is null)
+				return true;
+			ParameterInfo[] methodParams = method.GetParameters();
+			return methodParams.Length == parameters.Length
+				&& methodParams.Select(info => info.ParameterType).SequenceEqual(parameters);
+		}
+
+		internal static IEnumerable<MethodInfo> GetMethods(
+			Type type,
+			string name,
+			BindingFlags flags,
+			Type[]? parameters)
+			=> type.GetMethods(flags)
+			.Where(methodinfo => MethodMatch(methodinfo, name, parameters));
+
+		internal static MethodInfo? MethodNullable(
+			this Type type,
 			string name,
 			BindingFlags flags = Consts.bindAll,
 			Type[]? parameters = null,
 			Type[]? generics = null)
 		{
 			MethodInfo? methodInfo;
-			if (parameters is null)
-				methodInfo = type.GetMethod(name, flags);
-			else
-				methodInfo = type.GetMethod(name, flags, null, parameters, null);
+			MethodInfo[] methods = GetMethods(type, name, flags, parameters).Take(2).ToArray();
+			switch (methods.Length)
+			{
+				case 0:
+					return null;
+				case 1:
+					methodInfo = methods[0];
+					break;
+				default:
+					Debug.Warning(string.Concat("Multiple matches on getting method for ",
+					type.FullName, ":", name, ", defaulting to first one. The first two methods are:\n",
+					methods[0].ToString(), "\n", methods[1].ToString()));
+					methodInfo = methods[0];
+					break;
+			}
 			if (generics is not null)
 				methodInfo = methodInfo.MakeGenericMethod(generics);
 			return methodInfo;

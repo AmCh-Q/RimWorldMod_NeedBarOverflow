@@ -13,16 +13,17 @@ namespace NeedBarOverflow.Patches
 		static PatchApplier()
 		{
 			Debug.WatchStart("static PatchApplier()");
-			IEnumerable<Patch> patchesCandidate = GenTypes
+			List<Patch> patches = GenTypes
 				.AllTypes
 				//.AsParallel()
 				.Where(type
 					=> !type.IsAbstract
 					&& type.IsSubclassOf(typeof(Patch)))
-				.Select(type => Activator.CreateInstance(type))
+				.Select(CreatePatch)
+				.Where(patch => patch is not null && patch.Patchable)
 				.Cast<Patch>()
-				.Where(patch => patch.Patchable);
-			foreach (Patch patch in patchesCandidate)
+				.ToList();
+			foreach (Patch patch in patches)
 			{
 				Patch? existing = Patches
 					.Where(existing => existing.Equals(patch))
@@ -43,6 +44,20 @@ namespace NeedBarOverflow.Patches
 		}
 		public static bool Patched(Type type)
 			=> Patches.Any(patch => patch.GetType() == type);
+		public static Patch? CreatePatch(Type patchClass)
+		{
+			try
+			{
+				Patch patch = (Patch)Activator.CreateInstance(patchClass);
+				return patch;
+			}
+			catch (Exception ex)
+			{
+				Debug.Warning("Error in patch " + patchClass);
+				Debug.Warning(ex.GetType().FullName);
+				return null;
+			}
+		}
 		public static void ApplyPatches()
 		{
 			if (settings is null)
