@@ -1,16 +1,17 @@
 ﻿#if l1_5
 using NeedBarOverflow.Needs;
-using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
+using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow.Patches
 {
 	// FloatMenuMakerMap is removed in 1.6
+	// See FloatMenuOptionProvider_Ingest_GetSingleOptionFor for 1.6
 	// Disable right click option to consume food if pawn is too full on food
 	public sealed class FloatMenuMakerMap_AddHumanlikeOrders() : Patch_Single(
 		original: typeof(FloatMenuMakerMap).Method("AddHumanlikeOrders"),
@@ -37,8 +38,7 @@ namespace NeedBarOverflow.Patches
 				.Any(x => f_Ingest.Equals(x.Value));
 			return result;
 		}
-		private static void PostfixMethod(
-			Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
+		private static void PostfixMethod(Pawn pawn, List<FloatMenuOption> opts)
 		{
 			if (Need_Food_Utility.CanConsumeMoreFood(pawn))
 				return;
@@ -54,7 +54,7 @@ namespace NeedBarOverflow.Patches
 #endif
 					&& !thingDef.IsDrug)
 				{
-					opt.Label = string.Concat(opt.Label, ": ", Strings.FoodFull.Translate());
+					opt.Label = string.Concat(opt.Label, ": ", Strings.FoodFull.Translate().CapitalizeFirst());
 					opt.action = null;
 				}
 			}
