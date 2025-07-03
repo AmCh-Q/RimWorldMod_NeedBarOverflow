@@ -130,12 +130,12 @@ namespace NeedBarOverflow.Needs
 						continue;
 					}
 
-					string defName = defItem.defName.Trim().ToLowerInvariant();
+					string? defName = defItem.defName?.Trim().ToLowerInvariant();
 					if (!defName.NullOrEmpty())
-						defDict[defName] = defItem;
-					string defLabel = defItem.label.Trim().ToLowerInvariant();
+						defDict[defName!] = defItem;
+					string? defLabel = defItem.label?.Trim().ToLowerInvariant();
 					if (!defLabel.NullOrEmpty())
-						defDict.TryAdd(defLabel, defItem);
+						defDict.TryAdd(defLabel!, defItem);
 				}
 				Debug.Message("GetDefDict() Loaded " + statName.ToString());
 				defsByDisableTypeCache[statIdx] = defDict;

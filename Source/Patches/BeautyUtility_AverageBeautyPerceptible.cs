@@ -18,7 +18,7 @@ namespace NeedBarOverflow.Patches
 		private static int lastCheckTick = -1;
 		public override void Toggle()
 		{
-			Toggle(Setting_Common.AnyEnabled
+			Toggle(Setting_Common.Enabled(typeof(Need_Beauty))
 				&& !ModLister.HasActiveModWithName("Performance Optimizer"));
 		}
 		public override void Toggle(bool enable)
