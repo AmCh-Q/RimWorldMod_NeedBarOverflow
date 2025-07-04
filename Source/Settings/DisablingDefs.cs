@@ -11,6 +11,7 @@ namespace NeedBarOverflow.Needs
 		Race,
 		Apparel,
 		Hediff,
+		Gene,
 	}
 
 	public sealed partial class Setting_Common : IExposable
@@ -41,22 +42,28 @@ namespace NeedBarOverflow.Needs
 
 			private static readonly string[] dfltDisablingDefNames =
 			[
-				suffix, "VFEE_Apparel_TechfriarCrown", suffix,
+				suffix, "VFEE_Apparel_TechfriarCrown", suffix, "VRE_MindCoalescence, WVC_DeadStomach"
 			];
 
 			private static readonly Type[] dfltDisablingDefTypes =
 			[
 				typeof(ThingDef), typeof(ThingDef), typeof(HediffDef),
+#if g1_4
+				typeof(GeneDef),
+#else
+				typeof(Def),
+#endif
 			];
 
 			private static readonly string[] disablingDefs_str = [.. dfltDisablingDefNames];
-			public static readonly HashSet<Def>[] disablingDefs = [[], [], []];
+			public static readonly HashSet<Def>[] disablingDefs = [[], [], [], []];
 
 			private static readonly Dictionary<string, Def>?[]
-				defsByDisableTypeCache = [null, null, null];
+				defsByDisableTypeCache = [null, null, null, null];
 
-			private static readonly string[,] colorizeCache = new string[3, 2]
+			private static readonly string[,] colorizeCache = new string[4, 2]
 			{
+				{ string.Empty, string.Empty },
 				{ string.Empty, string.Empty },
 				{ string.Empty, string.Empty },
 				{ string.Empty, string.Empty },
@@ -74,7 +81,8 @@ namespace NeedBarOverflow.Needs
 				canOverflowCached =
 					CheckPawnRace(p) &&
 					CheckPawnApparel(p) &&
-					CheckPawnHealth(p);
+					CheckPawnHealth(p) &&
+					CheckPawnGenes(p);
 				return canOverflowCached;
 			}
 
@@ -109,6 +117,23 @@ namespace NeedBarOverflow.Needs
 					return true;
 				return !hediffs.Any(hediff => defs.Contains(hediff.def));
 			}
+
+#if l1_3
+			public static bool CheckPawnGenes(Pawn p) => true;
+#else
+			public static bool CheckPawnGenes(Pawn p)
+			{
+				if (!ModsConfig.BiotechActive)
+					return true;
+				HashSet<Def> defs = disablingDefs[(int)StatName_DisableType.Gene];
+				if (defs.Count == 0)
+					return true;
+				List<Gene>? genes = p.genes?.GenesListForReading;
+				if (genes is null || genes.Count == 0)
+					return true;
+				return !genes.Any(gene => gene.Active && defs.Contains(gene.def));
+			}
+#endif
 
 			private static Dictionary<string, Def> GetDefDict(StatName_DisableType statName)
 			{
@@ -199,6 +224,12 @@ namespace NeedBarOverflow.Needs
 			{
 				foreach (StatName_DisableType defType in Enum.GetValues(typeof(StatName_DisableType)))
 				{
+					if (defType == StatName_DisableType.Gene
+#if g1_4
+						&& !ModLister.BiotechInstalled
+#endif
+						)
+						continue;
 					string s1 = disablingDefs_str[(int)defType];
 					bool b1 = s1.EndsWith(suffix, StringComparison.Ordinal);
 					bool b2 = !b1;

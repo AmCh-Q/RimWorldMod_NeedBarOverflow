@@ -13,6 +13,8 @@
   <NBO.NoOverf.Apparel_Tip>當小人裝備著以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的裝備時將無法溢出需求條。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Apparel_Tip>
   <NBO.NoOverf.Hediff>禁止部分健康狀態下需求條溢出</NBO.NoOverf.Hediff>
   <NBO.NoOverf.Hediff_Tip>當小人擁有以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的健康狀況/身體部件時將無法溢出需求條。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Hediff_Tip>
+  <NBO.NoOverf.Gene>禁止部分基因下需求条溢出</NBO.NoOverf.Gene>
+  <NBO.NoOverf.Gene_Tip>當小人擁有以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的活躍基因時活跃基因時將無法溢出需求條。不活躍的基因不會影響需求條溢出。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Gene_Tip>
 
   <NBO.Need_Food.OverfEnabled>啓用食物值溢出</NBO.Need_Food.OverfEnabled>
   <NBO.Need_Food.OverfEnabled_Tip>允許小人的飲食條溢出</NBO.Need_Food.OverfEnabled_Tip>

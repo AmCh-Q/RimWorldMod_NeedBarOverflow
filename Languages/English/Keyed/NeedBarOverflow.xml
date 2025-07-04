@@ -13,6 +13,8 @@
   <NBO.NoOverf.Apparel_Tip>Pawns wearing apparel with defNames (preferred) or full names (in the game's current language) listed below cannot overflow their need bars. The list is comma-separated and case-insensitive. Names recognized by the mod will be highlighted.</NBO.NoOverf.Apparel_Tip>
   <NBO.NoOverf.Hediff>Disable Need Overflow with some health conditions</NBO.NoOverf.Hediff>
   <NBO.NoOverf.Hediff_Tip>Pawns with health conditions with defNames (preferred) or full names (in the game's current language) listed below cannot overflow their need bars. The list is comma-separated and case-insensitive. Names recognized by the mod will be highlighted.</NBO.NoOverf.Hediff_Tip>
+  <NBO.NoOverf.Gene>Disable Need Overflow with some genes</NBO.NoOverf.Gene>
+  <NBO.NoOverf.Gene_Tip>Pawns with active genes with defNames (preferred) or full names (in the game's current language) listed below cannot overflow their need bars. Inactive genes have no effect. The list is comma-separated and case-insensitive. Names recognized by the mod will be highlighted.</NBO.NoOverf.Gene_Tip>
 
   <NBO.Need_Food.OverfEnabled>Enable Food Overflow</NBO.Need_Food.OverfEnabled>
   <NBO.Need_Food.OverfEnabled_Tip>Allow pawns' food bars to overflow.</NBO.Need_Food.OverfEnabled_Tip>
