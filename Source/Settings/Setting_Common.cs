@@ -11,7 +11,7 @@ namespace NeedBarOverflow.Needs
 		private static readonly Dictionary<Type, float> dfltOverflow = new()
 		{
 			{ typeof(Need), -2f},
-			{ typeof(Need_Food), 3f },
+			{ typeof(Need_Food), 2f },
 			{ typeof(Need_Rest), 2f },
 			{ typeof(Need_Joy), 2f },
 			{ typeof(Need_Mood), -2f},
