@@ -40,8 +40,8 @@ namespace NeedBarOverflow.Needs
 				{ -0.5f, 1f, 1.2f, 1.4f, 1.6f, 1.8f, 2f, 3f, 5f, float.PositiveInfinity }, // HealthName.Level
 				{ -2f, 1f, 1.05f, 1.1f, 1.2f, 1.3f, 1.5f, 2f, 5f, float.PositiveInfinity }, // HealthName.HungerFactor
 				{ -2f, 1.1f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 10f }, // HealthName.HealingFactor
-				{ 0f, 0.01f, 0.02f, 0.05f, 0.1f, 0.15f, 0.2f, 0.25f, 0.3f, 1f }, // HealthName.MovingOffset
-				{ 0f, 0.05f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 1f }, // HealthName.EatingOffset
+				{ -1f, 0.01f, 0.02f, 0.05f, 0.1f, 0.15f, 0.2f, 0.25f, 0.3f, 1f }, // HealthName.MovingOffset
+				{ -1f, 0.05f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 1f }, // HealthName.EatingOffset
 				{ -1f, 0f, 0f, 0f, 0f, 0.25f, 2f, 5f, 6f, 24f }, // HealthName.VomitFreq
 			};
 
