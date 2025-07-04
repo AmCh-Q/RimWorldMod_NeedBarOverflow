@@ -81,8 +81,12 @@ namespace NeedBarOverflow.Needs
 				canOverflowCached =
 					CheckPawnRace(p) &&
 					CheckPawnApparel(p) &&
+#if l1_3
+					CheckPawnHealth(p);
+#else
 					CheckPawnHealth(p) &&
 					CheckPawnGenes(p);
+#endif
 				return canOverflowCached;
 			}
 
@@ -118,9 +122,7 @@ namespace NeedBarOverflow.Needs
 				return !hediffs.Any(hediff => defs.Contains(hediff.def));
 			}
 
-#if l1_3
-			public static bool CheckPawnGenes(Pawn p) => true;
-#else
+#if g1_4
 			public static bool CheckPawnGenes(Pawn p)
 			{
 				if (!ModsConfig.BiotechActive)
