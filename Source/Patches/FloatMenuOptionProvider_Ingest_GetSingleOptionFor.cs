@@ -28,7 +28,8 @@ namespace NeedBarOverflow.Patches
 				return;
 			if (thingDef.IsDrug)
 				return;
-			if (thingDef.ingestible.specialThoughtDirect == ModDefOf.IngestedHemogenPack)
+			if (ModDefOf.IngestedHemogenPack is not null &&
+				thingDef.ingestible.specialThoughtDirect == ModDefOf.IngestedHemogenPack)
 				return;
 			if (Need_Food_Utility.CanConsumeMoreFood(context.FirstSelectedPawn))
 				return;

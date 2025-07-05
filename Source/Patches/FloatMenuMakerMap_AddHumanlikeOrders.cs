@@ -50,7 +50,8 @@ namespace NeedBarOverflow.Patches
 				ThingDef thingDef = opt.revalidateClickTarget.def;
 				if (thingDef.IsNutritionGivingIngestible
 #if g1_4
-					&& thingDef.ingestible.specialThoughtDirect != ModDefOf.IngestedHemogenPack
+					&& (ModDefOf.IngestedHemogenPack is null ||
+					thingDef.ingestible.specialThoughtDirect != ModDefOf.IngestedHemogenPack)
 #endif
 					&& !thingDef.IsDrug)
 				{

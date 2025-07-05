@@ -22,7 +22,8 @@ namespace NeedBarOverflow.Patches
 			ThingDef thingDef = inv.def;
 			if (thingDef.IsNutritionGivingIngestible
 #if g1_4
-				&& thingDef.ingestible.specialThoughtDirect != ModDefOf.IngestedHemogenPack
+				&& (ModDefOf.IngestedHemogenPack is null ||
+					thingDef.ingestible.specialThoughtDirect != ModDefOf.IngestedHemogenPack)
 #endif
 				&& !thingDef.IsDrug
 				&& !Need_Food_Utility.CanConsumeMoreFood(pawn)
