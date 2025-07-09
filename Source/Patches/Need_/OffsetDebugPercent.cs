@@ -1,4 +1,4 @@
-﻿#if g1_5
+﻿#if g1_5 && false // disabled because in Vanilla, Need.DrawOnGUI is the only caller, which is patched instead
 using NeedBarOverflow.Needs;
 using RimWorld;
 

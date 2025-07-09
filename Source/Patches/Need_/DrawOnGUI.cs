@@ -1,28 +1,233 @@
-﻿using HarmonyLib;
-using NeedBarOverflow.Needs;
-using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
+using HarmonyLib;
 using UnityEngine;
+using RimWorld;
+using Verse;
+using NeedBarOverflow.Needs;
 
 namespace NeedBarOverflow.Patches
 {
+	[StaticConstructorOnStartup]
 	public sealed class Need_DrawOnGUI() : Patch_Single(
 		original: typeof(Need).Method(nameof(Need.DrawOnGUI)),
-		prefix: PrefixMethod,
-		transpiler: TranspilerMethod)
+		prefix: PrefixMethod)
 	{
+		static Need_DrawOnGUI()
+		{
+#if l1_3 // 1.2 - 1.3 has this field as protected
+			BarFullTexHor = SolidColorMaterials.NewSolidColorTexture(new Color(0.2f, 0.8f, 0.85f));
+#endif
+			BarOverflowTexHor = SolidColorMaterials.NewSolidColorTexture(new Color(0.2f, 0.8f, 0.85f, 0.75f));
+		}
+
 		public override void Toggle()
 			=> Toggle(Setting_Common.AnyEnabled);
+
+#if DrawOnGUI_UseTranspiler
 		private static bool PrefixMethod()
 			=> Event.current.type != EventType.Layout;
+#endif
 
-#if v1_4
-		private static float GetDevGizmosFloat()
+		// Need.DrawOnGUI usually expects the need level percentage to be between 0 and 1
+		//   and may overflow otherwise
+		// This patch fixes the visuals
+		// It also force inserts extra tick marks per 100% level
+		//   for needs with 1 unit as the Vanilla max
+		// When it comes to food, it inserts a tick mark per 1 unit of food
+		public static bool PrefixMethod(
+			Need __instance,
+			Rect rect,
+			int maxThresholdMarkers,
+			float customMargin,
+			bool drawArrows,
+			bool doTooltip
+#if g1_3
+			, Rect? rectForTooltip
+#endif
+#if g1_4
+			, bool drawLabel
+#endif
+			)
+		{
+			// (Custom) Skip unnecessary draws
+			if (Event.current.type == EventType.Layout)
+				return false;
+
+			// (Vanilla 1.2+) Adjust to max height
+			if (rect.height > Need.MaxDrawHeight)
+			{
+				rect.height = Need.MaxDrawHeight;
+				rect.y += (rect.height - Need.MaxDrawHeight) / 2f;
+			}
+
+			// (Vanilla 1.2+, separated) DrawHighlight
+			{
+#if l1_2
+				Rect rectForTooltip = rect;
+#else
+				rectForTooltip ??= rect; // Vanilla: rect2
+#endif
+				if (Mouse.IsOver((Rect)rectForTooltip))
+					DrawHighlight(__instance, doTooltip, (Rect)rectForTooltip);
+			}
+
+			// (Vanilla 1.2+, reordered) Set margins
+			float verticalMargin = 14f; // Vanilla: num2
+			if (rect.height < 50f)
+				verticalMargin *= Mathf.InverseLerp(0f, 50f, rect.height);
+			customMargin = ((customMargin >= 0f) ? customMargin : 29f); // Vanilla: num3
+			Rect unShrunkRect = new( // Vanilla: rect3
+				rect.x + customMargin,
+				rect.y,
+				rect.width - customMargin * 2f,
+				rect.height - verticalMargin);
+
+#if g1_4    // (Vanilla 1.2+, reordered) Draw labels
+			if (drawLabel) // Always draw in 1.2-1.3
+#endif
+			{
+				Text.Font = ((rect.height > 55f) ? GameFont.Small : GameFont.Tiny);
+				Text.Anchor = TextAnchor.LowerLeft;
+				Rect labelRect = new(
+					rect.x + customMargin + rect.width * 0.1f,
+					rect.y,
+					rect.width - customMargin - rect.width * 0.1f,
+					rect.height / 2f);
+				Widgets.Label(labelRect, __instance.LabelCap);
+				Text.Anchor = TextAnchor.UpperLeft;
+				unShrunkRect.y += rect.height / 2f;
+				unShrunkRect.height -= rect.height / 2f;
+			}
+
+#if l1_3    // (Vanilla 1.4+, separated, down supported to 1.2+) ShowDevGizmos
+			if (Prefs.DevMode && DebugSettings.godMode)
+#else
+			if (DebugSettings.ShowDevGizmos)
+#endif
+				ShowDevGizmos(__instance, unShrunkRect);
+
+			// (Custom) Get some common fields
+			float maxLevel = __instance.MaxLevel;
+			float curLevel = __instance.CurLevel;
+			float curLevelPercentage = curLevel / maxLevel;
+
+			// (Custom) Calculate some values
+			Rect shrunkRect = unShrunkRect; // Vanilla: rect6
+			float barShrinkFactor = 1f; // Vanilla: num4
+			float prcntShrinkFactor = 1f; // New
+			if (curLevel > maxLevel)
+			{
+				prcntShrinkFactor = maxLevel / curLevel;
+				maxLevel = curLevel;
+			}
+			NeedDef def = __instance.def;
+			if (maxLevel < 1f && def.scaleBar)
+				barShrinkFactor = maxLevel;
+			shrunkRect.width *= barShrinkFactor;
+
+			// (Vanilla 1.2+, replaced) Draw fillable bar
+			Rect barRect = FillableBar(shrunkRect, curLevelPercentage);
+
+			// (Vanilla 1.2+) Draw arrows
+			if (drawArrows)
+				Widgets.FillableBarChangeArrows(shrunkRect, __instance.GUIChangeArrow);
+
+			// (Vanilla 1.2+) Draw threshold percents
+			List<float> threshPercents = fr_threshPercents(__instance);
+			if (threshPercents != null)
+			{
+				int drawCount = Mathf.Min(threshPercents.Count, maxThresholdMarkers);
+				for (int i = 0; i < drawCount; i++)
+					d_DrawBarThreshold(__instance, barRect, threshPercents[i] * prcntShrinkFactor);
+			}
+
+			// (Vanilla 1.2+) Draw unit ticks
+			// Removed checks (always runs)
+			// I don't know why Vanilla's markers aren't perfectly aligned
+			// So I need to shift x a little
+			//#if l1_3
+			//			if (def.scaleBar)
+			//#else
+			//			if (def.showUnitTicks)
+			//#endif
+			{
+				barRect.x += 2f;
+				for (float j = 1f, step = 1f; j < maxLevel; j += step)
+				{
+					if (j >= maxLevel * 0.0078125f)
+						d_DrawBarDivision(__instance, barRect, j / maxLevel);
+					if (j >= step * 10f)
+						step *= 10.0f;
+				}
+				barRect.x -= 2f;
+			}
+
+			// (Vanilla 1.2+) Draw instant markers
+			float curInstantLevelPercentage = __instance.CurInstantLevelPercentage;
+			if (curInstantLevelPercentage >= 0f)
+				d_DrawBarInstantMarkerAt(__instance, shrunkRect, curInstantLevelPercentage * prcntShrinkFactor);
+
+			// (Vanilla 1.2+) Draw tutorial highlights
+			if (!def.tutorHighlightTag.NullOrEmpty())
+				UIHighlighter.HighlightOpportunity(rect, def.tutorHighlightTag);
+
+			Text.Font = GameFont.Small;
+			return false;
+		}
+
+#if v1_2 // 1.2 had class "TexButton" as "internal", so aquire it (too small, not worth reflection)
+		public static Texture2D
+			Plus = ContentFinder<Texture2D>.Get("UI/Buttons/Plus"),
+			Minus = ContentFinder<Texture2D>.Get("UI/Buttons/Minus");
+#endif
+#if l1_3 // 1.2 - 1.3 has this field as protected
+		public static Texture2D BarFullTexHor;
+#endif  // Lower transparency but otherwise the same
+		public static Texture2D BarOverflowTexHor;
+
+#if g1_5 && DEBUG // Won't use this if not debugging
+		public static Action<Need, float> d_OffsetDebugPercent
+			= (Action<Need, float>)Delegate.CreateDelegate(
+				typeof(Action<Need, float>),
+				typeof(Need).Method("OffsetDebugPercent")
+			);
+#endif
+		public static AccessTools.FieldRef<Need, List<float>>
+			fr_threshPercents
+			= AccessTools.FieldRefAccess<Need, List<float>>
+			(typeof(Need).Field("threshPercents"));
+
+		public static Action<Need, Rect, float>
+			d_DrawBarThreshold
+			= (Action<Need, Rect, float>)
+			Delegate.CreateDelegate(
+				typeof(Action<Need, Rect, float>),
+				typeof(Need).Method("DrawBarThreshold")),
+			d_DrawBarDivision
+			= (Action<Need, Rect, float>)
+			Delegate.CreateDelegate(
+				typeof(Action<Need, Rect, float>),
+				typeof(Need).Method("DrawBarDivision")),
+			d_DrawBarInstantMarkerAt
+			= (Action<Need, Rect, float>)
+			Delegate.CreateDelegate(
+				typeof(Action<Need, Rect, float>),
+				typeof(Need).Method("DrawBarInstantMarkerAt"));
+
+		// Same implementation in Vanilla's code in DrawOnGUI
+		// Just split out for readability
+		public static void DrawHighlight(Need __instance, bool doTooltip, Rect highlightRect)
+		{
+			Widgets.DrawHighlight(highlightRect);
+			if (!doTooltip)
+				return;
+			TooltipHandler.TipRegion(highlightRect,
+				new TipSignal(__instance.GetTipString, highlightRect.GetHashCode()));
+		}
+
+		// Helper function (1) for ShowDevGizmos()
+		public static float GetDevGizmosFloat()
 		{
 			bool ctrl = Helpers.CtrlDown;
 			bool shift = Helpers.ShiftDown;
@@ -32,35 +237,106 @@ namespace NeedBarOverflow.Patches
 				return 0.01f;
 			return 0.1f;
 		}
-#endif
-		private static string GetDevGizmosAddStr()
+
+		// Helper function (2) for ShowDevGizmos()
+		public static string GetDevGizmosStr(bool add)
 		{
 			bool ctrl = Helpers.CtrlDown;
 			bool shift = Helpers.ShiftDown;
 			if (shift && !ctrl)
-				return "+ 100%";
+				return add ? "+ 100%" : "- 100%";
 			if (ctrl && !shift)
-				return "+ 1%";
-			return "+ 10%";
-		}
-		private static string GetDevGizmosSubStr()
-		{
-			bool ctrl = Helpers.CtrlDown;
-			bool shift = Helpers.ShiftDown;
-			if (shift && !ctrl)
-				return "- 100%";
-			if (ctrl && !shift)
-				return "- 1%";
-			return "- 10%";
+				return add ? "+ 1%" : "- 1%";
+			return add ? "+ 10%" : "- 10%";
 		}
 
+		// Same implementation in Vanilla's code in DrawOnGUI
+		// Just split out for readability
+		public static void ShowDevGizmos(Need __instance, Rect rect3)
+		{
+			float lineHeight = Text.LineHeight;
+			Rect plusRect = new( // Vanilla: rect4
+				rect3.xMax - lineHeight,
+				rect3.y - lineHeight,
+				lineHeight, lineHeight);
+
+#if v1_2
+			if (Widgets.ButtonImage(plusRect.ContractedBy(4f), Plus))
+#else
+			if (Widgets.ButtonImage(plusRect.ContractedBy(4f), TexButton.Plus))
+#endif
+			{
+#if l1_4 || !DEBUG
+				__instance.CurLevelPercentage += GetDevGizmosFloat();
+#else           // Vanilla does above anyways, so use above if not debugging
+				d_OffsetDebugPercent(__instance, GetDevGizmosFloat());
+#endif
+			}
+			if (Mouse.IsOver(plusRect))
+				TooltipHandler.TipRegion(plusRect, GetDevGizmosStr(true));
+
+			Rect minusRect = new( // Vanilla: rect5
+				plusRect.xMin - lineHeight,
+				rect3.y - lineHeight,
+				lineHeight, lineHeight);
+#if v1_2
+			if (Widgets.ButtonImage(minusRect.ContractedBy(4f), Minus))
+#else
+			if (Widgets.ButtonImage(minusRect.ContractedBy(4f), TexButton.Minus))
+#endif
+			{
+#if l1_4 || !DEBUG
+				__instance.CurLevelPercentage -= GetDevGizmosFloat();
+#else           // Vanilla does above anyways, so use above if not debugging
+				d_OffsetDebugPercent(__instance, -GetDevGizmosFloat());
+#endif
+			}
+			if (Mouse.IsOver(minusRect))
+				TooltipHandler.TipRegion(minusRect, GetDevGizmosStr(false));
+		}
+
+		// A replacement implementation of Widgets.FillableBar
+		// In order to handle need overflows
+		public static Rect FillableBar(Rect rect, float curLevelPercentage)
+		{
+			Rect shrunkRect = rect;
+			bool doBorder = rect.height > 15f && rect.width > 20f;
+			if (doBorder)
+			{
+				GUI.DrawTexture(rect, BaseContent.BlackTex);
+				shrunkRect = rect.ContractedBy(3f);
+			}
+			bool drawOverflow = curLevelPercentage > 1f;
+			// Draw non-overflowing part of the bar
+			float fillWidth = shrunkRect.width;
+			if (curLevelPercentage < 1f)
+				fillWidth *= curLevelPercentage;
+			else if (drawOverflow)
+				fillWidth /= curLevelPercentage;
+			Rect fillRect = shrunkRect;
+			fillRect.width = fillWidth;
+#if l1_3
+			GUI.DrawTexture(fillRect, BarFullTexHor);
+#else
+			GUI.DrawTexture(fillRect, Widgets.BarFullTexHor);
+#endif
+			// If no draw overflow & already drawn border, skip
+			if (!drawOverflow && doBorder)
+				return shrunkRect;
+			fillRect.x += fillWidth;
+			fillRect.width = shrunkRect.width - fillWidth;
+			GUI.DrawTexture(fillRect, drawOverflow ? BarOverflowTexHor : BaseContent.BlackTex);
+			return shrunkRect;
+		}
+
+#if DrawOnGUI_UseTranspiler
 		// Need.DrawOnGUI usually expects the need level percentage to be between 0 and 1
 		//   and may overflow otherwise
 		// This patch fixes the visuals
 		// It also force inserts extra tick marks per 100% level
 		//   for needs with 1 unit as the Vanilla max
 		// When it comes to food, it inserts a tick mark per 1 unit of food
-
+		//
 		// This patch is very long and hard to read, unfortunately
 		// I've added many comments explaining each step
 		// The patch needs to handle different food cases,
@@ -109,13 +385,15 @@ namespace NeedBarOverflow.Patches
 				if (codeInstruction.opcode == OpCodes.Ldstr &&
 					codeInstruction.operand.Equals("+ 10%"))
 				{
-					yield return new CodeInstruction(OpCodes.Call, ((Delegate)GetDevGizmosAddStr).Method);
+					yield return new CodeInstruction(OpCodes.Ldc_I4_1);
+					yield return new CodeInstruction(OpCodes.Call, ((Delegate)GetDevGizmosStr).Method);
 					continue;
 				}
 				if (codeInstruction.opcode == OpCodes.Ldstr &&
 					codeInstruction.operand.Equals("- 10%"))
 				{
-					yield return new CodeInstruction(OpCodes.Call, ((Delegate)GetDevGizmosSubStr).Method);
+					yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+					yield return new CodeInstruction(OpCodes.Call, ((Delegate)GetDevGizmosStr).Method);
 					continue;
 				}
 #endif
@@ -180,7 +458,7 @@ namespace NeedBarOverflow.Patches
 					//			tmp2 = tmp1;		consumed at #Mul
 					yield return new CodeInstruction(OpCodes.Dup).WithLabels(jumpLabels[1]);
 
-					// ResetHediff max to the real maximum, which is CurLevel
+					// Reset max to the real maximum, which is CurLevel
 					//2		max = cur;
 					yield return new CodeInstruction(OpCodes.Ldloc_S, cur.LocalIndex).WithLabels(jumpLabels[2]);
 					yield return new CodeInstruction(OpCodes.Stloc_S, max.LocalIndex);
@@ -317,5 +595,6 @@ namespace NeedBarOverflow.Patches
 			}
 			Debug.CheckTranspiler(state, 8);
 		}
+#endif
 	}
 }
