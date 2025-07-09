@@ -14,6 +14,7 @@ namespace NeedBarOverflow.Needs
 		Gene,
 	}
 
+	[StaticConstructorOnStartup]
 	public sealed partial class Setting_Common : IExposable
 	{
 		public static readonly AccessTools.FieldRef<Need, Pawn>
@@ -30,11 +31,14 @@ namespace NeedBarOverflow.Needs
 				|| !Refs.VFEAncients_HasPower(pawn));
 		}
 
-		public static void LoadDisablingDefs()
-			=> DisablingDefs.LoadDisablingDefs();
 
 		public static void AddSettings(Listing_Standard ls)
 			=> DisablingDefs.AddSettings(ls);
+
+		static Setting_Common()
+		{
+			DisablingDefs.LoadDisablingDefs();
+		}
 
 		private static class DisablingDefs
 		{
@@ -255,8 +259,6 @@ namespace NeedBarOverflow.Needs
 
 			public static void LoadDisablingDefs()
 			{
-				if (!NeedBarOverflow.Initialized)
-					return;
 				Debug.Message("DisablingDefs.LoadDisabledDefs() called");
 				foreach (StatName_DisableType key in Enum.GetValues(typeof(StatName_DisableType)))
 					ParseDisablingDefs(key, disablingDefs_str[(int)key]);
@@ -267,10 +269,13 @@ namespace NeedBarOverflow.Needs
 				disablingDefs[(int)defType].Clear();
 				if (!AnyEnabled ||
 					defNameStr.NullOrEmpty() ||
-					defNameStr.EndsWith(suffix, StringComparison.Ordinal))
-				{
+					defNameStr.EndsWith(suffix, StringComparison.Ordinal) ||
+					(defType == StatName_DisableType.Gene
+#if g1_4
+					&& !ModLister.BiotechInstalled
+#endif
+					))
 					return;
-				}
 
 				string[] defNames = defNameStr.ToLowerInvariant().Split(',');
 				if (defNames.NullOrEmpty())

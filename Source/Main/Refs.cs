@@ -26,8 +26,14 @@ namespace NeedBarOverflow
 #pragma warning restore CS8618
 	}
 
+	[StaticConstructorOnStartup]
 	public static class Refs
 	{
+		static Refs()
+		{
+			LoadDelegate_VFEAncients();
+		}
+
 		public static readonly MethodInfo
 			m_CanOverflow = ((Func<Need, bool>)Needs.Setting_Common.CanOverflow).Method,
 			m_Clamp = ((Func<float, float, float, float>)Mathf.Clamp).Method,
@@ -46,15 +52,7 @@ namespace NeedBarOverflow
 
 		public static Func<Thing, bool>? VFEAncients_HasPower { get; private set; }
 
-		public static void Init()
-		{
-			LoadDelegate_VFEAncients();
-			Needs.Setting_Common.LoadDisablingDefs();
-			Needs.Setting_Food.ApplyFoodHediffSettings();
-			Patches.PatchApplier.ApplyPatches();
-		}
-
-		private static Func<Thing, bool>? LoadDelegate_VFEAncients()
+		public static Func<Thing, bool>? LoadDelegate_VFEAncients()
 		{
 			// VFE-Ancients Compatibility
 			if (VFEAncients_HasPower is not null)

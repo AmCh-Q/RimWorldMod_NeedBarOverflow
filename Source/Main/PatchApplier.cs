@@ -6,13 +6,23 @@ using Verse;
 
 namespace NeedBarOverflow.Patches
 {
+	[StaticConstructorOnStartup]
 	public static class PatchApplier
 	{
-		public static Settings? settings;
 		public static List<Patch> Patches { get; } = [];
 		static PatchApplier()
 		{
 			Debug.WatchStart("static PatchApplier()");
+			LoadPatches();
+			Debug.WatchLog($"static PatchApplier(): {Patches.Count} patches loaded");
+			ApplyPatches();
+			Debug.WatchLog("Done Applying Patches");
+			Debug.WatchStop();
+		}
+		public static bool Patched(Type type)
+			=> Patches.Any(patch => patch.GetType() == type);
+		public static void LoadPatches()
+		{
 			List<Patch> patches = GenTypes
 				.AllTypes
 				//.AsParallel()
@@ -39,11 +49,7 @@ namespace NeedBarOverflow.Patches
 					patch.GetType().Name, "], [",
 					existing.GetType().Name, "]."));
 			}
-			Debug.WatchLog($"static PatchApplier(): {Patches.Count} patches loaded");
-			Debug.WatchStop();
 		}
-		public static bool Patched(Type type)
-			=> Patches.Any(patch => patch.GetType() == type);
 		public static Patch? CreatePatch(Type patchClass)
 		{
 			try
@@ -54,19 +60,14 @@ namespace NeedBarOverflow.Patches
 			catch (Exception ex)
 			{
 				Debug.Warning("Error in patch " + patchClass);
-				Debug.Warning(ex.GetType().FullName);
+				Debug.Warning(ex.ToString());
 				return null;
 			}
 		}
 		public static void ApplyPatches()
 		{
-			if (settings is null)
-				return;
-			Debug.WatchStart("Applying Patches...");
 			foreach (Patch patch in Patches)
 				patch.Toggle();
-			Debug.WatchLog("Done Applying Patches");
-			Debug.WatchStop();
 		}
 	}
 }

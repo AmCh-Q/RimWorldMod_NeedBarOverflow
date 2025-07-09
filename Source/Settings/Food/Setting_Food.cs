@@ -4,6 +4,7 @@ using Verse;
 
 namespace NeedBarOverflow.Needs
 {
+	[StaticConstructorOnStartup]
 	public sealed partial class Setting_Food : Setting<Need_Food>, IExposable
 	{
 		public static bool AffectHealth
@@ -14,6 +15,11 @@ namespace NeedBarOverflow.Needs
 
 		public static float EffectStat(StatName_Food statName)
 			=> OverflowStats.EffectStat(statName);
+
+		static Setting_Food()
+		{
+			ApplyFoodHediffSettings();
+		}
 
 		public void ExposeData()
 		{

@@ -9,14 +9,13 @@ namespace NeedBarOverflow
 {
 	public class NeedBarOverflow : Mod
 	{
-		public static bool Initialized => PatchApplier.settings is not null;
+		public static Settings? settings;
+		public static bool Initialized => settings is not null;
 
 		public NeedBarOverflow(ModContentPack content) : base(content)
 		{
-			Debug.Message("NeedBarOverflow constructor called");
-			PatchApplier.settings = GetSettings<Settings>();
-			LongEventHandler.QueueLongEvent(Refs.Init,
-				"NeedBarOverflow.Mod.ctor", false, null);
+			Debug.Message("NeedBarOverflow mod constructor called");
+			settings = GetSettings<Settings>();
 		}
 
 		public override string SettingsCategory()
@@ -24,8 +23,8 @@ namespace NeedBarOverflow
 
 		public override void DoSettingsWindowContents(Rect inRect)
 		{
+			settings?.DoWindowContents(inRect);
 			base.DoSettingsWindowContents(inRect);
-			PatchApplier.settings?.DoWindowContents(inRect);
 		}
 	}
 }
