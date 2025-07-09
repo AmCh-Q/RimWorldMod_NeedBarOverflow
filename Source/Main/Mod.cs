@@ -3,7 +3,7 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 
-[assembly: AssemblyVersionAttribute("1.3.2.0")]
+[assembly: AssemblyVersionAttribute("1.3.3.0")]
 
 namespace NeedBarOverflow
 {

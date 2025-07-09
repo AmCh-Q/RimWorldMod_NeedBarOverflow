@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <packageId>AmCh.NeedBarOverflow</packageId>
-  <modVersion IgnoreIfNoMatchingField="True">1.3.2</modVersion>
+  <modVersion IgnoreIfNoMatchingField="True">1.3.3</modVersion>
   <name>Need Bar Overflow</name>
   <author>AmCh</author>
   <url>https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow</url>
