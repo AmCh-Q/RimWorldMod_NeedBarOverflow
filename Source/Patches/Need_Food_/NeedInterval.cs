@@ -85,7 +85,7 @@ namespace NeedBarOverflow.Patches
 		private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
 		{
-			if (PatchApplier.settings is not Settings s)
+			if (NeedBarOverflow.settings is not Settings s)
 				return;
 			Pawn_HealthTracker health = pawn.health;
 			Hediff hediff;
