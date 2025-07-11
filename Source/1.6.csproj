@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- Framework properties
 		https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#framework-properties -->
-		<TargetFramework>net48</TargetFramework>
+		<TargetFramework>net481</TargetFramework>
 		<!-- Language options
 		https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language -->
 		<DefineConstants>$(DefineConstants);g1_2;g1_3;g1_4;g1_5;g1_6;v1_6;l1_6;l1_7;l1_8;l1_9;</DefineConstants>

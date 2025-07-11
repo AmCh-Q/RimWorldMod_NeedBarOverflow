@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1.4", "1.4.csproj", "{D8864
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1.5", "1.5.csproj", "{649ED070-B4FB-434F-8626-AED8F780998E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.6", "1.6.csproj", "{61523AF2-470E-438C-920A-A9083F53BE08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1.6", "1.6.csproj", "{61523AF2-470E-438C-920A-A9083F53BE08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

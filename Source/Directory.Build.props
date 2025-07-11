@@ -13,7 +13,7 @@ Additionally, the property BaseIntermediateOutputPath has to be set here, explan
 		<!-- Package properties
 		https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target -->
 		<Authors>AmCh</Authors>
-		<Copyright>Copyright © AmCh 2024</Copyright>
+		<Copyright>Copyright © AmCh 2025</Copyright>
 		<PackageLicenseFile>..\LICENSE</PackageLicenseFile>
 		<PackageReadmeFile>..\README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow.git</RepositoryUrl>

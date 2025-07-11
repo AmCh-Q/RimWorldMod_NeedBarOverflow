@@ -111,6 +111,7 @@ namespace NeedBarOverflow.Patches
 			float maxLevel = __instance.MaxLevel;
 			float curLevel = __instance.CurLevel;
 			float curLevelPercentage = curLevel / maxLevel;
+			float actualMaxLevel = maxLevel;
 
 			// (Custom) Calculate some values
 			Rect shrunkRect = unShrunkRect; // Vanilla: rect6
@@ -119,11 +120,11 @@ namespace NeedBarOverflow.Patches
 			if (curLevel > maxLevel)
 			{
 				prcntShrinkFactor = maxLevel / curLevel;
-				maxLevel = curLevel;
+				actualMaxLevel = curLevel;
 			}
 			NeedDef def = __instance.def;
-			if (maxLevel < 1f && def.scaleBar)
-				barShrinkFactor = maxLevel;
+			if (actualMaxLevel < 1f && def.scaleBar)
+				barShrinkFactor = actualMaxLevel;
 			shrunkRect.width *= barShrinkFactor;
 
 			// (Vanilla 1.2+, replaced) Draw fillable bar
@@ -146,17 +147,19 @@ namespace NeedBarOverflow.Patches
 			// Removed checks (always runs)
 			// I don't know why Vanilla's markers aren't perfectly aligned
 			// So I need to shift x a little
-			//#if l1_3
-			//			if (def.scaleBar)
-			//#else
-			//			if (def.showUnitTicks)
-			//#endif
+#if l1_3
+			if (def.scaleBar
+#else
+			if (def.showUnitTicks
+#endif
+				|| maxLevel == 1f
+			)
 			{
 				barRect.x += 2f;
-				for (float j = 1f, step = 1f; j < maxLevel; j += step)
+				for (float j = 1f, step = 1f; j < actualMaxLevel; j += step)
 				{
-					if (j >= maxLevel * 0.0078125f)
-						d_DrawBarDivision(__instance, barRect, j / maxLevel);
+					if (j >= actualMaxLevel * 0.0078125f)
+						d_DrawBarDivision(__instance, barRect, j / actualMaxLevel);
 					if (j >= step * 10f)
 						step *= 10.0f;
 				}
