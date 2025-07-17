@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
 using RimWorld;
@@ -15,10 +16,29 @@ namespace NeedBarOverflow.Patches
 	{
 		static Need_DrawOnGUI()
 		{
-#if l1_3 // 1.2 - 1.3 has this field as protected
-			BarFullTexHor = SolidColorMaterials.NewSolidColorTexture(new Color(0.2f, 0.8f, 0.85f));
+			// Use static constructor to grab GUI Textures
+#if v1_2 // 1.2 had class "TexButton" as "internal" (too small, not worth reflection)
+			Plus = ContentFinder<Texture2D>.Get("UI/Buttons/Plus");
+			Minus = ContentFinder<Texture2D>.Get("UI/Buttons/Minus");
+#else
+			Plus = TexButton.Plus;
+			Minus = TexButton.Minus;
 #endif
+#if l1_3 // 1.2 - 1.3 has this field as "protected" (too small, not worth reflection)
+			BarFullTexHor
+				= SolidColorMaterials.NewSolidColorTexture(new Color(0.2f, 0.8f, 0.85f));
+#else
+			BarFullTexHor = Widgets.BarFullTexHor;
+#endif
+			// Texture for overflowing part of bar
 			BarOverflowTexHor = SolidColorMaterials.NewSolidColorTexture(new Color(0.2f, 0.8f, 0.85f, 0.75f));
+
+			// Texture for the instant tick marker
+			BarInstantMarkerTex
+				= (Texture2D)typeof(Need)
+				.GetField("BarInstantMarkerTex",
+				BindingFlags.Static | BindingFlags.NonPublic)
+				.GetValue(null);
 		}
 
 		public override void Toggle()
@@ -144,36 +164,38 @@ namespace NeedBarOverflow.Patches
 			}
 
 			// (Vanilla 1.2+) Draw unit ticks
-			// Removed checks (always runs)
-			// I don't know why Vanilla's markers aren't perfectly aligned
-			// So I need to shift x a little
+			// Modified checks (also draw orignal maxLevel is exactly 1f)
+			bool showUnitTicks
 #if l1_3
-			if (def.scaleBar
+				= def.scaleBar;
 #else
-			if (def.showUnitTicks
+				= def.showUnitTicks;
 #endif
-				|| maxLevel == 1f
-			)
+			if (showUnitTicks || maxLevel == 1f)
 			{
+				// I don't know why Vanilla's markers aren't perfectly aligned
+				// So I need to shift x a little
 				barRect.x += 2f;
 				for (float j = 1f, step = 1f; j < actualMaxLevel; j += step)
 				{
+					// Don't draw too dense of divisions at the left
+					// 0.0078125f is just a small power-of-two number I picked
 					if (j >= actualMaxLevel * 0.0078125f)
 						d_DrawBarDivision(__instance, barRect, j / actualMaxLevel);
+					// Draw at 1,2,3,...,9
+					// Then 10,20,30...,90
+					// Then 100,200,300, and so on
 					if (j >= step * 10f)
 						step *= 10.0f;
 				}
-				barRect.x -= 2f;
+				// no need to shift x back because we don't use it anymore
+				// barRect.x -= 2f;
 			}
 
-			// (Vanilla 1.2+) Draw instant markers
-			float curInstantLevelPercentage = __instance.CurInstantLevelPercentage * prcntShrinkFactor;
-			if (curInstantLevelPercentage >= 0f)
-			{
-				if (curInstantLevelPercentage > 1f)
-					curInstantLevelPercentage = 1f;
-				d_DrawBarInstantMarkerAt(__instance, shrunkRect, curInstantLevelPercentage);
-			}
+			// (Vanilla 1.2+, replaced, separated) Draw instant markers
+			float drawInstantLevelPercentage = __instance.CurInstantLevelPercentage * prcntShrinkFactor;
+			if (drawInstantLevelPercentage >= 0f)
+				DrawBarInstantMarkerAt(shrunkRect, drawInstantLevelPercentage);
 
 			// (Vanilla 1.2+) Draw tutorial highlights
 			if (!def.tutorHighlightTag.NullOrEmpty())
@@ -183,24 +205,21 @@ namespace NeedBarOverflow.Patches
 			return false;
 		}
 
-#if v1_2 // 1.2 had class "TexButton" as "internal", so aquire it (too small, not worth reflection)
-		public static Texture2D
-			Plus = ContentFinder<Texture2D>.Get("UI/Buttons/Plus"),
-			Minus = ContentFinder<Texture2D>.Get("UI/Buttons/Minus");
-#endif
-#if l1_3 // 1.2 - 1.3 has this field as protected
-		public static Texture2D BarFullTexHor;
-#endif  // Lower transparency but otherwise the same
-		public static Texture2D BarOverflowTexHor;
+		public static readonly Texture2D
+			Plus,
+			Minus,
+			BarFullTexHor,
+			BarOverflowTexHor,
+			BarInstantMarkerTex;
 
 #if g1_5 && DEBUG // Won't use this if not debugging
-		public static Action<Need, float> d_OffsetDebugPercent
+		public static readonly Action<Need, float> d_OffsetDebugPercent
 			= (Action<Need, float>)Delegate.CreateDelegate(
 				typeof(Action<Need, float>),
 				typeof(Need).Method("OffsetDebugPercent")
 			);
 #endif
-		public static AccessTools.FieldRef<Need, List<float>>
+		public static readonly AccessTools.FieldRef<Need, List<float>>
 			fr_threshPercents
 			= AccessTools.FieldRefAccess<Need, List<float>>
 			(typeof(Need).Field("threshPercents"));
@@ -215,12 +234,7 @@ namespace NeedBarOverflow.Patches
 			= (Action<Need, Rect, float>)
 			Delegate.CreateDelegate(
 				typeof(Action<Need, Rect, float>),
-				typeof(Need).Method("DrawBarDivision")),
-			d_DrawBarInstantMarkerAt
-			= (Action<Need, Rect, float>)
-			Delegate.CreateDelegate(
-				typeof(Action<Need, Rect, float>),
-				typeof(Need).Method("DrawBarInstantMarkerAt"));
+				typeof(Need).Method("DrawBarDivision"));
 
 		// Same implementation in Vanilla's code in DrawOnGUI
 		// Just split out for readability
@@ -267,11 +281,7 @@ namespace NeedBarOverflow.Patches
 				rect3.y - lineHeight,
 				lineHeight, lineHeight);
 
-#if v1_2
 			if (Widgets.ButtonImage(plusRect.ContractedBy(4f), Plus))
-#else
-			if (Widgets.ButtonImage(plusRect.ContractedBy(4f), TexButton.Plus))
-#endif
 			{
 #if l1_4 || !DEBUG
 				__instance.CurLevelPercentage += GetDevGizmosFloat();
@@ -286,11 +296,8 @@ namespace NeedBarOverflow.Patches
 				plusRect.xMin - lineHeight,
 				rect3.y - lineHeight,
 				lineHeight, lineHeight);
-#if v1_2
+
 			if (Widgets.ButtonImage(minusRect.ContractedBy(4f), Minus))
-#else
-			if (Widgets.ButtonImage(minusRect.ContractedBy(4f), TexButton.Minus))
-#endif
 			{
 #if l1_4 || !DEBUG
 				__instance.CurLevelPercentage -= GetDevGizmosFloat();
@@ -322,11 +329,9 @@ namespace NeedBarOverflow.Patches
 				fillWidth /= curLevelPercentage;
 			Rect fillRect = shrunkRect;
 			fillRect.width = fillWidth;
-#if l1_3
+
 			GUI.DrawTexture(fillRect, BarFullTexHor);
-#else
-			GUI.DrawTexture(fillRect, Widgets.BarFullTexHor);
-#endif
+
 			// If no draw overflow & already drawn border, skip
 			if (!drawOverflow && doBorder)
 				return shrunkRect;
@@ -334,6 +339,19 @@ namespace NeedBarOverflow.Patches
 			fillRect.width = shrunkRect.width - fillWidth;
 			GUI.DrawTexture(fillRect, drawOverflow ? BarOverflowTexHor : BaseContent.BlackTex);
 			return shrunkRect;
+		}
+
+		// A replacement implementation of Need.DrawBarInstantMarkerAt
+		// In order to handle need overflows
+		public static void DrawBarInstantMarkerAt(Rect barRect, float pct)
+		{
+			if (pct > 1f)
+				pct = 1f;
+			float textureSize = (barRect.width < 150f) ? 6f : 12f;
+			GUI.DrawTexture(new Rect(
+				barRect.x + barRect.width * pct - textureSize * 0.5f,
+				barRect.y + barRect.height, textureSize, textureSize),
+				BarInstantMarkerTex);
 		}
 
 #if DrawOnGUI_UseTranspiler
