@@ -120,11 +120,14 @@ namespace NeedBarOverflow.Patches
 				unShrunkRect.height -= rect.height / 2f;
 			}
 
-#if l1_3    // (Vanilla 1.4+, separated, down supported to 1.2+) ShowDevGizmos
-			if (Prefs.DevMode && DebugSettings.godMode)
+			// (Vanilla 1.4+, separated, down supported to 1.2+) ShowDevGizmos
+			bool showDevGizmos
+#if l1_3
+				= Prefs.DevMode && DebugSettings.godMode;
 #else
-			if (DebugSettings.ShowDevGizmos)
+				= DebugSettings.ShowDevGizmos;
 #endif
+			if (showDevGizmos)
 				ShowDevGizmos(__instance, unShrunkRect);
 
 			// (Custom) Get some common fields
