@@ -167,9 +167,13 @@ namespace NeedBarOverflow.Patches
 			}
 
 			// (Vanilla 1.2+) Draw instant markers
-			float curInstantLevelPercentage = __instance.CurInstantLevelPercentage;
+			float curInstantLevelPercentage = __instance.CurInstantLevelPercentage * prcntShrinkFactor;
 			if (curInstantLevelPercentage >= 0f)
-				d_DrawBarInstantMarkerAt(__instance, shrunkRect, curInstantLevelPercentage * prcntShrinkFactor);
+			{
+				if (curInstantLevelPercentage > 1f)
+					curInstantLevelPercentage = 1f;
+				d_DrawBarInstantMarkerAt(__instance, shrunkRect, curInstantLevelPercentage);
+			}
 
 			// (Vanilla 1.2+) Draw tutorial highlights
 			if (!def.tutorHighlightTag.NullOrEmpty())
