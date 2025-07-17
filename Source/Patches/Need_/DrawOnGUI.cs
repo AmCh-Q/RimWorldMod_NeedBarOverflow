@@ -14,6 +14,40 @@ namespace NeedBarOverflow.Patches
 		original: typeof(Need).Method(nameof(Need.DrawOnGUI)),
 		prefix: PrefixMethod)
 	{
+		// Textures for use in GUI, initialized in static constructor
+		public static readonly Texture2D
+			Plus,
+			Minus,
+			BarFullTexHor,
+			BarOverflowTexHor,
+			BarInstantMarkerTex;
+
+#if g1_5 && DEBUG // Won't use this if not debugging
+		public static readonly Action<Need, float> d_OffsetDebugPercent
+			= (Action<Need, float>)Delegate.CreateDelegate(
+				typeof(Action<Need, float>),
+				typeof(Need).Method("OffsetDebugPercent")
+			);
+#endif
+		// Fast access method to get the threshold percents of a Need
+		public static readonly AccessTools.FieldRef<Need, List<float>>
+			fr_threshPercents
+			= AccessTools.FieldRefAccess<Need, List<float>>
+			(typeof(Need).Field("threshPercents"));
+
+		// Two nonpublic methods from Need
+		public static Action<Need, Rect, float>
+			d_DrawBarThreshold
+			= (Action<Need, Rect, float>)
+			Delegate.CreateDelegate(
+				typeof(Action<Need, Rect, float>),
+				typeof(Need).Method("DrawBarThreshold")),
+			d_DrawBarDivision
+			= (Action<Need, Rect, float>)
+			Delegate.CreateDelegate(
+				typeof(Action<Need, Rect, float>),
+				typeof(Need).Method("DrawBarDivision"));
+
 		static Need_DrawOnGUI()
 		{
 			// Use static constructor to grab GUI Textures
@@ -31,23 +65,17 @@ namespace NeedBarOverflow.Patches
 			BarFullTexHor = Widgets.BarFullTexHor;
 #endif
 			// Texture for overflowing part of bar
-			BarOverflowTexHor = SolidColorMaterials.NewSolidColorTexture(new Color(0.2f, 0.8f, 0.85f, 0.75f));
+			BarOverflowTexHor = SolidColorMaterials
+				.NewSolidColorTexture(new Color(0.2f, 0.8f, 0.85f, 0.75f));
 
 			// Texture for the instant tick marker
-			BarInstantMarkerTex
-				= (Texture2D)typeof(Need)
-				.GetField("BarInstantMarkerTex",
-				BindingFlags.Static | BindingFlags.NonPublic)
+			BarInstantMarkerTex = (Texture2D)typeof(Need)
+				.Field("BarInstantMarkerTex")
 				.GetValue(null);
 		}
 
 		public override void Toggle()
 			=> Toggle(Setting_Common.AnyEnabled);
-
-#if DrawOnGUI_UseTranspiler
-		private static bool PrefixMethod()
-			=> Event.current.type != EventType.Layout;
-#endif
 
 		// Need.DrawOnGUI usually expects the need level percentage to be between 0 and 1
 		//   and may overflow otherwise
@@ -98,8 +126,7 @@ namespace NeedBarOverflow.Patches
 				verticalMargin *= Mathf.InverseLerp(0f, 50f, rect.height);
 			customMargin = ((customMargin >= 0f) ? customMargin : 29f); // Vanilla: num3
 			Rect unShrunkRect = new( // Vanilla: rect3
-				rect.x + customMargin,
-				rect.y,
+				rect.x + customMargin, rect.y,
 				rect.width - customMargin * 2f,
 				rect.height - verticalMargin);
 
@@ -121,14 +148,16 @@ namespace NeedBarOverflow.Patches
 			}
 
 			// (Vanilla 1.4+, separated, down supported to 1.2+) ShowDevGizmos
-			bool showDevGizmos
+			{
+				bool showDevGizmos
 #if l1_3
-				= Prefs.DevMode && DebugSettings.godMode;
+					= Prefs.DevMode && DebugSettings.godMode;
 #else
-				= DebugSettings.ShowDevGizmos;
+					= DebugSettings.ShowDevGizmos;
 #endif
-			if (showDevGizmos)
-				ShowDevGizmos(__instance, unShrunkRect);
+				if (showDevGizmos)
+					ShowDevGizmos(__instance, unShrunkRect);
+			}
 
 			// (Custom) Get some common fields
 			float maxLevel = __instance.MaxLevel;
@@ -196,7 +225,8 @@ namespace NeedBarOverflow.Patches
 			}
 
 			// (Vanilla 1.2+, replaced, separated) Draw instant markers
-			float drawInstantLevelPercentage = __instance.CurInstantLevelPercentage * prcntShrinkFactor;
+			float drawInstantLevelPercentage
+				= __instance.CurInstantLevelPercentage * prcntShrinkFactor;
 			if (drawInstantLevelPercentage >= 0f)
 				DrawBarInstantMarkerAt(shrunkRect, drawInstantLevelPercentage);
 
@@ -207,37 +237,6 @@ namespace NeedBarOverflow.Patches
 			Text.Font = GameFont.Small;
 			return false;
 		}
-
-		public static readonly Texture2D
-			Plus,
-			Minus,
-			BarFullTexHor,
-			BarOverflowTexHor,
-			BarInstantMarkerTex;
-
-#if g1_5 && DEBUG // Won't use this if not debugging
-		public static readonly Action<Need, float> d_OffsetDebugPercent
-			= (Action<Need, float>)Delegate.CreateDelegate(
-				typeof(Action<Need, float>),
-				typeof(Need).Method("OffsetDebugPercent")
-			);
-#endif
-		public static readonly AccessTools.FieldRef<Need, List<float>>
-			fr_threshPercents
-			= AccessTools.FieldRefAccess<Need, List<float>>
-			(typeof(Need).Field("threshPercents"));
-
-		public static Action<Need, Rect, float>
-			d_DrawBarThreshold
-			= (Action<Need, Rect, float>)
-			Delegate.CreateDelegate(
-				typeof(Action<Need, Rect, float>),
-				typeof(Need).Method("DrawBarThreshold")),
-			d_DrawBarDivision
-			= (Action<Need, Rect, float>)
-			Delegate.CreateDelegate(
-				typeof(Action<Need, Rect, float>),
-				typeof(Need).Method("DrawBarDivision"));
 
 		// Same implementation in Vanilla's code in DrawOnGUI
 		// Just split out for readability
@@ -356,6 +355,11 @@ namespace NeedBarOverflow.Patches
 				barRect.y + barRect.height, textureSize, textureSize),
 				BarInstantMarkerTex);
 		}
+
+#if DrawOnGUI_UseTranspiler
+		private static bool PrefixMethod()
+			=> Event.current.type != EventType.Layout;
+#endif
 
 #if DrawOnGUI_UseTranspiler
 		// Need.DrawOnGUI usually expects the need level percentage to be between 0 and 1
