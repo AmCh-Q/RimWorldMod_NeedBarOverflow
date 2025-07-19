@@ -38,6 +38,10 @@ namespace NeedBarOverflow
 		// For use in UI drawing
 		public static bool showSettings;
 
+		// Storage for tip strings of loaded modExtension info
+		// Won't change since XML reload require game restart
+		private static string? defDisableInfo;
+
 		// The default values of disablingDefs_str (all disabled by default)
 		private static readonly string suffix = "DISABLED";
 		private static readonly string[] dfltDisablingDefNames =
@@ -378,19 +382,21 @@ namespace NeedBarOverflow
 				if (defList.Count == 0)
 					return string.Empty;
 				return string.Concat(
-					Strings.NoOverf_Of[idx],
-					"  \n",
-					string.Join("  \n", defList.Select(DisableStringOfDef)));
+					Strings.NoOverf_Of[idx].Translate(),
+					"\n  ",
+					string.Join("\n  ", defList.Select(DisableStringOfDef)));
 			}
 
 			if (disablingDefs_modExtension.All(list => list.Count == 0))
 				return;
+
 			ls.GapLine();
-			IEnumerable<StatName_DisableType> disableTypes
-				= (IEnumerable<StatName_DisableType>)Enum.GetValues(typeof(StatName_DisableType));
-			string defDisableInfo = string.Join("\n",
-				disableTypes.Select(DisableStringOfType)
+			defDisableInfo ??= string.Join("\n",
+				((IEnumerable<StatName_DisableType>)
+				Enum.GetValues(typeof(StatName_DisableType)))
+				.Select(DisableStringOfType)
 				.Where(str => str.Length != 0));
+
 			ls.Label(Strings.NoOverf_ListDefs.Translate(defDisableInfo),
 				tooltip: Strings.NoOverf_ListDefs_Tip.Translate());
 		}
@@ -401,12 +407,12 @@ namespace NeedBarOverflow
 			ls.CheckboxLabeled(sl.TranslatedLabel(), ref showSettings, sl.TranslatedTip());
 			if (!showSettings)
 				return;
-			AddDisablingInfo(ls);
 
 			sl = new(Strings.NoOverf, Strings.checkIntervalTicks);
 			checkIntervalTicks = (int)Utility.AddNumSetting(
 				ls, checkIntervalTicks, sl, true, 0f, 5f, 1f, 100000f);
-			Utility.LsGap(ls);
+
+			AddDisablingInfo(ls);
 
 			foreach (StatName_DisableType disableType in Enum.GetValues(typeof(StatName_DisableType)))
 			{

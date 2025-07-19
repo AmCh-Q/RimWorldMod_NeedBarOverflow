@@ -9,17 +9,17 @@
 
   <NBO.NoOverf.ShowSettings>顯示禁止需求條溢出相關設置</NBO.NoOverf.ShowSettings>
   <NBO.NoOverf.ShowSettings_Tip>可以設定在特定條件下禁止需求條溢出。注意這條設定本身只能顯示/隱藏選項細節。</NBO.NoOverf.ShowSettings_Tip>
-  <NBO.NoOverf.ListDefs>以下情況由於XML設定會禁止列出的需求條溢出：{0}</NBO.NoOverf.ListDefs>
-  <NBO.NoOverf.ListDefs_Tip>XML設定需要重啓生效，但可以詳細設定哪些需求條禁止溢出，而下面的文本框只能禁止全部需求條溢出。</NBO.NoOverf.ListDefs_Tip>
-  <NBO.NoOverf.NoDefsFound>（未找到任何XML設定）</NBO.NoOverf.NoDefsFound>
-
-  <NBO.NoOverf.OfRace>屬於以下種族的生物：\n</NBO.NoOverf.OfRace>
-  <NBO.NoOverf.OfApparel>穿著以下裝備的生物：\n</NBO.NoOverf.OfApparel>
-  <NBO.NoOverf.OfHediff>帶有以下器官/健康狀況的生物：\n</NBO.NoOverf.OfHediff>
-  <NBO.NoOverf.OfGene>帶有以下活躍基因的生物：\n</NBO.NoOverf.OfGene>
 
   <NBO.NoOverf.checkIntervalTicks>最大檢查更新頻率：每{0}刻更新一次</NBO.NoOverf.checkIntervalTicks>
   <NBO.NoOverf.checkIntervalTicks_Tip>正常速度下一秒等於60刻，而默認1800刻對應每30秒更新一次。實際更新按需進行，所以頻率可能更低。</NBO.NoOverf.checkIntervalTicks_Tip>
+
+  <NBO.NoOverf.ListDefs>以下情況由於XML設定會禁止列出的需求條溢出：{0}</NBO.NoOverf.ListDefs>
+  <NBO.NoOverf.ListDefs_Tip>XML設定需要重啓生效，但可以詳細設定哪些需求條禁止溢出，而下面的文本框只能禁止全部需求條溢出。</NBO.NoOverf.ListDefs_Tip>
+  <NBO.NoOverf.NoDefsFound>（未找到任何XML設定）</NBO.NoOverf.NoDefsFound>
+  <NBO.NoOverf.OfRace>屬於以下種族的生物：</NBO.NoOverf.OfRace>
+  <NBO.NoOverf.OfApparel>穿著以下裝備的生物：</NBO.NoOverf.OfApparel>
+  <NBO.NoOverf.OfHediff>帶有以下器官/健康狀況的生物：</NBO.NoOverf.OfHediff>
+  <NBO.NoOverf.OfGene>帶有以下活躍基因的生物：</NBO.NoOverf.OfGene>
 
   <NBO.NoOverf.Race>禁止部分種族需求條溢出</NBO.NoOverf.Race>
   <NBO.NoOverf.Race_Tip>以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的種族將無法溢出需求條。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Race_Tip>
