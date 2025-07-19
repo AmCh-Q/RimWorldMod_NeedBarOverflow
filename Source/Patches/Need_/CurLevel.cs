@@ -23,7 +23,7 @@ namespace NeedBarOverflow.Patches
 		public static float Adjusted_MaxLevel(Need need)
 		{
 			float originalMax = need.MaxLevel;
-			if (!Setting_Common.CanOverflow(need))
+			if (!DisablingDefs.CanOverflow(need))
 				return originalMax;
 			Type type = need.GetType();
 			float mult = Setting_Common.GetOverflow(type);

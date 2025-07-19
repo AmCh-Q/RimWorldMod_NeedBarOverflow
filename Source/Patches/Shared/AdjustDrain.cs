@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace NeedBarOverflow.Patches
@@ -21,6 +22,7 @@ namespace NeedBarOverflow.Patches
 
 		// Formula to adjust the offset
 		//   Higher percentage -> higher offset drain
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float AdjustMethod(float m, float multiplier, float curLevelPercentage)
 			=> m * Mathf.Max((curLevelPercentage - 1f) * multiplier + 1f, 1f);
 

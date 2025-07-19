@@ -1,13 +1,14 @@
 ﻿#if g1_3
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using RimWorld;
 using Verse;
 using NeedBarOverflow.Needs;
-using System.Collections.Generic;
+using NeedBarOverflow.Patches;
 
-namespace NeedBarOverflow.Patches.ModCompat
+namespace NeedBarOverflow.ModCompat
 {
 	// Vanilla Nutrient Paste Expanded
 	// https://steamcommunity.com/sharedfiles/filedetails/?id=2920385763

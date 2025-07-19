@@ -3,19 +3,21 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 
-[assembly: AssemblyVersionAttribute("1.3.5.0")]
+[assembly: AssemblyVersionAttribute("1.4.0.0")]
 
 namespace NeedBarOverflow
 {
 	public class NeedBarOverflow : Mod
 	{
-		public static Settings? settings;
-		public static bool Initialized => settings is not null;
+		private static Settings? settings;
+		public static Settings Settings
+			=> settings ??= ModInstance!.GetSettings<Settings>();
+		public static NeedBarOverflow? ModInstance { get; private set; }
 
 		public NeedBarOverflow(ModContentPack content) : base(content)
 		{
 			Debug.Message("NeedBarOverflow mod constructor called");
-			settings = GetSettings<Settings>();
+			ModInstance = this;
 		}
 
 		public override string SettingsCategory()
@@ -23,7 +25,7 @@ namespace NeedBarOverflow
 
 		public override void DoSettingsWindowContents(Rect inRect)
 		{
-			settings?.DoWindowContents(inRect);
+			Settings.DoWindowContents(inRect);
 			base.DoSettingsWindowContents(inRect);
 		}
 	}

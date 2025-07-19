@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine.Networking;
 using Verse;
 
@@ -16,12 +17,15 @@ namespace NeedBarOverflow.Needs
 	{
 		protected static float[] dfltStats, overflowStats;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool EffectEnabled(IConvertible statName)
 			=> Setting<T>.Enabled && overflowStats[(int)statName] > 0f;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float EffectStat(IConvertible statName)
 			=> overflowStats[(int)statName];
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float EffectStat(int statId)
 			=> overflowStats[statId];
 

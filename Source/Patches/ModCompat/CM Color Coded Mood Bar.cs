@@ -1,7 +1,8 @@
-﻿using NeedBarOverflow.Needs;
-using RimWorld;
+﻿using RimWorld;
+using NeedBarOverflow.Needs;
+using NeedBarOverflow.Patches;
 
-namespace NeedBarOverflow.Patches.ModCompat
+namespace NeedBarOverflow.ModCompat
 {
 	// CM Color Coded Mood Bar [1.1+]
 	// https://steamcommunity.com/sharedfiles/filedetails/?id=2006605356

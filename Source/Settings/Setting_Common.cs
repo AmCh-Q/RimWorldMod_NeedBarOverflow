@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
 
-namespace NeedBarOverflow.Needs
+namespace NeedBarOverflow
 {
-	public sealed partial class Setting_Common : IExposable
+	[StaticConstructorOnStartup]
+	public sealed class Setting_Common : IExposable
 	{
 		private static readonly Dictionary<Type, float> dfltOverflow = new()
 		{
@@ -36,18 +38,35 @@ namespace NeedBarOverflow.Needs
 	#endif
 		};
 
-		public static Dictionary<string, Type> AllNeedTypesByName { get; }
-			= GenTypes.AllTypes
-			.Where(type => type.IsSubclassOf(typeof(Need)))
-			.ToDictionary(type => type.FullName);
+		public static Dictionary<string, Type> NeedTypesByName { get; }
+
+		public static Dictionary<Type, NeedDef[]> NeedDefByType { get; }
 
 		// Add Name and default setting of needs here
 		private static readonly Dictionary<string, float> modsOverflow = [];
 
 		private static Dictionary<Type, float> overflow = new(dfltOverflow);
 
+		static Setting_Common()
+		{
+			Log.Message("static Setting_Common");
+			NeedTypesByName = DefDatabase<NeedDef>.AllDefsListForReading
+				.Select(needDef => needDef.needClass)
+				.Where(needType => needType is not null)
+				.Distinct()
+				.ToDictionary(needType => needType.FullName);
+			Log.Message("static Setting_Common Mid");
+			NeedTypesByName[typeof(Need).FullName] = typeof(Need);
+			NeedDefByType = DefDatabase<NeedDef>.AllDefsListForReading
+				.Where(needDef => needDef.needClass is not null)
+				.GroupBy(needDef => needDef.needClass)
+				.ToDictionary(group => group.Key, group => group.Distinct().ToArray());
+			Log.Message("static Setting_Common End");
+		}
+
 		public static bool AnyEnabled => overflow.Any(x => x.Value > 0f);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool Enabled(Type needType)
 		{
 			if (overflow.TryGetValue(needType, out float value))
@@ -55,6 +74,7 @@ namespace NeedBarOverflow.Needs
 			return overflow[typeof(Need)] > 0f;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float GetOverflow(Type needType)
 		{
 			if (overflow.TryGetValue(needType, out float value))
@@ -62,6 +82,7 @@ namespace NeedBarOverflow.Needs
 			return overflow[typeof(Need)];
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void SetOverflow(Type needType, float value)
 		{
 			if (overflow.ContainsKey(needType))
@@ -87,12 +108,12 @@ namespace NeedBarOverflow.Needs
 			overflow = new(dfltOverflow);
 			foreach (KeyValuePair<string, float> need in modsOverflow)
 			{
-				if (AllNeedTypesByName.TryGetValue(need.Key, out Type needType))
+				if (NeedTypesByName.TryGetValue(need.Key, out Type needType))
 					overflow[needType] = need.Value;
 			}
 			foreach (KeyValuePair<string, float> need in vanillaOverflow)
 			{
-				if (AllNeedTypesByName.TryGetValue(need.Key, out Type needType))
+				if (NeedTypesByName.TryGetValue(need.Key, out Type needType))
 					overflow[needType] = need.Value;
 			}
 		}

@@ -12,7 +12,7 @@ namespace NeedBarOverflow.Patches
 				// Pawn's food meter is set below the limit percentage
 				|| need.CurLevel < Setting_Food.EffectStat(StatName_Food.DisableEating) * need.MaxLevel
 				|| need.CurCategory > HungerCategory.Fed // Pawn is hungry
-				|| !Setting_Common.CanOverflow(need, pawn);
+				|| !DisablingDefs.CanOverflow(need, pawn);
 		}
 	}
 }

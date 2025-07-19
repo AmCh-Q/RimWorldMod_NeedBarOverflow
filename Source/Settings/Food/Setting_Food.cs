@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Verse;
 
 namespace NeedBarOverflow.Needs
@@ -10,9 +11,11 @@ namespace NeedBarOverflow.Needs
 		public static bool AffectHealth
 			=> HealthStats.AffectHealth;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool EffectEnabled(StatName_Food statName)
 			=> Enabled && OverflowStats.EffectStat(statName) > 0f;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float EffectStat(StatName_Food statName)
 			=> OverflowStats.EffectStat(statName);
 

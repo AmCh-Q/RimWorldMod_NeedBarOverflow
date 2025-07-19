@@ -1,20 +1,25 @@
-﻿using Verse;
+﻿using System.Runtime.CompilerServices;
+using Verse;
 
-namespace NeedBarOverflow.Needs
+namespace NeedBarOverflow
 {
 	public class SettingLabel
 	{
 		public readonly string name, label, tip;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public string TranslatedLabel()
 		  => label.Translate();
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public string TranslatedLabel(NamedArgument arg)
 		  => label.Translate(arg);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public string TranslatedTip()
 		  => tip.Translate();
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public string TranslatedTip(NamedArgument arg)
 		  => tip.Translate(arg);
 

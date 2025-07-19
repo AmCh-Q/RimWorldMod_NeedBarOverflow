@@ -1,7 +1,6 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Verse;
 
 namespace NeedBarOverflow.Needs
@@ -57,7 +56,7 @@ namespace NeedBarOverflow.Needs
 				if (b1)
 				{
 					f1 = Utility.AddNumSetting(ls, f1, true,
-						Mathf.Log10(0.5f), 1f, 0.5f, 10f,
+						-0.301023f, 1f, 0.5f, 10f,
 						null, sl.tip,
 						showAsPerc: true);
 				}

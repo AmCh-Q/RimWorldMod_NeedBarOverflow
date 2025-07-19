@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace NeedBarOverflow.Needs
+namespace NeedBarOverflow
 {
 	public static class Utility
 	{

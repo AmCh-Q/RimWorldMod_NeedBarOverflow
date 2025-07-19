@@ -85,12 +85,9 @@ namespace NeedBarOverflow.Patches
 		private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
 		{
-			if (NeedBarOverflow.settings is not Settings s)
-				return;
 			Pawn_HealthTracker health = pawn.health;
-			Hediff hediff;
 			if (newValue <= need.MaxLevel
-				|| !Setting_Common.CanOverflow(need, pawn))
+				|| !DisablingDefs.CanOverflow(need, pawn))
 			{
 				if (newValue > need.MaxLevel)
 					need.CurLevel = need.MaxLevel;
@@ -108,6 +105,7 @@ namespace NeedBarOverflow.Patches
 					effectMultiplier = 1f;
 				pawnsWithFoodOverflow[pawn] = effectMultiplier;
 			}
+			Hediff hediff;
 #if l1_4
 			hediff = health.hediffSet.GetFirstHediffOfDef(ModDefOf.FoodOverflow);
 			hediff ??= health.AddHediff(ModDefOf.FoodOverflow);

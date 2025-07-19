@@ -3,9 +3,23 @@
   <NBO.Name>需求條溢出</NBO.Name>
 
   <NBO.RestartReq>（重啓游戲后生效）</NBO.RestartReq>
-  <NBO.RestartNReq>（設置無需重啓）</NBO.RestartNReq>
-  <NBO.RestartReq_Tip>有一部分設置需要重啓游戲后才能完全生效，在此之前它們有可能部分生效</NBO.RestartReq_Tip>
-  <NBO.RestartNReq_Tip>除非另有説明，關閉設置窗口后立即剩下，無需重啓游戲</NBO.RestartNReq_Tip>
+  <NBO.RestartNReq>（設定無需重啓）</NBO.RestartNReq>
+  <NBO.RestartReq_Tip>有一部分設定需要重啓游戲后才能完全生效，在此之前它們有可能部分生效</NBO.RestartReq_Tip>
+  <NBO.RestartNReq_Tip>除非另有説明，關閉設定窗口后立即剩下，無需重啓游戲</NBO.RestartNReq_Tip>
+
+  <NBO.NoOverf.ShowSettings>顯示禁止需求條溢出相關設置</NBO.NoOverf.ShowSettings>
+  <NBO.NoOverf.ShowSettings_Tip>可以設定在特定條件下禁止需求條溢出。注意這條設定本身只能顯示/隱藏選項細節。</NBO.NoOverf.ShowSettings_Tip>
+  <NBO.NoOverf.ListDefs>以下情況由於XML設定會禁止列出的需求條溢出：{0}</NBO.NoOverf.ListDefs>
+  <NBO.NoOverf.ListDefs_Tip>XML設定需要重啓生效，但可以詳細設定哪些需求條禁止溢出，而下面的文本框只能禁止全部需求條溢出。</NBO.NoOverf.ListDefs_Tip>
+  <NBO.NoOverf.NoDefsFound>（未找到任何XML設定）</NBO.NoOverf.NoDefsFound>
+
+  <NBO.NoOverf.OfRace>屬於以下種族的生物：\n</NBO.NoOverf.OfRace>
+  <NBO.NoOverf.OfApparel>穿著以下裝備的生物：\n</NBO.NoOverf.OfApparel>
+  <NBO.NoOverf.OfHediff>帶有以下器官/健康狀況的生物：\n</NBO.NoOverf.OfHediff>
+  <NBO.NoOverf.OfGene>帶有以下活躍基因的生物：\n</NBO.NoOverf.OfGene>
+
+  <NBO.NoOverf.checkIntervalTicks>最大檢查更新頻率：每{0}刻更新一次</NBO.NoOverf.checkIntervalTicks>
+  <NBO.NoOverf.checkIntervalTicks_Tip>正常速度下一秒等於60刻，而默認1800刻對應每30秒更新一次。實際更新按需進行，所以頻率可能更低。</NBO.NoOverf.checkIntervalTicks_Tip>
 
   <NBO.NoOverf.Race>禁止部分種族需求條溢出</NBO.NoOverf.Race>
   <NBO.NoOverf.Race_Tip>以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的種族將無法溢出需求條。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Race_Tip>
@@ -26,8 +40,8 @@
   <NBO.Need_Food.DisableEating_Tip>如果小人的食物值大於{0}，將無法命令小人進食食物（小人仍然可以服用沒有營養的藥物，崩潰的小人仍然可以暴飲暴食）。</NBO.Need_Food.DisableEating_Tip>
   <NBO.Disabled_FoodFull>吃飽了</NBO.Disabled_FoodFull>
 
-  <NBO.Need_Food.HealthDetails>顯示健康影響详细設置</NBO.Need_Food.HealthDetails>
-  <NBO.Need_Food.HealthDetails_Tip>顯示/隱藏選項細節，無論以下設置是否顯示，只要關於吃過飽的選項啓動，對應的數值都會生效。</NBO.Need_Food.HealthDetails_Tip>
+  <NBO.Need_Food.HealthDetails>顯示健康影響详细設定</NBO.Need_Food.HealthDetails>
+  <NBO.Need_Food.HealthDetails_Tip>顯示/隱藏選項細節，無論以下設定是否顯示，只要關於吃過飽的選項啓動，對應的數值都會生效。</NBO.Need_Food.HealthDetails_Tip>
 
   <NBO.Need_Food.HealthEnable.HungerFactor>吃過飽后餓的更快</NBO.Need_Food.HealthEnable.HungerFactor>
   <NBO.Need_Food.HealthEnable.HungerFactor_Tip>如果小人的食物值大於100%，他的食物值將更快下降。</NBO.Need_Food.HealthEnable.HungerFactor_Tip>
@@ -45,7 +59,7 @@
   <NBO.Need_Food.GourmandMult>貪食小人過飽影響乘數：{0}</NBO.Need_Food.GourmandMult>
   <NBO.Need_Food.GourmandMult_Tip>當貪食小人的食物值大於100%，他們受到的影響將會降低，每溢出100%的影響只相當于普通小人溢出{0}的影響。</NBO.Need_Food.GourmandMult_Tip>
   <NBO.Need_Food.ShowHediffLvl>食物值超過{0}后顯示健康影響</NBO.Need_Food.ShowHediffLvl>
-  <NBO.Need_Food.ShowHediffLvl_Tip>如果小人的食物值大於{0}，過飽的健康影響將顯示在健康栏里。这个設置會考虑到前兩條設置，因此非人類生物和貪食小人可能要吃更多后才會顯示健康影響。</NBO.Need_Food.ShowHediffLvl_Tip>
+  <NBO.Need_Food.ShowHediffLvl_Tip>如果小人的食物值大於{0}，過飽的健康影響將顯示在健康栏里。这个設定會考虑到前兩條設定，因此非人類生物和貪食小人可能要吃更多后才會顯示健康影響。</NBO.Need_Food.ShowHediffLvl_Tip>
 
   <NBO.Need_Food.HealthStat.Level>如果小人的食物值達到{0}...</NBO.Need_Food.HealthStat.Level>
   <NBO.Need_Food.HealthStat.HungerFactor>他的食物值將以{0}倍速下降</NBO.Need_Food.HealthStat.HungerFactor>
@@ -59,18 +73,18 @@
   <NBO.Need_Rest.OverfPerc>睡眠值溢出倍率：{0}</NBO.Need_Rest.OverfPerc>
   <NBO.Need_Rest.OverfPerc_Tip>小人最大可以達到{0}睡眠值</NBO.Need_Rest.OverfPerc_Tip>
   <NBO.Need_Rest.FastDrain>睡飽后睡眠值更快下降：{0}效果</NBO.Need_Rest.FastDrain>
-  <NBO.Need_Rest.FastDrain_Tip>如果小人的睡眠值大於100%，他清醒时的睡眠值下降速度將增加({0} × 溢出值)。此設置越高、睡眠值越高，累地越快。</NBO.Need_Rest.FastDrain_Tip>
+  <NBO.Need_Rest.FastDrain_Tip>如果小人的睡眠值大於100%，他清醒时的睡眠值下降速度將增加({0} × 溢出值)。此設定越高、睡眠值越高，累地越快。</NBO.Need_Rest.FastDrain_Tip>
   <NBO.Need_Rest.SlowGain>睡飽后再睡觉回復更慢：{0}效果</NBO.Need_Rest.SlowGain>
-  <NBO.Need_Rest.SlowGain_Tip>如果小人的睡眠值大於100%，他睡眠的效率將被除以({0} × 溢出值 + 100%)。此設置越高、睡眠值越高，睡眠效率越低。此設置仅影響正常睡眠，不影響药物效果。</NBO.Need_Rest.SlowGain_Tip>
+  <NBO.Need_Rest.SlowGain_Tip>如果小人的睡眠值大於100%，他睡眠的效率將被除以({0} × 溢出值 + 100%)。此設定越高、睡眠值越高，睡眠效率越低。此設定仅影響正常睡眠，不影響药物效果。</NBO.Need_Rest.SlowGain_Tip>
 
   <NBO.Need_Joy.OverfEnabled>啓用娛樂值溢出</NBO.Need_Joy.OverfEnabled>
   <NBO.Need_Joy.OverfEnabled_Tip>允許小人的娛樂值溢出</NBO.Need_Joy.OverfEnabled_Tip>
   <NBO.Need_Joy.OverfPerc>娛樂值溢出倍率：{0}</NBO.Need_Joy.OverfPerc>
   <NBO.Need_Joy.OverfPerc_Tip>小人最大可以達到{0}娛樂值</NBO.Need_Joy.OverfPerc_Tip>
   <NBO.Need_Joy.FastDrain>娛樂值溢出后更快下降：{0}效果</NBO.Need_Joy.FastDrain>
-  <NBO.Need_Joy.FastDrain_Tip>如果小人的娛樂值大於100%，他的娛樂值下降速度將增加({0} × 溢出值)。此設置越高、娛樂值越高，娛樂值下降地越快。</NBO.Need_Joy.FastDrain_Tip>
+  <NBO.Need_Joy.FastDrain_Tip>如果小人的娛樂值大於100%，他的娛樂值下降速度將增加({0} × 溢出值)。此設定越高、娛樂值越高，娛樂值下降地越快。</NBO.Need_Joy.FastDrain_Tip>
   <NBO.Need_Joy.SlowGain>娛樂值溢出后娛樂效率更低：{0}效果</NBO.Need_Joy.SlowGain>
-  <NBO.Need_Joy.SlowGain_Tip>如果小人的娛樂值大於100%，他的娛樂效率將被除以({0} × 溢出值 + 100%)。此設置越高、娛樂值越高，娛樂效率越低。</NBO.Need_Joy.SlowGain_Tip>
+  <NBO.Need_Joy.SlowGain_Tip>如果小人的娛樂值大於100%，他的娛樂效率將被除以({0} × 溢出值 + 100%)。此設定越高、娛樂值越高，娛樂效率越低。</NBO.Need_Joy.SlowGain_Tip>
 
   <NBO.Need_Mood.OverfEnabled>啓用心情值溢出</NBO.Need_Mood.OverfEnabled>
   <NBO.Need_Mood.OverfEnabled_Tip>允許小人的心情值溢出</NBO.Need_Mood.OverfEnabled_Tip>
@@ -127,9 +141,9 @@
   <NBO.Need_KillThirst.OverfPerc>殺欲值溢出倍率：{0}</NBO.Need_KillThirst.OverfPerc>
   <NBO.Need_KillThirst.OverfPerc_Tip>小人最大可以達到{0}殺欲值</NBO.Need_KillThirst.OverfPerc_Tip>
   <NBO.Need_KillThirst.FastDrain>殺欲值溢出后更快下降：{0}效果</NBO.Need_KillThirst.FastDrain>
-  <NBO.Need_KillThirst.FastDrain_Tip>如果小人的殺欲值大於100%，他的殺欲值下降速度將增加({0} × 溢出值)。此設置越高、殺欲值越高，殺欲值下降地越快。</NBO.Need_KillThirst.FastDrain_Tip>
+  <NBO.Need_KillThirst.FastDrain_Tip>如果小人的殺欲值大於100%，他的殺欲值下降速度將增加({0} × 溢出值)。此設定越高、殺欲值越高，殺欲值下降地越快。</NBO.Need_KillThirst.FastDrain_Tip>
   <NBO.Need_KillThirst.SlowGain>溢出后杀戮滿足效率更低：{0}效果</NBO.Need_KillThirst.SlowGain>
-  <NBO.Need_KillThirst.SlowGain_Tip>如果小人的殺欲值大於100%，他的杀戮滿足效率將被除以({0} × 溢出值 + 100%)。此設置越高、殺欲值越高，杀戮滿足效率越低。</NBO.Need_KillThirst.SlowGain_Tip>
+  <NBO.Need_KillThirst.SlowGain_Tip>如果小人的殺欲值大於100%，他的杀戮滿足效率將被除以({0} × 溢出值 + 100%)。此設定越高、殺欲值越高，杀戮滿足效率越低。</NBO.Need_KillThirst.SlowGain_Tip>
 
   <NBO.Need_MechEnergy.OverfEnabled>啓用能量值溢出</NBO.Need_MechEnergy.OverfEnabled>
   <NBO.Need_MechEnergy.OverfEnabled_Tip>允許機械体能量值溢出</NBO.Need_MechEnergy.OverfEnabled_Tip>
@@ -147,7 +161,7 @@
   <NBO.Need_Play.OverfPerc_Tip>嬰兒最大可以達到{0}玩樂值</NBO.Need_Play.OverfPerc_Tip>
 
   <NBO.ShowHiddenSettings>顯示不推薦啓用的需求溢出</NBO.ShowHiddenSettings>
-  <NBO.ShowHiddenSettings_Tip>以下需求溢出設置要么官方支持很差，要么很容易出錯，不建议開。注意这條設置本身只能顯示/隱藏選項細節，如果你開過了，還需一个个關。</NBO.ShowHiddenSettings_Tip>
+  <NBO.ShowHiddenSettings_Tip>以下需求溢出設定要么官方支持很差，要么很容易出錯，不建议開。注意这條設定本身只能顯示/隱藏選項細節，如果你開過了，還需一个个關。</NBO.ShowHiddenSettings_Tip>
 
   <NBO.Need.OverfEnabled>啓用缺省需求條溢出</NBO.Need.OverfEnabled>
   <NBO.Need.OverfEnabled_Tip>允許任何目前尚未正式支持的需求條溢出。可能會報各種奇怪的錯誤，但是如果你真的想溢出模組的需求條的话，只能開这个了。</NBO.Need.OverfEnabled_Tip>

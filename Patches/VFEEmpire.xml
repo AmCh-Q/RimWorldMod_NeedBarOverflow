@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Vanilla Factions Expanded - Empire</li>
+    </mods>
+    <match Class="PatchOperationAddModExtension">
+      <xpath>Defs/ThingDef[defName="VFEE_Apparel_TechfriarCrown"]</xpath>
+      <value>
+        <li Class = "NeedBarOverflow.DisableNeedOverflowExtension">
+          <disableOverflowNeeds>
+            <li>Need_Rest</li>
+            <li>Need_Joy</li>
+          </disableOverflowNeeds>
+        </li>
+      </value>
+    </match>
+  </Operation>
+</Patch>

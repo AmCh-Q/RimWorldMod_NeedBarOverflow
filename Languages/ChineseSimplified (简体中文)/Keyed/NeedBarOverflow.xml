@@ -7,6 +7,20 @@
   <NBO.RestartReq_Tip>有一部分设置需要重启游戏后才能完全生效，在此之前它们有可能部分生效</NBO.RestartReq_Tip>
   <NBO.RestartNReq_Tip>除非另有说明，关闭设置窗口后立刻生效，无需重启游戏</NBO.RestartNReq_Tip>
 
+  <NBO.NoOverf.ShowSettings>显示禁止需求条溢出相关设置</NBO.NoOverf.ShowSettings>
+  <NBO.NoOverf.ShowSettings_Tip>可以设置在特定条件下禁止需求条溢出。注意这条设置本身只能显示/隐藏选项细节</NBO.NoOverf.ShowSettings_Tip>
+  <NBO.NoOverf.ListDefs>以下情况由于XML设定会禁止列出的需求条溢出：{0}</NBO.NoOverf.ListDefs>
+  <NBO.NoOverf.ListDefs_Tip>XML设定需要重启生效，但可以详细设置哪些需求条禁止溢出，而下面的文本框只能禁止全部需求条溢出。</NBO.NoOverf.ListDefs_Tip>
+  <NBO.NoOverf.NoDefsFound>（未找到任何XML设定）</NBO.NoOverf.NoDefsFound>
+
+  <NBO.NoOverf.OfRace>属于以下种族的生物：\n</NBO.NoOverf.OfRace>
+  <NBO.NoOverf.OfApparel>穿着以下装备的生物：\n</NBO.NoOverf.OfApparel>
+  <NBO.NoOverf.OfHediff>带有以下器官/健康状况的生物：\n</NBO.NoOverf.OfHediff>
+  <NBO.NoOverf.OfGene>带有以下活跃基因的生物：\n</NBO.NoOverf.OfGene>
+
+  <NBO.NoOverf.checkIntervalTicks>最大检查更新频率：每{0}刻更新一次</NBO.NoOverf.checkIntervalTicks>
+  <NBO.NoOverf.checkIntervalTicks_Tip>正常速度下一秒等于60刻，而默认1800刻对应每30秒更新一次。实际更新按需进行，所以频率可能更低。</NBO.NoOverf.checkIntervalTicks_Tip>
+
   <NBO.NoOverf.Race>禁止部分种族需求条溢出</NBO.NoOverf.Race>
   <NBO.NoOverf.Race_Tip>以下列表的defNames（优先）或者全名（以游戏加载的语言为准）对应的种族将无法溢出需求条。列表用逗号分割，不区分大小写。模组成功识别的名字将会被高亮显示。</NBO.NoOverf.Race_Tip>
   <NBO.NoOverf.Apparel>禁止穿着部分装备时需求条溢出</NBO.NoOverf.Apparel>

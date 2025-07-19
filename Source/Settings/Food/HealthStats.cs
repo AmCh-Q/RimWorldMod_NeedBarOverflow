@@ -76,6 +76,7 @@ namespace NeedBarOverflow.Needs
 						healthStat_strs[key] = string.Join(Strings.Space, statStr());
 					}
 				}
+
 				Scribe_Collections.Look(ref healthStat_strs,
 					Strings.healthStats, LookMode.Value, LookMode.Value);
 				if (Scribe.mode == LoadSaveMode.LoadingVars)
@@ -103,12 +104,10 @@ namespace NeedBarOverflow.Needs
 					}
 					healthStats[(int)HealthName.Level, 1] = 1f;
 				}
-				if (NeedBarOverflow.Initialized &&
-					(Scribe.mode == LoadSaveMode.PostLoadInit ||
-					Scribe.mode == LoadSaveMode.Saving))
-				{
+
+				if (Scribe.mode == LoadSaveMode.PostLoadInit ||
+					Scribe.mode == LoadSaveMode.Saving)
 					ApplyFoodHediffSettings();
-				}
 			}
 
 			public static void AddSettings(Listing_Standard ls)

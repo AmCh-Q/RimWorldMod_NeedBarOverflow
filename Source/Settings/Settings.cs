@@ -3,16 +3,17 @@ using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using static NeedBarOverflow.Needs.Utility;
+using static NeedBarOverflow.Utility;
 
 namespace NeedBarOverflow
 {
 	public class Settings : ModSettings
 	{
-		private static bool showHiddenSettings;
-		private Vector2 settingsScrollPos;
+		public static bool showHiddenSettings;
+		public Vector2 settingsScrollPos;
 
-		public Settings() => Debug.Message("NeedBarOverflow_Settings constructor called");
+		public Settings()
+			=> Debug.Message("NeedBarOverflow_Settings constructor called with Scribe.mode == " + Scribe.mode);
 
 		public void DoWindowContents(Rect inRect)
 		{
@@ -24,8 +25,8 @@ namespace NeedBarOverflow
 			height = 0f;
 			ls.Begin(rect);
 			LsGap(ls);
-			ls.Label(Strings.RestartNReq.Translate());
-			Setting_Common.AddSettings(ls);
+			ls.Label(Strings.RestartNReq_Tip.Translate());
+			DisablingDefs.AddSettings(ls);
 			if (AddSimpleSetting(ls, typeof(Need_Food)))
 				Setting_Food.AddSettings(ls);
 			if (AddSimpleSetting(ls, typeof(Need_Rest)))
@@ -70,7 +71,7 @@ namespace NeedBarOverflow
 
 		public override void ExposeData()
 		{
-			Debug.Message("ExposeData() called");
+			Debug.Message("Settings.ExposeData() called with Scribe.mode == " + Scribe.mode);
 			base.ExposeData();
 			Setting_Common common = new();
 			Setting_Food food = new();
@@ -87,12 +88,9 @@ namespace NeedBarOverflow
 			Scribe_Deep.Look(ref killThirst, nameof(Need_KillThirst));
 #endif
 
-			if (NeedBarOverflow.Initialized &&
-				(Scribe.mode == LoadSaveMode.PostLoadInit ||
-				Scribe.mode == LoadSaveMode.Saving))
-			{
+			if (Scribe.mode == LoadSaveMode.PostLoadInit ||
+				Scribe.mode == LoadSaveMode.Saving)
 				Patches.PatchApplier.ApplyPatches();
-			}
 		}
 	}
 }

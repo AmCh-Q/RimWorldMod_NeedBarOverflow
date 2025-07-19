@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Dust Bunnies</li>
+    </mods>
+    <match Class="PatchOperationAddModExtension">
+      <xpath>Defs/ThingDef[defName="Crows_DustBunnyRace"]</xpath>
+      <value>
+        <li Class = "NeedBarOverflow.DisableNeedOverflowExtension">
+          <disableOverflowNeeds>
+            <li>Need_Food</li>
+            <li>Need_Chemical</li>
+          </disableOverflowNeeds>
+        </li>
+      </value>
+    </match>
+  </Operation>
+</Patch>
