@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using NeedBarOverflow.ModCompat;
 using RimWorld;
 using Verse;
 
@@ -353,49 +354,54 @@ namespace NeedBarOverflow
 			}
 		}
 
+		public static string DisableStringOfDef(Def def)
+		{
+			string name = def.label;
+			if (name.NullOrEmpty())
+				name = def.defName;
+
+			List<Type>? types = def.HasModExtension<DisableNeedOverflowExtension>()
+				? def.GetModExtension<DisableNeedOverflowExtension>()?.disableOverflowNeeds
+				: null;
+
+			if (types is null || types.Count == 0)
+				return Strings.NoOverf_NoDefsFound;
+
+			string typeliststr = string.Join(",",
+				types.Select(
+					type => Setting_Common.NeedDefByType[type]
+					.Select(def => def.label)
+				).SelectMany(label => label).Distinct());
+			return string.Concat(name, ": ", typeliststr);
+		}
+
+		public static string DisableStringOfDefs(string nameString, IEnumerable<Def> defEnum)
+		{
+			if (defEnum is not ICollection<Def> defList)
+				defList = [.. defEnum];
+			if (defList.Count == 0)
+				return string.Empty;
+			return string.Concat(nameString.Translate(), "\n  ",
+				string.Join("\n  ", defEnum.Select(DisableStringOfDef)));
+		}
+
+		public static string DisableStringOfType(StatName_DisableType type)
+			=> DisableStringOfDefs(Strings.NoOverf_Of[(int)type], disablingDefs_modExtension[(int)type]);
+
 		public static void AddDisablingInfo(Listing_Standard ls)
 		{
-			static string DisableStringOfDef(Def def)
-			{
-				string name = def.label;
-				if (name.NullOrEmpty())
-					name = def.defName;
-
-				List<Type>? types = def.HasModExtension<DisableNeedOverflowExtension>()
-					? def.GetModExtension<DisableNeedOverflowExtension>()?.disableOverflowNeeds
-					: null;
-
-				if (types is null || types.Count == 0)
-					return Strings.NoOverf_NoDefsFound;
-
-				string typeliststr = string.Join(",",
-					types.Select(
-						type => Setting_Common.NeedDefByType[type]
-						.Select(def => def.label)
-					).SelectMany(label => label).Distinct());
-				return string.Concat(name, ": ", typeliststr);
-			}
-			static string DisableStringOfType(StatName_DisableType disableType)
-			{
-				int idx = (int)disableType;
-				List<Def> defList = disablingDefs_modExtension[idx];
-				if (defList.Count == 0)
-					return string.Empty;
-				return string.Concat(
-					Strings.NoOverf_Of[idx].Translate(),
-					"\n  ",
-					string.Join("\n  ", defList.Select(DisableStringOfDef)));
-			}
-
 			if (disablingDefs_modExtension.All(list => list.Count == 0))
 				return;
 
 			ls.GapLine();
-			defDisableInfo ??= string.Join("\n",
-				((IEnumerable<StatName_DisableType>)
-				Enum.GetValues(typeof(StatName_DisableType)))
-				.Select(DisableStringOfType)
-				.Where(str => str.Length != 0));
+			defDisableInfo ??= string.Concat("\n",
+				string.Join("\n",
+					((IEnumerable<StatName_DisableType>)
+					Enum.GetValues(typeof(StatName_DisableType)))
+					.Select(DisableStringOfType)
+					.Where(str => str.Length != 0)),
+				VFEAncients.DisableStringOfType()
+			);
 
 			ls.Label(Strings.NoOverf_ListDefs.Translate(defDisableInfo),
 				tooltip: Strings.NoOverf_ListDefs_Tip.Translate());

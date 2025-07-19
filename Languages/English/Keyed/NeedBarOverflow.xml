@@ -20,6 +20,7 @@
   <NBO.NoOverf.OfApparel>Pawns wearing these apparel:</NBO.NoOverf.OfApparel>
   <NBO.NoOverf.OfHediff>Pawns with these bionics/health conditions:</NBO.NoOverf.OfHediff>
   <NBO.NoOverf.OfGene>Pawns with these genes active:</NBO.NoOverf.OfGene>
+  <NBO.NoOverf.OfVFEAPower>Pawns with these VFE - Ancients powers active:</NBO.NoOverf.OfVFEAPower>
 
   <NBO.NoOverf.Race>Disable Need Overflow for some races</NBO.NoOverf.Race>
   <NBO.NoOverf.Race_Tip>Races with defNames (preferred) or full names (in the game's current language) listed below cannot overflow their need bars. The list is comma-separated and case-insensitive. Names recognized by the mod will be highlighted.</NBO.NoOverf.Race_Tip>

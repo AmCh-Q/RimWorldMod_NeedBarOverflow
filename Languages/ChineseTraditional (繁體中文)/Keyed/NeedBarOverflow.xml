@@ -20,6 +20,7 @@
   <NBO.NoOverf.OfApparel>穿著以下裝備的生物：</NBO.NoOverf.OfApparel>
   <NBO.NoOverf.OfHediff>帶有以下器官/健康狀況的生物：</NBO.NoOverf.OfHediff>
   <NBO.NoOverf.OfGene>帶有以下活躍基因的生物：</NBO.NoOverf.OfGene>
+  <NBO.NoOverf.OfVFEAPower>擁有以下"原版古代人派系擴展"能力的生物：</NBO.NoOverf.OfVFEAPower>
 
   <NBO.NoOverf.Race>禁止部分種族需求條溢出</NBO.NoOverf.Race>
   <NBO.NoOverf.Race_Tip>以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的種族將無法溢出需求條。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Race_Tip>

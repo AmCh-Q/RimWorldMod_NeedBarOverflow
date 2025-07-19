@@ -46,7 +46,9 @@ namespace NeedBarOverflow
 			HealthEnable_ = nameof(HealthEnable_),
 			HealthStat_ = nameof(HealthStat_),
 			ConsumeThing = nameof(ConsumeThing),
-			FoodFull = "NBO.Disabled_FoodFull";
+			FoodFull = "NBO.Disabled_FoodFull",
+
+			NoOverf_OfVFEAPower = "NBO.NoOverf.OfVFEAPower";
 
 		public static readonly string[]
 			NoOverf_Of = [

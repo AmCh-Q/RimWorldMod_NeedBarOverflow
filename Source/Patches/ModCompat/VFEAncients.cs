@@ -15,6 +15,7 @@ namespace NeedBarOverflow.ModCompat
 		public static readonly bool active;
 		public static readonly Type? t_PowerDef, t_PowerTracker;
 		public static readonly Func<Pawn, IEnumerable<Def>>? GetPawnPowerDefs;
+		private static List<Def>? disablingDefs_modExtension;
 
 		static VFEAncients()
 		{
@@ -29,6 +30,11 @@ namespace NeedBarOverflow.ModCompat
 
 			GetPawnPowerDefs = Init_GetPawnPowerDefs();
 		}
+
+		public static List<Def> DisablingDefs_modExtension
+			=> disablingDefs_modExtension ??= [..GenDefDatabase
+				.GetAllDefsInDatabaseForDef(t_PowerDef)
+				.Where(def => def.HasModExtension<DisableNeedOverflowExtension>())];
 
 		private static Func<Pawn, IEnumerable<Def>> Init_GetPawnPowerDefs()
 		{
@@ -65,11 +71,20 @@ namespace NeedBarOverflow.ModCompat
 			return lambda.Compile();
 		}
 
+		public static string DisableStringOfType()
+		{
+			if (!active)
+				return string.Empty;
+			return '\n' + DisablingDefs.DisableStringOfDefs(Strings.NoOverf_OfVFEAPower, DisablingDefs_modExtension!);
+		}
+
 		public static bool DisableDueToPower(Pawn pawn, Type needType)
 		{
 			Debug.Assert(active, "VFEAncients.active");
 			Debug.Assert(GetPawnPowerDefs is not null, "GetPawnPowerDefs is not null");
 
+			if (DisablingDefs_modExtension!.Count == 0)
+				return false;
 			// Check
 			Def[] powerDefs = [.. GetPawnPowerDefs!(pawn)];
 			return powerDefs.Any(powerDef
