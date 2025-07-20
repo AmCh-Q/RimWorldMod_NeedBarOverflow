@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using UnityEngine;
 using RimWorld;
@@ -102,6 +103,14 @@ namespace NeedBarOverflow.Patches
 			if (Event.current.type == EventType.Layout)
 				return false;
 
+			// (Custom) Get some common fields
+			float maxLevel = __instance.MaxLevel;
+			float curLevel = __instance.CurLevel;
+
+			// (Custom) Skip if not overflowing
+			if (curLevel <= maxLevel)
+				return true;
+
 			// (Vanilla 1.2+) Adjust to max height
 			if (rect.height > Need.MaxDrawHeight)
 			{
@@ -125,7 +134,7 @@ namespace NeedBarOverflow.Patches
 			if (rect.height < 50f)
 				verticalMargin *= Mathf.InverseLerp(0f, 50f, rect.height);
 			customMargin = ((customMargin >= 0f) ? customMargin : 29f); // Vanilla: num3
-			Rect unShrunkRect = new( // Vanilla: rect3
+			Rect needRect = new( // Vanilla: rect3
 				rect.x + customMargin, rect.y,
 				rect.width - customMargin * 2f,
 				rect.height - verticalMargin);
@@ -143,8 +152,8 @@ namespace NeedBarOverflow.Patches
 					rect.height / 2f);
 				Widgets.Label(labelRect, __instance.LabelCap);
 				Text.Anchor = TextAnchor.UpperLeft;
-				unShrunkRect.y += rect.height / 2f;
-				unShrunkRect.height -= rect.height / 2f;
+				needRect.y += rect.height / 2f;
+				needRect.height -= rect.height / 2f;
 			}
 
 			// (Vanilla 1.4+, separated, down supported to 1.2+) ShowDevGizmos
@@ -156,35 +165,23 @@ namespace NeedBarOverflow.Patches
 					= DebugSettings.ShowDevGizmos;
 #endif
 				if (showDevGizmos)
-					ShowDevGizmos(__instance, unShrunkRect);
+					ShowDevGizmos(__instance, needRect);
 			}
 
-			// (Custom) Get some common fields
-			float maxLevel = __instance.MaxLevel;
-			float curLevel = __instance.CurLevel;
-			float curLevelPercentage = curLevel / maxLevel;
-			float actualMaxLevel = maxLevel;
+			// Vanilla rect6 no longer needed
+			// Vanilla num4 no longer needed
+			float prcntShrinkFactor = maxLevel / curLevel; // New
 
-			// (Custom) Calculate some values
-			Rect shrunkRect = unShrunkRect; // Vanilla: rect6
-			float barShrinkFactor = 1f; // Vanilla: num4
-			float prcntShrinkFactor = 1f; // New
-			if (curLevel > maxLevel)
-			{
-				prcntShrinkFactor = maxLevel / curLevel;
-				actualMaxLevel = curLevel;
-			}
 			NeedDef def = __instance.def;
-			if (actualMaxLevel < 1f && def.scaleBar)
-				barShrinkFactor = actualMaxLevel;
-			shrunkRect.width *= barShrinkFactor;
+			if (curLevel < 1f && def.scaleBar)
+				needRect.width *= curLevel;
 
 			// (Vanilla 1.2+, replaced) Draw fillable bar
-			Rect barRect = FillableBar(shrunkRect, curLevelPercentage);
+			Rect barRect = FillableBar(needRect, curLevel / maxLevel);
 
 			// (Vanilla 1.2+) Draw arrows
 			if (drawArrows)
-				Widgets.FillableBarChangeArrows(shrunkRect, __instance.GUIChangeArrow);
+				Widgets.FillableBarChangeArrows(needRect, __instance.GUIChangeArrow);
 
 			// (Vanilla 1.2+) Draw threshold percents
 			List<float> threshPercents = fr_threshPercents(__instance);
@@ -208,12 +205,13 @@ namespace NeedBarOverflow.Patches
 				// I don't know why Vanilla's markers aren't perfectly aligned
 				// So I need to shift x a little
 				barRect.x += 2f;
-				for (float j = 1f, step = 1f; j < actualMaxLevel; j += step)
+				// 0.0078125f is just a small power-of-two number I picked
+				float minDrawLevel = curLevel * 0.0078125f;
+				for (float j = 1f, step = 1f; j < curLevel; j += step)
 				{
 					// Don't draw too dense of divisions at the left
-					// 0.0078125f is just a small power-of-two number I picked
-					if (j >= actualMaxLevel * 0.0078125f)
-						d_DrawBarDivision(__instance, barRect, j / actualMaxLevel);
+					if (j >= minDrawLevel)
+						d_DrawBarDivision(__instance, barRect, j / curLevel);
 					// Draw at 1,2,3,...,9
 					// Then 10,20,30...,90
 					// Then 100,200,300, and so on
@@ -224,11 +222,15 @@ namespace NeedBarOverflow.Patches
 				// barRect.x -= 2f;
 			}
 
-			// (Vanilla 1.2+, replaced, separated) Draw instant markers
+			// (Vanilla 1.2+, replaced, separated, modified) Draw instant markers
 			float drawInstantLevelPercentage
 				= __instance.CurInstantLevelPercentage * prcntShrinkFactor;
+			// In Vanilla, the rect wouldn't've been shrunk by (curLevel < 1f)
+			// But the difference is so small that I avoid creating an extra rect instead
+			// Every vanilla need with instant have max of 1f
+			// so this wouldn't make a difference anyways without some unseen mods
 			if (drawInstantLevelPercentage >= 0f)
-				DrawBarInstantMarkerAt(shrunkRect, drawInstantLevelPercentage);
+				DrawBarInstantMarkerAt(needRect, drawInstantLevelPercentage);
 
 			// (Vanilla 1.2+) Draw tutorial highlights
 			if (!def.tutorHighlightTag.NullOrEmpty())
@@ -313,6 +315,7 @@ namespace NeedBarOverflow.Patches
 
 		// A replacement implementation of Widgets.FillableBar
 		// In order to handle need overflows
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Rect FillableBar(Rect rect, float curLevelPercentage)
 		{
 			Rect shrunkRect = rect;
