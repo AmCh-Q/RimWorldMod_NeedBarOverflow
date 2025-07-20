@@ -2,15 +2,14 @@
 <Patch>
   <Operation Class="PatchOperationFindMod">
     <mods>
-      <li>Dust Bunnies</li>
+      <li>Vanilla Races Expanded - Fungoid</li>
     </mods>
     <match Class="PatchOperationAddModExtension">
-      <xpath>Defs/ThingDef[defName="Crows_DustBunnyRace"]</xpath>
+      <xpath>Defs/GeneDef[defName="VRE_MindCoalescence"]</xpath>
       <value>
         <li Class = "NeedBarOverflow.DisableNeedOverflowExtension">
           <disableOverflowNeeds>
-            <li>Need_Food</li>
-            <li>Need_Chemical</li>
+            <li>Need_Mood</li>
           </disableOverflowNeeds>
         </li>
       </value>

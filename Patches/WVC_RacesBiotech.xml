@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <!-- I am not sure if this is needed, but I got a report saying that this Gene Causes food overflow... -->
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>WVC - Xenotypes and Genes</li>
+    </mods>
+    <match Class="PatchOperationAddModExtension">
+      <xpath>Defs/GeneDef[defName="WVC_DeadStomach"]</xpath>
+      <value>
+        <li Class = "NeedBarOverflow.DisableNeedOverflowExtension">
+          <disableOverflowNeeds>
+            <li>Need_Food</li>
+          </disableOverflowNeeds>
+        </li>
+      </value>
+    </match>
+  </Operation>
+</Patch>
