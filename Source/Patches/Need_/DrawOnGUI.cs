@@ -52,14 +52,14 @@ namespace NeedBarOverflow.Patches
 		static Need_DrawOnGUI()
 		{
 			// Use static constructor to grab GUI Textures
-#if v1_2 // 1.2 had class "TexButton" as "internal" (too small, not worth reflection)
+#if l1_2    // 1.2 had class "TexButton" as "internal" (too small, not worth reflection)
 			Plus = ContentFinder<Texture2D>.Get("UI/Buttons/Plus");
 			Minus = ContentFinder<Texture2D>.Get("UI/Buttons/Minus");
 #else
 			Plus = TexButton.Plus;
 			Minus = TexButton.Minus;
 #endif
-#if l1_3 // 1.2 - 1.3 has this field as "protected" (too small, not worth reflection)
+#if l1_3    // 1.2 - 1.3 has this field as "protected" (too small, not worth reflection)
 			BarFullTexHor
 				= SolidColorMaterials.NewSolidColorTexture(new Color(0.2f, 0.8f, 0.85f));
 #else
