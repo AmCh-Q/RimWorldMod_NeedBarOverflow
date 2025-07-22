@@ -13,15 +13,19 @@ namespace NeedBarOverflow.ModCompat
 	// Vanilla Nutrient Paste Expanded
 	// https://steamcommunity.com/sharedfiles/filedetails/?id=2920385763
 	public sealed class VanillaNutrientPasteExpanded() : Patch_Single(
-		original: Helpers
-			.TypeByName("VNPE.Building_Dripper")?
-			.MethodNullable("TickRare"),
+		original: ModsConfig.IsActive("VanillaExpanded.VNutrientE")
+		? GenTypes.GetTypeInAnyAssembly("VNPE.Building_Dripper")?
+			.MethodNullable("TickRare") : null,
 		postfix: PostfixMethod)
 	{
 		public static readonly AccessTools.FieldRef<object, CompFacility>? fr_facilityComp;
 		static VanillaNutrientPasteExpanded()
 		{
-			FieldInfo? f_facilityComp = Helpers.TypeByName("VNPE.Building_Dripper")?.GetField("facilityComp", Consts.bindAll);
+			if (!ModsConfig.IsActive("VanillaExpanded.VNutrientE"))
+				return;
+			FieldInfo? f_facilityComp
+				= GenTypes.GetTypeInAnyAssembly("VNPE.Building_Dripper")?
+				.GetField("facilityComp", Consts.bindAll);
 			if (f_facilityComp is null)
 				fr_facilityComp = null;
 			else

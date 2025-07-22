@@ -57,16 +57,16 @@ namespace NeedBarOverflow
 			// VFE-Ancients Compatibility
 			if (VFEAncients_HasPower is not null)
 				return VFEAncients_HasPower;
-			if (!ModLister.HasActiveModWithName("Vanilla Factions Expanded - Ancients"))
+			if (!ModsConfig.IsActive("VanillaExpanded.VFEA"))
 				return null;
 
 			Type? t_PowerWorker_Hunger
-				= Helpers.TypeByName("VFEAncients.PowerWorker_Hunger");
+				= GenTypes.GetTypeInAnyAssembly("VFEAncients.PowerWorker_Hunger");
 			if (t_PowerWorker_Hunger is null)
 				return null;
 
 			Type? t_VFEAncients_HarmonyPatches_Helpers
-				= Helpers.TypeByName("VFEAncients.HarmonyPatches.Helpers");
+				= GenTypes.GetTypeInAnyAssembly("VFEAncients.HarmonyPatches.Helpers");
 			if (t_VFEAncients_HarmonyPatches_Helpers is null)
 				return null;
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Emit;
+using Verse;
 
 namespace NeedBarOverflow.Patches.ModCompat
 {
@@ -14,19 +15,21 @@ namespace NeedBarOverflow.Patches.ModCompat
 	public sealed class Character_Editor_AAddNeed() : Patch_Multi(
 #if v1_5
 		// Version 1.5 only -- Mod used obfuscated method name
-		original: [
-			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
+		original: ModsConfig.IsActive("void.charactereditor") ?
+		[
+			GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+f")?
 			.MethodNullable(name: "a", parameters: [typeof(Need)]),
-			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
+			GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+f")?
 			.MethodNullable(name: "b", parameters: [typeof(Need)])
-		],
+		] : [],
 #else
-		original: [
-			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
+		original: ModsConfig.IsActive("void.charactereditor") ?
+		[
+			GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
 			.MethodNullable(name: "AAddNeed", parameters: [typeof(Need)]),
-			Helpers.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
+			GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
 			.MethodNullable(name: "ASubNeed", parameters: [typeof(Need)])
-		],
+		] : [],
 #endif
 		transpiler: TranspilerMethod)
 	{

@@ -19,7 +19,7 @@ namespace NeedBarOverflow.Patches
 		public override void Toggle()
 		{
 			Toggle(Setting_Common.Enabled(typeof(Need_Beauty))
-				&& !ModLister.HasActiveModWithName("Performance Optimizer"));
+				&& !ModsConfig.IsActive("Taranchuk.PerformanceOptimizer"));
 		}
 		public override void Toggle(bool enable)
 		{

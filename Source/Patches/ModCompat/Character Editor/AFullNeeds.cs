@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Emit;
+using Verse;
 
 namespace NeedBarOverflow.Patches.ModCompat
 {
@@ -13,13 +14,13 @@ namespace NeedBarOverflow.Patches.ModCompat
 	public sealed class Character_Editor_AFullNeeds() : Patch_Single(
 #if v1_5
 		// Version 1.5 only -- Mod used obfuscated method name
-		original: Helpers
-			.TypeByName("CharacterEditor.CEditor+EditorUI+f")?
-			.MethodNullable(name: "a", parameters: []),
+		original: ModsConfig.IsActive("void.charactereditor")
+		? GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+f")?
+			.MethodNullable(name: "a", parameters: []) : null,
 #else
-		original: Helpers
-			.TypeByName("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-			.MethodNullable(name: "AFullNeeds", parameters: []),
+		original: ModsConfig.IsActive("void.charactereditor")
+		? GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
+			.MethodNullable(name: "AFullNeeds", parameters: []) : null,
 #endif
 		transpiler: TranspilerMethod)
 	{

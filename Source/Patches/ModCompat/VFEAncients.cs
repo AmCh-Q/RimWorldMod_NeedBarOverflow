@@ -19,12 +19,12 @@ namespace NeedBarOverflow.ModCompat
 
 		static VFEAncients()
 		{
-			active = ModLister.HasActiveModWithName("Vanilla Factions Expanded - Ancients");
+			active = ModsConfig.IsActive("VanillaExpanded.VFEA");
 			if (!active)
 				return;
 
-			t_PowerDef = Helpers.TypeByName("VFEAncients.PowerDef");
-			t_PowerTracker = Helpers.TypeByName("VFEAncients.Pawn_PowerTracker");
+			t_PowerDef = GenTypes.GetTypeInAnyAssembly("VFEAncients.PowerDef");
+			t_PowerTracker = GenTypes.GetTypeInAnyAssembly("VFEAncients.Pawn_PowerTracker");
 			Debug.Assert(t_PowerDef is not null, "VFEAncients.t_PowerDef is not null");
 			Debug.Assert(t_PowerTracker is not null, "VFEAncients.t_PowerTracker is not null");
 

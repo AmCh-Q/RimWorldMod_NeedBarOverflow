@@ -13,14 +13,6 @@ namespace NeedBarOverflow
 {
 	internal static class Helpers
 	{
-		internal static Type? TypeByName(string tostringname)
-		{
-			return GenTypes
-				.AllTypes
-				.Where(type => type.ToString() == tostringname)
-				.FirstOrDefault();
-		}
-
 		internal static bool MethodMatch(MethodInfo method, string name, Type[]? parameters)
 		{
 			if (method is null || name.NullOrEmpty())
