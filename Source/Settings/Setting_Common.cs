@@ -55,13 +55,11 @@ namespace NeedBarOverflow
 				.Where(needType => needType is not null)
 				.Distinct()
 				.ToDictionary(needType => needType.FullName);
-			Log.Message("static Setting_Common Mid");
 			NeedTypesByName[typeof(Need).FullName] = typeof(Need);
 			NeedDefByType = DefDatabase<NeedDef>.AllDefsListForReading
 				.Where(needDef => needDef.needClass is not null)
 				.GroupBy(needDef => needDef.needClass)
 				.ToDictionary(group => group.Key, group => group.Distinct().ToArray());
-			Log.Message("static Setting_Common End");
 		}
 
 		public static bool AnyEnabled => overflow.Any(x => x.Value > 0f);
