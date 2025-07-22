@@ -25,14 +25,8 @@ namespace NeedBarOverflow
 			=> DefOfHelper.EnsureInitializedInCtor(typeof(ModDefOf));
 #pragma warning restore CS8618
 	}
-
-	[StaticConstructorOnStartup]
 	public static class Refs
 	{
-		static Refs()
-		{
-			LoadDelegate_VFEAncients();
-		}
 
 		public static readonly MethodInfo
 			m_CanOverflow = ((Func<Need, bool>)DisablingDefs.CanOverflow).Method,
@@ -49,42 +43,5 @@ namespace NeedBarOverflow
 		public static readonly FieldInfo
 			f_curLevelInt = typeof(Need).Field("curLevelInt"),
 			f_needPawn = typeof(Need).Field("pawn");
-
-		public static Func<Thing, bool>? VFEAncients_HasPower { get; private set; }
-
-		public static Func<Thing, bool>? LoadDelegate_VFEAncients()
-		{
-			// VFE-Ancients Compatibility
-			if (VFEAncients_HasPower is not null)
-				return VFEAncients_HasPower;
-			if (!ModsConfig.IsActive("VanillaExpanded.VFEA"))
-				return null;
-
-			Type? t_PowerWorker_Hunger
-				= GenTypes.GetTypeInAnyAssembly("VFEAncients.PowerWorker_Hunger");
-			if (t_PowerWorker_Hunger is null)
-				return null;
-
-			Type? t_VFEAncients_HarmonyPatches_Helpers
-				= GenTypes.GetTypeInAnyAssembly("VFEAncients.HarmonyPatches.Helpers");
-			if (t_VFEAncients_HarmonyPatches_Helpers is null)
-				return null;
-
-			MethodInfo? m_VFEAncients_HasPower
-				= t_VFEAncients_HarmonyPatches_Helpers
-				.MethodNullable("HasPower",
-					parameters: [typeof(Thing)],
-					generics: [t_PowerWorker_Hunger]);
-			if (m_VFEAncients_HasPower is null)
-				return null;
-
-			VFEAncients_HasPower
-				= (Func<Thing, bool>)
-				Delegate.CreateDelegate(
-				typeof(Func<Thing, bool>),
-				m_VFEAncients_HasPower, false);
-			VFEAncients_HasPower.NotNull(nameof(VFEAncients_HasPower));
-			return VFEAncients_HasPower;
-		}
 	}
 }
