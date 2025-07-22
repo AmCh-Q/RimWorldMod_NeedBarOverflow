@@ -21,6 +21,7 @@ namespace NeedBarOverflow.Patches
 	{
 		public override void Toggle()
 			=> Toggle(Setting_Common.AnyEnabled);
+
 		public static float Adjusted_MaxLevel(Need need, Pawn pawn)
 		{
 			float originalMax = need.MaxLevel;
@@ -31,9 +32,11 @@ namespace NeedBarOverflow.Patches
 			if (mult < 1)
 				return originalMax;
 			if (type == typeof(Need_Food))
-				return Mathf.Max(originalMax * mult, originalMax + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
+				return Mathf.Max(originalMax * mult,
+					originalMax + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
 			return originalMax * mult;
 		}
+
 		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
@@ -41,62 +44,74 @@ namespace NeedBarOverflow.Patches
 				= ((Func<Need, Pawn, float>)Adjusted_MaxLevel).Method;
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
 			int state = 0;
-			Label skipAdjustLabel = ilg.DefineLabel();
-			Label needAdjustLabel = ilg.DefineLabel();
+			Label floorLabel = ilg.DefineLabel();
+			Label finishLabel = ilg.DefineLabel();
 			for (int i = 0; i < instructionList.Count; i++)
 			{
+				// Pass current instruction normally
 				CodeInstruction codeInstruction = instructionList[i];
-				// In this case, we've reached the portion of code to patch
-				if (state == 0 && i >= 1 && i < instructionList.Count - 4 &&
-					// Haven't patched yet, and not at very beginning or end
-					// The new value to be clamped is on top of stack
-					instructionList[i - 1].opcode == OpCodes.Ldarg_1 &&
-					// The vanilla method would load 0d
-					codeInstruction.LoadsConstant(0d) &&
-					// The vanilla method would load MaxLevel
-					instructionList[i + 1].opcode == OpCodes.Ldarg_0 &&
-					instructionList[i + 2].Calls(Refs.get_MaxLevel) &&
-					// The vanilla method would call Clamp(new value, 0f, MaxLevel)
-					instructionList[i + 3].Calls(Refs.m_Clamp) &&
-					// There is an instruction after everything is done
-					//   (It's stfld but what it is doesn't matter)
-					instructionList.Count > i + 4)
-				{
-					state = 1;
-					// First check if f_curLevelInt < new value
-					// Load f_curLevelInt
-					yield return new CodeInstruction(OpCodes.Ldarg_0);
-					yield return new CodeInstruction(OpCodes.Ldfld, Refs.f_curLevelInt);
-					// Load new value
-					yield return new CodeInstruction(OpCodes.Ldarg_1);
-					// Jump if f_curLevelInt < new value
-					yield return new CodeInstruction(OpCodes.Blt_S, needAdjustLabel);
-
-					// Case 1: f_curLevelInt >= new value
-					//   that means the new value did not increase
-					yield return codeInstruction; // Load 0f
-												  // Get Max(the new value, 0f) on stack
-					yield return new CodeInstruction(OpCodes.Call, Refs.m_Max);
-					// Skip to end
-					yield return new CodeInstruction(OpCodes.Br_S, skipAdjustLabel);
-
-					// Case 2: f_curLevelInt < new value
-					//   that means the new value increased and need clamping
-					// Load the adjusted MaxLevel value
-					yield return new CodeInstruction(OpCodes.Ldarg_0).WithLabels(needAdjustLabel);
-					yield return new CodeInstruction(OpCodes.Call, m_Adjusted_MaxLevel);
-					// Get Min(the new value, adjusted MaxLevel)
-					yield return new CodeInstruction(OpCodes.Call, Refs.m_Min);
-
-					// Done, this is the instruction after everything is done
-					yield return instructionList[i + 4].WithLabels(skipAdjustLabel);
-					// Then skip the original methods
-					//   as well as the original line after done
-					i += 4;
-					continue;
-				}
-				// Normal instuctions outside of portion of interest, pass normally
 				yield return codeInstruction;
+
+				// If the code does not match all of below, continue
+				if (!(
+					// Not patched yet
+					state == 0 &&
+					// The newValue to be clamped is on top of stack
+					codeInstruction.opcode == OpCodes.Ldarg_1 &&
+					// The vanilla method would load 0f
+					instructionList[i + 1].LoadsConstant(0f) &&
+					// The vanilla method would load MaxLevel
+					instructionList[i + 2].opcode == OpCodes.Ldarg_0 &&
+					instructionList[i + 3].Calls(Refs.get_MaxLevel) &&
+					// The vanilla method would call Clamp(newValue, 0f, MaxLevel)
+					instructionList[i + 4].Calls(Refs.m_Clamp) &&
+					// There is one more instruction after that
+					i < instructionList.Count - 5))
+					continue;
+
+				// Enter patch
+				state = 1;
+				// 1st: if (newValue <= f_curLevelInt) (not increasing)
+				// Load newValue
+				yield return new CodeInstruction(OpCodes.Ldarg_1);
+				// Load f_curLevelInt
+				yield return new CodeInstruction(OpCodes.Ldarg_0);
+				yield return new CodeInstruction(OpCodes.Ldfld, Refs.f_curLevelInt);
+				// Skip if (newValue <= f_curLevelInt) (not increasing)
+				yield return new CodeInstruction(OpCodes.Ble_S, floorLabel);
+
+				// 2nd: if (newValue <= MaxLevel) (not overflowing vanilla max)
+				// Load newValue
+				yield return new CodeInstruction(OpCodes.Ldarg_1);
+				// Load MaxLevel
+				yield return new CodeInstruction(OpCodes.Ldarg_0);
+				yield return new CodeInstruction(OpCodes.Callvirt, Refs.get_MaxLevel);
+				// Skip if (newValue <= MaxLevel) (not overflowing)
+				yield return new CodeInstruction(OpCodes.Ble_S, finishLabel);
+
+				// 3rd: Both increasing and overflowing
+				// -> need clamping by adjusted max
+				// Load the adjusted MaxLevel value
+				yield return new CodeInstruction(OpCodes.Ldarg_0);
+				yield return new CodeInstruction(OpCodes.Dup);
+				yield return new CodeInstruction(OpCodes.Ldfld, Refs.f_needPawn);
+				yield return new CodeInstruction(OpCodes.Call, m_Adjusted_MaxLevel);
+				// Get Min(newValue, adjusted MaxLevel)
+				yield return new CodeInstruction(OpCodes.Call, Refs.m_Min);
+				// Skip past zero flooring
+				yield return new CodeInstruction(OpCodes.Br_S, finishLabel);
+
+				// 4th: Not increasing
+				// Need clamping by 0 min
+				yield return new CodeInstruction(OpCodes.Ldc_R4, 0f).WithLabels(floorLabel); // Load 0f
+				yield return new CodeInstruction(OpCodes.Call, Refs.m_Max);
+
+				// Done, this is the instruction after everything is done
+				yield return instructionList[i + 5].WithLabels(finishLabel);
+
+				// Then skip the original methods
+				//   as well as the original line after done
+				i += 5;
 			}
 			Debug.CheckTranspiler(state, 1);
 		}
