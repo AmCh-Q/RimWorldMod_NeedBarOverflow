@@ -25,7 +25,7 @@ namespace NeedBarOverflow.Patches
 		{
 			List<Patch> patches = GenTypes
 				.AllTypes
-				//.AsParallel()
+				.AsParallel()
 				.Where(type
 					=> !type.IsAbstract
 					&& type.IsSubclassOf(typeof(Patch)))
