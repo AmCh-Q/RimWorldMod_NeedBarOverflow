@@ -44,9 +44,8 @@ Additionally, the property BaseIntermediateOutputPath has to be set here, explan
 		<TargetType>library</TargetType>
 		<!-- Code Generation Options
 		https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/code-generation -->
-		<DebugType>none</DebugType>
-		<Optimize Condition=" '$(Configuration)' != 'Debug' ">true</Optimize>
-		<Optimize Condition=" '$(Configuration)' == 'Debug' ">false</Optimize>
-		<Deterministic>true</Deterministic>
+		<DebugType>embedded</DebugType>
+		<Optimize>true</Optimize>
+		<!-- <Deterministic>true</Deterministic> -->
 	</PropertyGroup>
 </Project>

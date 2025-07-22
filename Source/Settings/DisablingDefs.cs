@@ -152,7 +152,7 @@ namespace NeedBarOverflow
 			if (canOverflow)
 				cacheVal |= CanOverflowMask;
 			pawnCanOverflowCache[needId] = cacheVal;
-			Debug.Message(pawn.Name + " CanOverflow: " + canOverflow);
+			//Debug.Message(pawn.Name + " CanOverflow: " + canOverflow);
 			return canOverflow;
 		}
 
