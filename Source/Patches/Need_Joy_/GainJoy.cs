@@ -99,6 +99,8 @@ namespace NeedBarOverflow.Patches
 					// Load the setting max joy instead of 1f
 					// So that Vanilla will calculate Min(amount, MaxJoy - CurLevel) instead
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
+					yield return new CodeInstruction(OpCodes.Dup);
+					yield return new CodeInstruction(OpCodes.Ldfld, Refs.f_needPawn);
 					yield return new CodeInstruction(OpCodes.Call, Refs.m_CanOverflow);
 					yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabels[0]);
 					yield return codeInstruction;

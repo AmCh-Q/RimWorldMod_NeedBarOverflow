@@ -1,13 +1,14 @@
-﻿using HarmonyLib;
-using NeedBarOverflow.Needs;
-using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
+using HarmonyLib;
+using RimWorld;
+using Verse;
+using NeedBarOverflow.Needs;
 
 namespace NeedBarOverflow.Patches
 {
@@ -20,10 +21,10 @@ namespace NeedBarOverflow.Patches
 	{
 		public override void Toggle()
 			=> Toggle(Setting_Common.AnyEnabled);
-		public static float Adjusted_MaxLevel(Need need)
+		public static float Adjusted_MaxLevel(Need need, Pawn pawn)
 		{
 			float originalMax = need.MaxLevel;
-			if (!DisablingDefs.CanOverflow(need))
+			if (!DisablingDefs.CanOverflow(need, pawn))
 				return originalMax;
 			Type type = need.GetType();
 			float mult = Setting_Common.GetOverflow(type);
@@ -37,7 +38,7 @@ namespace NeedBarOverflow.Patches
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			MethodInfo m_Adjusted_MaxLevel
-				= ((Func<Need, float>)Adjusted_MaxLevel).Method;
+				= ((Func<Need, Pawn, float>)Adjusted_MaxLevel).Method;
 			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
 			int state = 0;
 			Label skipAdjustLabel = ilg.DefineLabel();

@@ -90,25 +90,13 @@ namespace NeedBarOverflow
 		const int CheckTickMask = Int32.MaxValue;
 		const int CanOverflowMask = Int32.MinValue;
 
-		// Fast access method for private member: need -> pawn
-		public static readonly AccessTools.FieldRef<Need, Pawn>
-			fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>(Refs.f_needPawn);
-
 		static DisablingDefs()
 		{
 			Log.Message("DisablingDefs static constructor called");
 			LoadDisablingDefs();
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool CanOverflow(Need need)
-			=> CanOverflow(need, fr_needPawn(need));
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool CanOverflow(Need need, Pawn pawn)
-			=> CanOverflow_Cached(need, pawn);
-
-		public static bool CanOverflow_Cached(Need need, Pawn pawn)
 		{
 			// Check if cache unavailable
 			int needId = need.GetHashCode();

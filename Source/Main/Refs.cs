@@ -29,7 +29,7 @@ namespace NeedBarOverflow
 	{
 
 		public static readonly MethodInfo
-			m_CanOverflow = ((Func<Need, bool>)DisablingDefs.CanOverflow).Method,
+			m_CanOverflow = ((Func<Need, Pawn, bool>)DisablingDefs.CanOverflow).Method,
 			m_Clamp = ((Func<float, float, float, float>)Mathf.Clamp).Method,
 			m_Clamp01 = ((Func<float, float>)Mathf.Clamp01).Method,
 			m_Min = ((Func<float, float, float>)Mathf.Min).Method,
