@@ -35,7 +35,7 @@ Additionally, the property BaseIntermediateOutputPath has to be set here, explan
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<!-- Language options
 		https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language -->
-		<DefineConstants Condition=" '$(Configuration)' == 'Debug' ">DEBUG</DefineConstants>
+		<DefineConstants Condition=" '$(Configuration)' == 'Debug' ">$(DefineConstants);DEBUG</DefineConstants>
 		<LangVersion>latestMajor</LangVersion>
 		<Nullable>enable</Nullable>
 		<!-- Output options

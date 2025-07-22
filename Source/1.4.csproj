@@ -3,13 +3,13 @@
 	<PropertyGroup>
 		<!-- Framework properties
 		https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#framework-properties -->
-		<TargetFramework>net48</TargetFramework>
+		<TargetFramework>net472</TargetFramework>
 		<!-- Language options
 		https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language -->
 		<DefineConstants>$(DefineConstants);g1_2;g1_3;g1_4;v1_4;l1_4;l1_5;l1_6;l1_7;l1_8;l1_9;</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.4.3901" />
-		<PackageReference Include="Lib.Harmony" Version="2.2.*" ExcludeAssets="runtime" />
+		<PackageReference Include="Lib.Harmony" Version="2.2.2" ExcludeAssets="runtime" />
 	</ItemGroup>
 </Project>
