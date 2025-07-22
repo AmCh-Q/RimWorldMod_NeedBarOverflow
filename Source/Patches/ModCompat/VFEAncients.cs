@@ -11,9 +11,8 @@ namespace NeedBarOverflow.ModCompat
 {
 	public static class VFEAncients
 	{
-		public static readonly bool active;
-		static VFEAncients()
-			=> active = ModsConfig.IsActive("VanillaExpanded.VFEA");
+		public static readonly bool active
+			= ModsConfig.IsActive("VanillaExpanded.VFEA");
 
 		private static List<Def>? disablingDefs_modExtension;
 		private static List<Def> DisablingDefs_modExtension
