@@ -24,7 +24,7 @@ namespace NeedBarOverflow.DisableNeedOverflow
 	{
 		// Storage for tip strings of loaded modExtension info
 		// Won't change since XML reload require game restart
-		private static string? defDisableInfo;
+		public static string? defDisableInfo;
 
 		// List of defs disabling needs
 		public static readonly List<Def>[] disablingDefs = [[], [], [], []];
