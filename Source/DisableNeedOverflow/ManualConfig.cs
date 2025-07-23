@@ -86,6 +86,7 @@ namespace NeedBarOverflow.DisableNeedOverflow
 
 		public static void AddSettings(Listing_Standard ls)
 		{
+			ls.GapLine();
 			foreach (StatName_DisableType disableType in Enum.GetValues(typeof(StatName_DisableType)))
 			{
 				if (disableType == StatName_DisableType.Gene && !Defs.biotechActive)

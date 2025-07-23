@@ -42,7 +42,7 @@ namespace NeedBarOverflow.DisableNeedOverflow
 		public static bool Membership(Pawn pawn)
 		{
 #if g1_5
-			if (pawn.IsMutant)
+			if (ModsConfig.BiotechActive && pawn.IsMutant)
 			{
 				if (pawn.Faction?.IsPlayer ?? false)
 					return membershipSetting[(int)MemberShipType.AllowPlayerMutants];
@@ -59,9 +59,9 @@ namespace NeedBarOverflow.DisableNeedOverflow
 					return membershipSetting[(int)MemberShipType.AllowColonists];
 #else
 					if (pawn.IsSlave)
-						return !membershipSetting[(int)MemberShipType.AllowColonySlaves];
+						return membershipSetting[(int)MemberShipType.AllowColonySlaves];
 					else
-						return !membershipSetting[(int)MemberShipType.AllowColonists];
+						return membershipSetting[(int)MemberShipType.AllowColonists];
 #endif
 				}
 				if (pawn.guest?.HostFaction == Faction.OfPlayer)
@@ -92,6 +92,18 @@ namespace NeedBarOverflow.DisableNeedOverflow
 			Array Enums = Enum.GetValues(typeof(MemberShipType));
 			foreach (MemberShipType key in Enums)
 			{
+#if l1_2
+				if (key == MemberShipType.AllowColonySlaves)
+					continue;
+#endif
+				if ((key == MemberShipType.AllowPlayerMutants
+					|| key == MemberShipType.AllowOtherMutants)
+#if g1_5
+					&& !ModLister.BiotechInstalled
+#endif
+					)
+					continue;
+
 				SettingLabel sl = new(Strings.AllowOverf, key.ToString());
 				bool setting = membershipSetting[(int)key];
 				ls.CheckboxLabeled(sl.TranslatedLabel(), ref setting);

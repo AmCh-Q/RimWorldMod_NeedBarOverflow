@@ -26,7 +26,7 @@
   <NBO.AllowOverf.AllowPlayerOthers>允许其余殖民地生物的需求条溢出</NBO.AllowOverf.AllowPlayerOthers>
   <NBO.AllowOverf.AllowOthers>允许其余任何生物的需求条溢出</NBO.AllowOverf.AllowOthers>
 
-  <NBO.NoOverf.ListDefs>以下情况由于XML设定会禁止列出的需求条溢出：{0}</NBO.NoOverf.ListDefs>
+  <NBO.NoOverf.ListDefs>以下情况（由于XML设定）会禁止列出的需求条溢出：{0}</NBO.NoOverf.ListDefs>
   <NBO.NoOverf.ListDefs_Tip>XML设定需要重启生效，但可以详细设置哪些需求条禁止溢出，而下面的文本框只能禁止全部需求条溢出。</NBO.NoOverf.ListDefs_Tip>
   <NBO.NoOverf.NoDefsFound>（未找到任何XML设定）</NBO.NoOverf.NoDefsFound>
   <NBO.NoOverf.OfRace>属于以下种族的生物：</NBO.NoOverf.OfRace>
