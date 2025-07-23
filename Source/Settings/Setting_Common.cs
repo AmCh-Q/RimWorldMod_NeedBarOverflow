@@ -100,7 +100,7 @@ namespace NeedBarOverflow
 			}
 			Scribe_Collections.Look(ref vanillaOverflow, Strings.overflow, LookMode.Value, LookMode.Value);
 			vanillaOverflow ??= [];
-			DisablingDefs.ExposeData();
+			DisableNeedOverflow.Common.ExposeData();
 			if (Scribe.mode != LoadSaveMode.LoadingVars)
 				return;
 			overflow = new(dfltOverflow);

@@ -34,8 +34,6 @@ namespace NeedBarOverflow.Patches
 				{
 					state = 1;
 					yield return codeInstruction;
-					yield return new CodeInstruction(OpCodes.Dup);
-					yield return new CodeInstruction(OpCodes.Ldfld, Refs.f_needPawn);
 					yield return new CodeInstruction(OpCodes.Call, Refs.m_CanOverflow);
 					yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabel);
 					yield return instructionList[i + 1];

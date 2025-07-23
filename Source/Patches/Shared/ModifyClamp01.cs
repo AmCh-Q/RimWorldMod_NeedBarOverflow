@@ -35,10 +35,8 @@ namespace NeedBarOverflow.Patches
 				state++; // increment counter of how many times the patch ran
 
 				// stackTop, before ops: the value to be clamped
-				// value = CanOverflow(this, this.pawn) ? Clamp(value, 0f, MaxValue) : Clamp01(value)
+				// value = CanOverflow(this) ? Clamp(value, 0f, MaxValue) : Clamp01(value)
 				yield return new CodeInstruction(OpCodes.Ldarg_0);
-				yield return new CodeInstruction(OpCodes.Dup);
-				yield return new CodeInstruction(OpCodes.Ldfld, Refs.f_needPawn);
 				yield return new CodeInstruction(OpCodes.Call, Refs.m_CanOverflow);
 				yield return new CodeInstruction(OpCodes.Brtrue_S, jumpLabels[0]);
 				yield return codeInstruction;

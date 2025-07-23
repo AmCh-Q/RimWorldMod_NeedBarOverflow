@@ -56,8 +56,10 @@ namespace NeedBarOverflow.Patches
 				pawnsWithFoodOverflow.Clear();
 			}
 		}
+
 		private static bool HasHediff(Pawn pawn)
 			=> pawn.health?.hediffSet.HasHediff(ModDefOf.FoodOverflow) ?? false;
+
 		private static void RemoveHediff(Pawn pawn, bool removeFromList = true)
 		{
 #if l1_4
@@ -71,6 +73,7 @@ namespace NeedBarOverflow.Patches
 			if (removeFromList)
 				pawnsWithFoodOverflow.Remove(pawn);
 		}
+
 		public static void UpdateHediff(Pawn pawn)
 		{
 			if (pawn.needs?.food is not Need_Food need
@@ -82,12 +85,13 @@ namespace NeedBarOverflow.Patches
 			pawnsWithFoodOverflow[pawn] = -1f;
 			UpdateHediff(need.CurLevel, need, pawn);
 		}
+
 		private static void UpdateHediff(
 			float newValue, Need_Food need, Pawn pawn)
 		{
 			Pawn_HealthTracker health = pawn.health;
 			if (newValue <= need.MaxLevel
-				|| !DisablingDefs.CanOverflow(need, pawn))
+				|| !DisableNeedOverflow.Common.CanOverflow(need))
 			{
 				if (newValue > need.MaxLevel)
 					need.CurLevel = need.MaxLevel;

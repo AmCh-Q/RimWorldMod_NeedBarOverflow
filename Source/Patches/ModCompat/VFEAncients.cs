@@ -84,19 +84,26 @@ namespace NeedBarOverflow.ModCompat
 		{
 			if (!active)
 				return string.Empty;
-			return '\n' + DisablingDefs.DisableStringOfDefs(Strings.NoOverf_OfVFEAPower, DisablingDefs_modExtension);
+			return '\n' + DisableNeedOverflow
+				.DefExtension
+				.DisableStringOfDefs(
+				Strings.NoOverf_OfVFEAPower,
+				DisablingDefs_modExtension);
 		}
 
-		public static bool DisableDueToPower(Pawn pawn, Type needType)
+		public static bool CheckByType_Power(Pawn pawn, Type needType)
 		{
 			if (!active)
-				return false;
+				return true;
 			if (DisablingDefs_modExtension!.Count == 0)
-				return false;
+				return true;
 			// Check
 			Def[] powerDefs = [.. GetPawnPowerDefs(pawn)];
-			return powerDefs.Any(powerDef
-				=> DisablingDefs.DisableDueToDefExtension(powerDef, needType));
+			return powerDefs.All(powerDef
+				=> DisableNeedOverflow
+				.DefExtension
+				.DefModExtension(
+					powerDef, needType));
 		}
 	}
 }

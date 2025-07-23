@@ -34,6 +34,7 @@ namespace NeedBarOverflow
 			healthStats = nameof(healthStats),
 			disablingDefs = nameof(disablingDefs),
 			checkIntervalTicks = nameof(checkIntervalTicks),
+			membership = nameof(membership),
 
 			ShowSettings = nameof(ShowSettings),
 			ShowHiddenSettings = nameof(ShowHiddenSettings),
@@ -41,6 +42,7 @@ namespace NeedBarOverflow
 			OverfPerc = nameof(OverfPerc),
 
 			NoOverf = nameof(NoOverf),
+			AllowOverf = nameof(AllowOverf),
 
 			HealthDetails = nameof(HealthDetails),
 			HealthEnable_ = nameof(HealthEnable_),

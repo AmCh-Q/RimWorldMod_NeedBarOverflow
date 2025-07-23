@@ -9,8 +9,8 @@
       <value>
         <li Class = "NeedBarOverflow.DisableNeedOverflowExtension">
           <disableOverflowNeeds>
-            <li>Need_Rest</li>
             <li>Need_Joy</li>
+            <li>RimWorld.Need_Rest</li>
           </disableOverflowNeeds>
         </li>
       </value>

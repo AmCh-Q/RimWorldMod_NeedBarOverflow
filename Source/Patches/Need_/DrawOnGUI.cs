@@ -287,6 +287,8 @@ namespace NeedBarOverflow.Patches
 
 			if (Widgets.ButtonImage(plusRect.ContractedBy(4f), Plus))
 			{
+				// Remove cached value (recalculate if can overflow immediately)
+				DisableNeedOverflow.Cache.CanOverflow_Remove(__instance);
 #if l1_4 || !DEBUG
 				__instance.CurLevelPercentage += GetDevGizmosFloat();
 #else           // Vanilla does above anyways, so use above if not debugging
@@ -303,6 +305,8 @@ namespace NeedBarOverflow.Patches
 
 			if (Widgets.ButtonImage(minusRect.ContractedBy(4f), Minus))
 			{
+				// Remove cached value (recalculate if can overflow immediately)
+				DisableNeedOverflow.Cache.CanOverflow_Remove(__instance);
 #if l1_4 || !DEBUG
 				__instance.CurLevelPercentage -= GetDevGizmosFloat();
 #else           // Vanilla does above anyways, so use above if not debugging
@@ -315,7 +319,6 @@ namespace NeedBarOverflow.Patches
 
 		// A replacement implementation of Widgets.FillableBar
 		// In order to handle need overflows
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Rect FillableBar(Rect rect, float curLevelPercentage)
 		{
 			Rect shrunkRect = rect;

@@ -2,8 +2,8 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using HarmonyLib;
-using RimWorld;
 using UnityEngine;
+using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow
@@ -29,7 +29,7 @@ namespace NeedBarOverflow
 	{
 
 		public static readonly MethodInfo
-			m_CanOverflow = ((Func<Need, Pawn, bool>)DisablingDefs.CanOverflow).Method,
+			m_CanOverflow = ((Func<Need, bool>)DisableNeedOverflow.Common.CanOverflow).Method,
 			m_Clamp = ((Func<float, float, float, float>)Mathf.Clamp).Method,
 			m_Clamp01 = ((Func<float, float>)Mathf.Clamp01).Method,
 			m_Min = ((Func<float, float, float>)Mathf.Min).Method,
@@ -43,5 +43,8 @@ namespace NeedBarOverflow
 		public static readonly FieldInfo
 			f_curLevelInt = typeof(Need).Field("curLevelInt"),
 			f_needPawn = typeof(Need).Field("pawn");
+
+		public static readonly AccessTools.FieldRef<Need, Pawn>
+			fr_needPawn = AccessTools.FieldRefAccess<Need, Pawn>(f_needPawn);
 	}
 }

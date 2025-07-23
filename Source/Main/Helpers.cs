@@ -143,7 +143,9 @@ namespace NeedBarOverflow
 		{
 			if (!float.IsFinite(d))
 				return localize ? "∞" : d.ToString("F0", CultureInfo.InvariantCulture);
-			if (showAsPerc)
+			if (localize && d < 0f)
+				d = 0f;
+			else if (showAsPerc)
 				d *= 100f;
 			float abs = Mathf.Abs(d);
 			string result;

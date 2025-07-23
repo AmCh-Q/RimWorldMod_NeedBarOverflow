@@ -11,7 +11,7 @@
   <NBO.NoOverf.ShowSettings_Tip>You can disable Need Overflow for pawns under certain conditions. Note that this checkbox only hides/unhides the settings.</NBO.NoOverf.ShowSettings_Tip>
 
   <NBO.NoOverf.checkIntervalTicks>Maximum Update Frequency: Every {0} ticks</NBO.NoOverf.checkIntervalTicks>
-  <NBO.NoOverf.checkIntervalTicks_Tip>One second is equal to 60 ticks at normal speed. The default value of 1800 ticks represents checking once per 30 seconds. Update would only be done as needed, so the real update frequency may be lower.</NBO.NoOverf.checkIntervalTicks_Tip>
+  <NBO.NoOverf.checkIntervalTicks_Tip>One second is equal to 60 ticks at normal speed. Update would only be done as needed, so the real update frequency may be lower.</NBO.NoOverf.checkIntervalTicks_Tip>
 
   <NBO.NoOverf.ListDefs>The following condition would disable the listed Needs from overflowing due to XML settings:{0}</NBO.NoOverf.ListDefs>
   <NBO.NoOverf.ListDefs_Tip>XML settings require game restart, but allow for detailed configuration of which need overflow to disable, while the textboxes below only allow for blanket disabling of all needs from overflowing.</NBO.NoOverf.ListDefs_Tip>

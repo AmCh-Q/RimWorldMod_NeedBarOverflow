@@ -11,7 +11,7 @@
   <NBO.NoOverf.ShowSettings_Tip>可以設定在特定條件下禁止需求條溢出。注意這條設定本身只能顯示/隱藏選項細節。</NBO.NoOverf.ShowSettings_Tip>
 
   <NBO.NoOverf.checkIntervalTicks>最大檢查更新頻率：每{0}刻更新一次</NBO.NoOverf.checkIntervalTicks>
-  <NBO.NoOverf.checkIntervalTicks_Tip>正常速度下一秒等於60刻，而默認1800刻對應每30秒更新一次。實際更新按需進行，所以頻率可能更低。</NBO.NoOverf.checkIntervalTicks_Tip>
+  <NBO.NoOverf.checkIntervalTicks_Tip>正常速度下一秒等於60刻。實際更新按需進行，所以頻率可能更低。</NBO.NoOverf.checkIntervalTicks_Tip>
 
   <NBO.NoOverf.ListDefs>以下情況由於XML設定會禁止列出的需求條溢出：{0}</NBO.NoOverf.ListDefs>
   <NBO.NoOverf.ListDefs_Tip>XML設定需要重啓生效，但可以詳細設定哪些需求條禁止溢出，而下面的文本框只能禁止全部需求條溢出。</NBO.NoOverf.ListDefs_Tip>
@@ -29,7 +29,7 @@
   <NBO.NoOverf.Hediff>禁止部分健康狀態下需求條溢出</NBO.NoOverf.Hediff>
   <NBO.NoOverf.Hediff_Tip>當小人擁有以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的健康狀況/身體部件時將無法溢出需求條。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Hediff_Tip>
   <NBO.NoOverf.Gene>禁止部分基因下需求条溢出</NBO.NoOverf.Gene>
-  <NBO.NoOverf.Gene_Tip>當小人擁有以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的活躍基因時活跃基因時將無法溢出需求條。不活躍的基因不會影響需求條溢出。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Gene_Tip>
+  <NBO.NoOverf.Gene_Tip>當小人擁有以下列表的defNames（優先）或全名（以游戲加載的語言爲準）對應的活躍基因時將無法溢出需求條。不活躍的基因不會影響需求條溢出。列表用逗號分隔，不區分大小寫。模組成功識別的名字將會被高亮顯示。</NBO.NoOverf.Gene_Tip>
 
   <NBO.Need_Food.OverfEnabled>啓用食物值溢出</NBO.Need_Food.OverfEnabled>
   <NBO.Need_Food.OverfEnabled_Tip>允許小人的飲食條溢出</NBO.Need_Food.OverfEnabled_Tip>

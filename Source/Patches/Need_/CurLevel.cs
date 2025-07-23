@@ -22,10 +22,10 @@ namespace NeedBarOverflow.Patches
 		public override void Toggle()
 			=> Toggle(Setting_Common.AnyEnabled);
 
-		public static float Adjusted_MaxLevel(Need need, Pawn pawn)
+		public static float Adjusted_MaxLevel(Need need)
 		{
 			float originalMax = need.MaxLevel;
-			if (!DisablingDefs.CanOverflow(need, pawn))
+			if (!DisableNeedOverflow.Common.CanOverflow(need))
 				return originalMax;
 			Type type = need.GetType();
 			float mult = Setting_Common.GetOverflow(type);
@@ -41,8 +41,9 @@ namespace NeedBarOverflow.Patches
 			IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
 		{
 			MethodInfo m_Adjusted_MaxLevel
-				= ((Func<Need, Pawn, float>)Adjusted_MaxLevel).Method;
-			ReadOnlyCollection<CodeInstruction> instructionList = instructions.ToList().AsReadOnly();
+				= ((Func<Need, float>)Adjusted_MaxLevel).Method;
+			ReadOnlyCollection<CodeInstruction> instructionList
+				= instructions.ToList().AsReadOnly();
 			int state = 0;
 			Label floorLabel = ilg.DefineLabel();
 			Label finishLabel = ilg.DefineLabel();
@@ -93,8 +94,6 @@ namespace NeedBarOverflow.Patches
 				// -> need clamping by adjusted max
 				// Load the adjusted MaxLevel value
 				yield return new CodeInstruction(OpCodes.Ldarg_0);
-				yield return new CodeInstruction(OpCodes.Dup);
-				yield return new CodeInstruction(OpCodes.Ldfld, Refs.f_needPawn);
 				yield return new CodeInstruction(OpCodes.Call, m_Adjusted_MaxLevel);
 				// Get Min(newValue, adjusted MaxLevel)
 				yield return new CodeInstruction(OpCodes.Call, Refs.m_Min);
@@ -103,7 +102,7 @@ namespace NeedBarOverflow.Patches
 
 				// 4th: Not increasing
 				// Need clamping by 0 min
-				yield return new CodeInstruction(OpCodes.Ldc_R4, 0f).WithLabels(floorLabel); // Load 0f
+				yield return new CodeInstruction(OpCodes.Ldc_R4, 0f).WithLabels(floorLabel);
 				yield return new CodeInstruction(OpCodes.Call, Refs.m_Max);
 
 				// Done, this is the instruction after everything is done
