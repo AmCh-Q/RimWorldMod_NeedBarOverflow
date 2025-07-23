@@ -94,7 +94,7 @@ namespace NeedBarOverflow.DisableNeedOverflow
 			{
 				SettingLabel sl = new(Strings.AllowOverf, key.ToString());
 				bool setting = membershipSetting[(int)key];
-				ls.CheckboxLabeled(sl.TranslatedLabel(), ref setting, sl.TranslatedTip());
+				ls.CheckboxLabeled(sl.TranslatedLabel(), ref setting);
 				membershipSetting[(int)key] = setting;
 			}
 		}

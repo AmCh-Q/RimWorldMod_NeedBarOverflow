@@ -13,6 +13,19 @@
   <NBO.NoOverf.checkIntervalTicks>最大檢查更新頻率：每{0}刻更新一次</NBO.NoOverf.checkIntervalTicks>
   <NBO.NoOverf.checkIntervalTicks_Tip>正常速度下一秒等於60刻。實際更新按需進行，所以頻率可能更低。</NBO.NoOverf.checkIntervalTicks_Tip>
 
+  <NBO.AllowOverf.AllowColonists>允許殖民者的需求條溢出</NBO.AllowOverf.AllowColonists>
+  <NBO.AllowOverf.AllowColonySlaves>允許殖民地奴隸的需求條溢出</NBO.AllowOverf.AllowColonySlaves>
+  <NBO.AllowOverf.AllowColonyGuests>允許殖民地訪客的需求條溢出</NBO.AllowOverf.AllowColonyGuests>
+  <NBO.AllowOverf.AllowColonyPrisoners>允許殖民地囚犯的需求條溢出</NBO.AllowOverf.AllowColonyPrisoners>
+  <NBO.AllowOverf.AllowOtherHumans>允許其餘類人生物的需求條溢出</NBO.AllowOverf.AllowOtherHumans>
+  <NBO.AllowOverf.AllowPlayerAnimals>允許殖民地動物的需求條溢出</NBO.AllowOverf.AllowPlayerAnimals>
+  <NBO.AllowOverf.AllowWildAnimals>允許野生動物的需求條溢出</NBO.AllowOverf.AllowWildAnimals>
+  <NBO.AllowOverf.AllowOtherAnimals>允許其它動物的需求條溢出</NBO.AllowOverf.AllowOtherAnimals>
+  <NBO.AllowOverf.AllowPlayerMutants>允許殖民地異象生物的需求條溢出</NBO.AllowOverf.AllowPlayerMutants>
+  <NBO.AllowOverf.AllowOtherMutants>允許其它異象生物的需求條溢出</NBO.AllowOverf.AllowOtherMutants>
+  <NBO.AllowOverf.AllowPlayerOthers>允許其餘殖民地生物的需求條溢出</NBO.AllowOverf.AllowPlayerOthers>
+  <NBO.AllowOverf.AllowOthers>允許其餘任何生物的需求條溢出</NBO.AllowOverf.AllowOthers>
+
   <NBO.NoOverf.ListDefs>以下情況由於XML設定會禁止列出的需求條溢出：{0}</NBO.NoOverf.ListDefs>
   <NBO.NoOverf.ListDefs_Tip>XML設定需要重啓生效，但可以詳細設定哪些需求條禁止溢出，而下面的文本框只能禁止全部需求條溢出。</NBO.NoOverf.ListDefs_Tip>
   <NBO.NoOverf.NoDefsFound>（未找到任何XML設定）</NBO.NoOverf.NoDefsFound>

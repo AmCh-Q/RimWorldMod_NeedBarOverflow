@@ -13,6 +13,19 @@
   <NBO.NoOverf.checkIntervalTicks>Maximum Update Frequency: Every {0} ticks</NBO.NoOverf.checkIntervalTicks>
   <NBO.NoOverf.checkIntervalTicks_Tip>One second is equal to 60 ticks at normal speed. Update would only be done as needed, so the real update frequency may be lower.</NBO.NoOverf.checkIntervalTicks_Tip>
 
+  <NBO.AllowOverf.AllowColonists>Allow Colonists' Needs to Overflow</NBO.AllowOverf.AllowColonists>
+  <NBO.AllowOverf.AllowColonySlaves>Allow Colony Slaves' Needs to Overflow</NBO.AllowOverf.AllowColonySlaves>
+  <NBO.AllowOverf.AllowColonyGuests>Allow Colony Guests' Needs to Overflow</NBO.AllowOverf.AllowColonyGuests>
+  <NBO.AllowOverf.AllowColonyPrisoners>Allow Colony Prisoners' Needs to Overflow</NBO.AllowOverf.AllowColonyPrisoners>
+  <NBO.AllowOverf.AllowOtherHumans>Allow Other Humanlikes' Needs to Overflow</NBO.AllowOverf.AllowOtherHumans>
+  <NBO.AllowOverf.AllowPlayerAnimals>Allow Colony Animals' Needs to Overflow</NBO.AllowOverf.AllowPlayerAnimals>
+  <NBO.AllowOverf.AllowWildAnimals>Allow Wildlives' Needs to Overflow</NBO.AllowOverf.AllowWildAnimals>
+  <NBO.AllowOverf.AllowOtherAnimals>Allow Other Animals' Needs to Overflow</NBO.AllowOverf.AllowOtherAnimals>
+  <NBO.AllowOverf.AllowPlayerMutants>Allow Colony Mutants' Needs to Overflow</NBO.AllowOverf.AllowPlayerMutants>
+  <NBO.AllowOverf.AllowOtherMutants>Allow Other Mutants' Needs to Overflow</NBO.AllowOverf.AllowOtherMutants>
+  <NBO.AllowOverf.AllowPlayerOthers>Allow Other Colony Pawns' Needs to Overflow</NBO.AllowOverf.AllowPlayerOthers>
+  <NBO.AllowOverf.AllowOthers>Allow All Other Pawns' Needs to Overflow</NBO.AllowOverf.AllowOthers>
+
   <NBO.NoOverf.ListDefs>The following condition would disable the listed Needs from overflowing due to XML settings:{0}</NBO.NoOverf.ListDefs>
   <NBO.NoOverf.ListDefs_Tip>XML settings require game restart, but allow for detailed configuration of which need overflow to disable, while the textboxes below only allow for blanket disabling of all needs from overflowing.</NBO.NoOverf.ListDefs_Tip>
   <NBO.NoOverf.NoDefsFound>(No XML setting was found)</NBO.NoOverf.NoDefsFound>
