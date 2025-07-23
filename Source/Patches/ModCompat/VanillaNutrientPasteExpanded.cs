@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
-using RimWorld;
 using Verse;
+using RimWorld;
 using NeedBarOverflow.Needs;
 using NeedBarOverflow.Patches;
 

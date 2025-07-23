@@ -1,7 +1,7 @@
-﻿using RimWorld;
+﻿using Verse;
+using RimWorld;
 using NeedBarOverflow.Needs;
 using NeedBarOverflow.Patches;
-using Verse;
 
 namespace NeedBarOverflow.ModCompat
 {

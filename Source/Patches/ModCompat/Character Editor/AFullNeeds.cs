@@ -1,13 +1,14 @@
-﻿using HarmonyLib;
-using NeedBarOverflow.Needs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Emit;
+using HarmonyLib;
 using Verse;
+using NeedBarOverflow.Needs;
+using NeedBarOverflow.Patches;
 
-namespace NeedBarOverflow.Patches.ModCompat
+namespace NeedBarOverflow.ModCompat
 {
 	// Character Editor
 	// https://steamcommunity.com/sharedfiles/filedetails/?id=1874644848
