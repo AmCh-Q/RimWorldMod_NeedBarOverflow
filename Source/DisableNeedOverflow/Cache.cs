@@ -47,7 +47,7 @@ namespace NeedBarOverflow.DisableNeedOverflow
 			if (expireQueue.Count != 0 &&
 				currTick < expireQueue.Peek().First)
 			{
-				Debug.Message("Clearing cache");
+				Debug.Message("Clearing cache" + expireQueue.Count + "," + checkCache.Count);
 				checkCache.Clear();
 				expireQueue.Clear();
 			}
@@ -75,7 +75,6 @@ namespace NeedBarOverflow.DisableNeedOverflow
 			if (canOverflow)
 				currTick |= CanOverflowMask;
 			checkCache[needHash] = currTick;
-			Debug.Message("Cache set, lengths: " + expireQueue.Count + "," + checkCache.Count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
