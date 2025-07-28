@@ -10,9 +10,6 @@ namespace NeedBarOverflow.Needs
 {
 	public sealed partial class Setting_Food : IExposable
 	{
-		public static void ApplyFoodHediffSettings()
-			=> HealthStats.ApplyFoodHediffSettings();
-
 		public static class HealthStats
 		{
 			public enum HealthName

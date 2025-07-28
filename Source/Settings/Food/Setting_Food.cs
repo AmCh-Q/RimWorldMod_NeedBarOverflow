@@ -21,7 +21,7 @@ namespace NeedBarOverflow.Needs
 
 		static Setting_Food()
 		{
-			ApplyFoodHediffSettings();
+			HealthStats.ApplyFoodHediffSettings();
 		}
 
 		public void ExposeData()
