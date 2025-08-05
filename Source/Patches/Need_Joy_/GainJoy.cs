@@ -15,21 +15,21 @@ public sealed class Need_Joy_GainJoy() : Patch_Single(
 {
 	public override void Toggle()
 	{
-		Toggle(Setting_Common.Enabled(typeof(Need_Joy)),
-			OverflowStats_DrainGain<Need_Joy>.EffectEnabled(StatName_DrainGain.SlowGain));
+		bool enable = Setting_Common.Enabled(typeof(Need_Joy));
+		bool enableGain = OverflowStats_DrainGain<Need_Joy>.EffectEnabled(StatName_DrainGain.SlowGain);
+		Toggle(enable, enableGain);
 	}
 	public override void Toggle(bool enable)
 	{
-		Toggle(enable,
-			enable && OverflowStats_DrainGain<Need_Joy>
-			.EffectEnabled(StatName_DrainGain.SlowGain));
+		bool enableGain = OverflowStats_DrainGain<Need_Joy>.EffectEnabled(StatName_DrainGain.SlowGain);
+		Toggle(enable, enableGain);
 	}
 	public void Toggle(bool enable, bool enableGain)
 	{
-		if (enable)
-			Dopatch(enable, enableGain);
 		if (!enable || !enableGain)
 			Unpatch(enable, enableGain);
+		if (enable)
+			Dopatch(enable, enableGain);
 	}
 	protected override void Dopatch()
 		=> Dopatch(true, OverflowStats_DrainGain<Need_Joy>.EffectEnabled(StatName_DrainGain.SlowGain));
@@ -37,9 +37,6 @@ public sealed class Need_Joy_GainJoy() : Patch_Single(
 		=> Unpatch(false, false);
 	private void Dopatch(bool enable, bool enableGain)
 	{
-		Debug.Message("Patching Method "
-			+ Original!.DeclaringType.Name
-			+ ":" + Original.Name);
 		HarmonyLib.Patches? patches = PatchProcessor.GetPatchInfo(Original);
 		bool patchTranspiler = enable &&
 			(patches is null || patches.Transpilers.All(p => p.owner != harmony.Id));
@@ -47,6 +44,9 @@ public sealed class Need_Joy_GainJoy() : Patch_Single(
 			(patches is null || patches.Prefixes.All(p => p.owner != harmony.Id));
 		if (!patchTranspiler && !patchPrefix)
 			return;
+		Debug.Message("Patching Method "
+			+ Original!.DeclaringType.Name
+			+ ":" + Original.Name);
 		harmony.Patch(Original,
 			prefix: Prefix,
 			transpiler: Transpiler);
@@ -62,6 +62,9 @@ public sealed class Need_Joy_GainJoy() : Patch_Single(
 			patches.Prefixes.Any(p => p.owner == harmony.Id);
 		if (!unpatchTranspiler && !unpatchPrefix)
 			return;
+		Debug.Message("Unpatching Method "
+			+ Original!.DeclaringType.Name
+			+ ":" + Original.Name);
 		HarmonyPatchType unpatchType = HarmonyPatchType.All;
 		if (unpatchTranspiler && !unpatchPrefix)
 			unpatchType = HarmonyPatchType.Transpiler;
@@ -87,13 +90,19 @@ public sealed class Need_Joy_GainJoy() : Patch_Single(
 		{
 			CodeInstruction codeInstruction = instructionList[i];
 			// In this case, we've reached the portion of code to patch
-			if (state == 0 && i >= 1 && i < instructionList.Count - 4 &&// Haven't Patched yet, and not at the end of instructions
-				instructionList[i - 1].opcode == OpCodes.Ldarg_1 &&  // Vanilla would load amount of joy to add
-				codeInstruction.LoadsConstant(1d) &&                 // Vanilla would load const 1f
+			if (// Haven't Patched yet, and not at the end of instructions
+				state == 0 && i >= 1 && i < instructionList.Count - 4 &&
+				// Vanilla would load amount of joy to add
+				instructionList[i - 1].opcode == OpCodes.Ldarg_1 &&
+				// Vanilla would load const 1f
+				codeInstruction.LoadsConstant(1d) &&
+				// Vanilla would get CurLevel
 				instructionList[i + 1].opcode == OpCodes.Ldarg_0 &&
-				instructionList[i + 2].Calls(Refs.get_CurLevel) &&// Vanilla would get CurLevel
-				instructionList[i + 3].opcode == OpCodes.Sub &&      // Vanilla would calculate 1f - CurLevel
-				instructionList[i + 4].Calls(Refs.m_Min))         // Vanilla would calculate Min(amount, 1f - CurLevel)
+				instructionList[i + 2].Calls(Refs.get_CurLevel) &&
+				// Vanilla would calculate 1f - CurLevel
+				instructionList[i + 3].opcode == OpCodes.Sub &&
+				// Vanilla would calculate Min(amount, 1f - CurLevel)
+				instructionList[i + 4].Calls(Refs.m_Min))
 			{
 				state = 1;
 				// Load the setting max joy instead of 1f
