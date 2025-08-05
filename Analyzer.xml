@@ -2,8 +2,10 @@
 <!--
 This is for the mod "Dubs Performance Analyzer"
 There will be an extra tab tracking the performance of methods in this mod.
+For Harmony Patches, use the tab already built in to the analyzer mod.
 这个是给"Dubs Performance Analyzer"模组使用的。
 添加了一个追踪本模组运行性能的页面。
+对于Harmony补丁的性能分析，请参照"Dubs Performance Analyzer"模组本身自带的有关页面。
 -->
 <Analyzer>
   <NeedBarOverflow>
