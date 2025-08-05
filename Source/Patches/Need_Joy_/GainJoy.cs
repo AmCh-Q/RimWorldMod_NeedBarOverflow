@@ -48,8 +48,8 @@ public sealed class Need_Joy_GainJoy() : Patch_Single(
 			+ Original!.DeclaringType.Name
 			+ ":" + Original.Name);
 		harmony.Patch(Original,
-			prefix: Prefix,
-			transpiler: Transpiler);
+			prefix: patchPrefix ? Prefix : null,
+			transpiler: patchTranspiler ? Transpiler : null);
 	}
 	private void Unpatch(bool enable, bool enableGain)
 	{
