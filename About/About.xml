@@ -6,7 +6,7 @@
   <author>AmCh</author>
   <url>https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow</url>
   <description>
-Pawn's Need Bars are no longer clamped to 100%.\n\nThis mod allows pawn's need bars to overflow, so children/modded races with small bodysize/pets can actually eat a full meal and get all of the nutrition, instead of wasting a good chunk of them due to hunger being capped at 100% in vanilla. It can also allow needs such as sleep and recreation to overflow.\n\nBy default (configurable) a pawn can reach up to 200% food (higher if the pawn is small, allowing consuming at least 1 extra unit of food), 200% sleep, and 200% recreation.
+Pawn's Need Bars are no longer clamped to 100%.\n\nThis mod allows pawn's need bars to overflow, so children/modded races with small bodysize/pets can actually eat a full meal and get all of the nutrition, instead of wasting a good chunk of them due to hunger being capped at 100% in vanilla. It can also allow needs such as sleep and recreation to overflow.\n\nBy default (configurable) a pawn can reach up to 200% on food (or at least 1 extra unit of food if the pawn is small), sleep, recreation, comfort, beauty, and chemical needs.
   </description>
   <steamAppId>2566316158</steamAppId>
   <supportedVersions>
