@@ -116,7 +116,8 @@ public sealed partial class Setting_Food : IExposable
 		}
 
 		// Singleton pattern (except it's not readonly so we can ref it)
-		private OverflowStats_Food() { }
+		private OverflowStats_Food()
+		{ }
 		public static OverflowStats_Food instance = new();
 	}
 }

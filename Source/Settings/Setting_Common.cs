@@ -1,8 +1,8 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using RimWorld;
 using Verse;
 
 namespace NeedBarOverflow;
@@ -62,7 +62,8 @@ public sealed class Setting_Common : IExposable
 	}
 
 	// Singleton pattern (except it's not readonly so we can ref it)
-	private Setting_Common() { }
+	private Setting_Common()
+	{ }
 	public static Setting_Common instance = new();
 
 	public static bool AnyEnabled => overflow.Values.Any(x => x > 0f);

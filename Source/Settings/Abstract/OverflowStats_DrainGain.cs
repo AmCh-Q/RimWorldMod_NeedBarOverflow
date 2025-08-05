@@ -1,8 +1,8 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Verse;
-using RimWorld;
 
 namespace NeedBarOverflow.Needs;
 
@@ -83,6 +83,7 @@ public sealed class OverflowStats_DrainGain<T> : IExposable where T : Need
 	}
 
 	// Singleton pattern (except it's not readonly so we can ref it)
-	private OverflowStats_DrainGain() { }
+	private OverflowStats_DrainGain()
+	{ }
 	public static OverflowStats_DrainGain<T> instance = new();
 }

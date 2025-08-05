@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Verse;
 
@@ -20,10 +19,10 @@ public sealed partial class Setting_Food : Setting<Need_Food>, IExposable
 
 	static Setting_Food()
 		=> Debug.StaticConstructorLog(typeof(Setting_Food));
-	//HealthStats.ApplyFoodHediffSettings();
 
 	// Singleton pattern (except it's not readonly so we can ref it)
-	private Setting_Food() { }
+	private Setting_Food()
+	{ }
 	public static Setting_Food instance = new();
 
 	public void ExposeData()
