@@ -35,9 +35,9 @@ namespace NeedBarOverflow.Patches
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return new CodeInstruction(OpCodes.Callvirt, Refs.get_CurLevel);
 					yield return codeInstruction;
-					yield return new CodeInstruction(OpCodes.Ldc_I4, (int)StatName_DG.SlowGain);
+					yield return new CodeInstruction(OpCodes.Ldc_I4, (int)StatName_DrainGain.SlowGain);
 					yield return new CodeInstruction(OpCodes.Call,
-						((Func<int, float>)OverflowStats<Need_KillThirst>.EffectStat).Method);
+						((Func<int, float>)OverflowStats_DrainGain<Need_KillThirst>.EffectStat).Method);
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					yield return new CodeInstruction(OpCodes.Callvirt, Refs.get_CurLevelPercentage);
 					yield return new CodeInstruction(OpCodes.Call, AdjustGain.m_adjust);

@@ -10,12 +10,12 @@ namespace NeedBarOverflow.Patches
 		postfix: PostFixMethod)
 	{
 		public override void Toggle()
-			=> Toggle(OverflowStats<Need_Joy>.EffectEnabled(StatName_DG.FastDrain));
+			=> Toggle(OverflowStats_DrainGain<Need_Joy>.EffectEnabled(StatName_DrainGain.FastDrain));
 
 		public static void PostFixMethod(Need_Joy __instance, ref float __result)
 		{
 			__result = AdjustDrain.AdjustMethod(__result,
-				OverflowStats<Need_Joy>.EffectStat(StatName_DG.FastDrain),
+				OverflowStats_DrainGain<Need_Joy>.EffectStat(StatName_DrainGain.FastDrain),
 				__instance.CurInstantLevelPercentage);
 		}
 	}

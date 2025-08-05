@@ -51,6 +51,8 @@ namespace NeedBarOverflow.Patches
 
 		static Need_DrawOnGUI()
 		{
+			Debug.Message("static Patches.Need_DrawOnGUI constructor called");
+
 			// Use static constructor to grab GUI Textures
 #if l1_2    // 1.2 had class "TexButton" as "internal" (too small, not worth reflection)
 			Plus = ContentFinder<Texture2D>.Get("UI/Buttons/Plus");

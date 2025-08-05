@@ -31,9 +31,12 @@ namespace NeedBarOverflow.DisableNeedOverflow
 			{ string.Empty, string.Empty },
 		};
 
-		public static void LoadDisablingDefs()
+		static ManualConfig()
+			=> Debug.StaticConstructorLog(typeof(ManualConfig));
+
+		public static void ParseDisablingDefs()
 		{
-			Debug.Message("DisablingDefs.LoadDisabledDefs() called");
+			Debug.Message("DisablingDefs.ParseDisablingDefs() called");
 			foreach (StatName_DisableType key in Enum.GetValues(typeof(StatName_DisableType)))
 				ParseDisablingDefs(key, disablingDefs_str[(int)key]);
 		}
@@ -123,7 +126,6 @@ namespace NeedBarOverflow.DisableNeedOverflow
 			{
 				foreach (StatName_DisableType key in Enum.GetValues(typeof(StatName_DisableType)))
 					scribeDefDict.Add(key, disablingDefs_str[(int)key]);
-				LoadDisablingDefs();
 			}
 			Scribe_Collections.Look(
 				ref scribeDefDict,
@@ -139,6 +141,7 @@ namespace NeedBarOverflow.DisableNeedOverflow
 						?? dfltDisablingDefNames[(int)key];
 				}
 			}
+			ParseDisablingDefs();
 		}
 	}
 }

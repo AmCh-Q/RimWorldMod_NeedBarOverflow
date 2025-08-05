@@ -12,18 +12,18 @@ namespace NeedBarOverflow.Patches
 		private static bool patchDrain, patchGain;
 		public override void Toggle()
 		{
-			bool enableDrain = OverflowStats<Need_Rest>
-				.EffectEnabled(StatName_DG.FastDrain);
-			bool enableGain = OverflowStats<Need_Rest>
-				.EffectEnabled(StatName_DG.SlowGain);
+			bool enableDrain = OverflowStats_DrainGain<Need_Rest>
+				.EffectEnabled(StatName_DrainGain.FastDrain);
+			bool enableGain = OverflowStats_DrainGain<Need_Rest>
+				.EffectEnabled(StatName_DrainGain.SlowGain);
 			Toggle(enableDrain, enableGain);
 		}
 		public override void Toggle(bool enable)
 		{
-			bool enableDrain = enable && OverflowStats<Need_Rest>
-				.EffectEnabled(StatName_DG.FastDrain);
-			bool enableGain = enable && OverflowStats<Need_Rest>
-				.EffectEnabled(StatName_DG.SlowGain);
+			bool enableDrain = enable && OverflowStats_DrainGain<Need_Rest>
+				.EffectEnabled(StatName_DrainGain.FastDrain);
+			bool enableGain = enable && OverflowStats_DrainGain<Need_Rest>
+				.EffectEnabled(StatName_DrainGain.SlowGain);
 			Toggle(enableDrain, enableGain);
 		}
 		public void Toggle(bool enableDrain, bool enableGain)
@@ -38,9 +38,9 @@ namespace NeedBarOverflow.Patches
 				base.Toggle(true);
 		}
 		private static float DrainMultiplier()
-		  => OverflowStats<Need_Rest>.EffectStat(StatName_DG.FastDrain);
+		  => OverflowStats_DrainGain<Need_Rest>.EffectStat(StatName_DrainGain.FastDrain);
 		private static float GainMultiplier()
-		  => OverflowStats<Need_Rest>.EffectStat(StatName_DG.SlowGain);
+		  => OverflowStats_DrainGain<Need_Rest>.EffectStat(StatName_DrainGain.SlowGain);
 		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions)
 		{

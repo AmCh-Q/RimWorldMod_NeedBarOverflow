@@ -1,9 +1,9 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Verse;
+using RimWorld;
 
 namespace NeedBarOverflow.DisableNeedOverflow
 {
@@ -41,16 +41,6 @@ namespace NeedBarOverflow.DisableNeedOverflow
 		{
 			// Erase the top bit of the currTick for canOverflow
 			currTick &= CheckTickMask;
-			// Check queue
-			// if currTick is smaller than queue elements, the queue is in the future
-			// (likely due to save loading) so we clear it and the cache
-			if (expireQueue.Count != 0 &&
-				currTick < expireQueue.Peek().First)
-			{
-				Debug.Message("Clearing cache" + expireQueue.Count + "," + checkCache.Count);
-				checkCache.Clear();
-				expireQueue.Clear();
-			}
 			// Record the save in queue
 			expireQueue.Enqueue(new(currTick, needHash));
 
@@ -75,6 +65,13 @@ namespace NeedBarOverflow.DisableNeedOverflow
 			if (canOverflow)
 				currTick |= CanOverflowMask;
 			checkCache[needHash] = currTick;
+		}
+
+		public static void CanOverflow_Clear()
+		{
+			Debug.Message("Clearing cache" + expireQueue.Count + "," + checkCache.Count);
+			checkCache.Clear();
+			expireQueue.Clear();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

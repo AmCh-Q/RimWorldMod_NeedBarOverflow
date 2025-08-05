@@ -12,9 +12,9 @@ namespace NeedBarOverflow.Patches
 		transpiler: TranspilerMethod)
 	{
 		public override void Toggle()
-			=> Toggle(OverflowStats<Need_KillThirst>.EffectEnabled(StatName_DG.FastDrain));
+			=> Toggle(OverflowStats_DrainGain<Need_KillThirst>.EffectEnabled(StatName_DrainGain.FastDrain));
 		private static float DrainMultiplier()
-			=> OverflowStats<Need_KillThirst>.EffectStat(StatName_DG.FastDrain);
+			=> OverflowStats_DrainGain<Need_KillThirst>.EffectStat(StatName_DrainGain.FastDrain);
 		private static IEnumerable<CodeInstruction> TranspilerMethod(
 			IEnumerable<CodeInstruction> instructions)
 			=> AdjustDrain.TranspilerMethod(instructions, DrainMultiplier);

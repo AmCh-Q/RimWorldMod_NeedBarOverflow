@@ -9,6 +9,9 @@ namespace NeedBarOverflow.Patches
 		public override void Toggle()
 			=> Toggle(true);
 		private static void PostfixMethod()
-			=> Need_Food_NeedInterval.ResetHediff();
+		{
+			Need_Food_NeedInterval.ResetHediff();
+			DisableNeedOverflow.Cache.CanOverflow_Clear();
+		}
 	}
 }

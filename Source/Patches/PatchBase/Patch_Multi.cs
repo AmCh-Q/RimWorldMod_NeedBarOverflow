@@ -26,8 +26,7 @@ namespace NeedBarOverflow.Patches
 			Delegate? transpiler = null,
 			Delegate? finalizer = null)
 			: base([.. original
-					.Where(d => d is not null)
-					.Select(d => d!.Method)
+					.Select(d => d?.Method)
 					.Where(m => m is not null)
 					.OrderBy(m => m!.Name)],
 				new Patches(prefix, postfix, transpiler, finalizer))

@@ -3,15 +3,13 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 
-[assembly: AssemblyVersionAttribute("1.4.1.0")]
+[assembly: AssemblyVersionAttribute("1.4.2.0")]
 
 namespace NeedBarOverflow
 {
 	public class NeedBarOverflow : Mod
 	{
-		private static Settings? settings;
-		public static Settings Settings
-			=> settings ??= ModInstance!.GetSettings<Settings>();
+		public static Settings? settings;
 		public static NeedBarOverflow? ModInstance { get; private set; }
 
 		public NeedBarOverflow(ModContentPack content) : base(content)
@@ -25,7 +23,7 @@ namespace NeedBarOverflow
 
 		public override void DoSettingsWindowContents(Rect inRect)
 		{
-			Settings.DoWindowContents(inRect);
+			settings?.DoWindowContents(inRect);
 			base.DoSettingsWindowContents(inRect);
 		}
 	}

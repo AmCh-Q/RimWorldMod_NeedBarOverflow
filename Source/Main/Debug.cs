@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using Verse;
@@ -9,6 +10,10 @@ namespace NeedBarOverflow
 	{
 		private const string prefix = "[Need Bar Overflow]: ";
 		private static Stopwatch? watch;
+
+		[Conditional("DEBUG")]
+		internal static void StaticConstructorLog(Type t)
+			=> Message("static constructor of type [" + t.FullName + "] called");
 
 		[Conditional("DEBUG")]
 		internal static void Message(string s)

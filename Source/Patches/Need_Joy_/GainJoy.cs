@@ -16,13 +16,13 @@ namespace NeedBarOverflow.Patches
 		public override void Toggle()
 		{
 			Toggle(Setting_Common.Enabled(typeof(Need_Joy)),
-				OverflowStats<Need_Joy>.EffectEnabled(StatName_DG.SlowGain));
+				OverflowStats_DrainGain<Need_Joy>.EffectEnabled(StatName_DrainGain.SlowGain));
 		}
 		public override void Toggle(bool enable)
 		{
 			Toggle(enable,
-				enable && OverflowStats<Need_Joy>
-				.EffectEnabled(StatName_DG.SlowGain));
+				enable && OverflowStats_DrainGain<Need_Joy>
+				.EffectEnabled(StatName_DrainGain.SlowGain));
 		}
 		public void Toggle(bool enable, bool enableGain)
 		{
@@ -32,7 +32,7 @@ namespace NeedBarOverflow.Patches
 				Unpatch(enable, enableGain);
 		}
 		protected override void Dopatch()
-			=> Dopatch(true, OverflowStats<Need_Joy>.EffectEnabled(StatName_DG.SlowGain));
+			=> Dopatch(true, OverflowStats_DrainGain<Need_Joy>.EffectEnabled(StatName_DrainGain.SlowGain));
 		protected override void Unpatch()
 			=> Unpatch(false, false);
 		private void Dopatch(bool enable, bool enableGain)
@@ -72,7 +72,7 @@ namespace NeedBarOverflow.Patches
 		private static void PrefixMethod(Need_Joy __instance, ref float amount)
 		{
 			amount = AdjustGain.AdjustMethod(amount,
-				OverflowStats<Need_Joy>.EffectStat(StatName_DG.SlowGain),
+				OverflowStats_DrainGain<Need_Joy>.EffectStat(StatName_DrainGain.SlowGain),
 				__instance.CurInstantLevelPercentage);
 		}
 		private static IEnumerable<CodeInstruction> TranspilerMethod(

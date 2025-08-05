@@ -6,29 +6,21 @@ using Verse;
 
 namespace NeedBarOverflow.Patches
 {
-	[StaticConstructorOnStartup]
 	public static class PatchApplier
 	{
 		public static List<Patch> Patches { get; } = [];
 		static PatchApplier()
 		{
-			Debug.WatchStart("static PatchApplier()");
+			Debug.WatchStart($"static constructor of type [{typeof(PatchApplier).FullName}] called");
 			LoadPatches();
-			Debug.WatchLog($"static PatchApplier(): {Patches.Count} patches loaded");
-			ApplyPatches();
-			Debug.WatchLog("Done Applying Patches");
-			Debug.WatchStop();
+			Debug.WatchStop($"static constructor: {Patches.Count} patches loaded");
 		}
 		public static bool Patched(Type type)
 			=> Patches.Any(patch => patch.GetType() == type);
-		public static void LoadPatches()
+		private static void LoadPatches()
 		{
-			List<Patch> patches = GenTypes
-				.AllTypes
-				//.AsParallel()
-				.Where(type
-					=> !type.IsAbstract
-					&& type.IsSubclassOf(typeof(Patch)))
+			List<Patch> patches = typeof(Patch)
+				.AllSubclassesNonAbstract()
 				.Select(CreatePatch)
 				.Where(patch => patch is not null && patch.Patchable)
 				.Cast<Patch>()
@@ -50,17 +42,16 @@ namespace NeedBarOverflow.Patches
 					existing.GetType().Name, "]."));
 			}
 		}
-		public static Patch? CreatePatch(Type patchClass)
+		private static Patch? CreatePatch(Type patchClass)
 		{
 			try
 			{
 				Patch patch = (Patch)Activator.CreateInstance(patchClass);
 				return patch;
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				Debug.Warning("Error in patch " + patchClass);
-				Debug.Warning(ex.ToString());
+				Debug.Warning($"Error in patch {patchClass}: {e}");
 				return null;
 			}
 		}

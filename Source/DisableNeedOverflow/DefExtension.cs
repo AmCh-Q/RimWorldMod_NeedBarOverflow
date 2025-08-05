@@ -19,7 +19,6 @@ namespace NeedBarOverflow
 
 namespace NeedBarOverflow.DisableNeedOverflow
 {
-	[StaticConstructorOnStartup]
 	public static class DefExtension
 	{
 		// Storage for tip strings of loaded modExtension info
@@ -30,10 +29,7 @@ namespace NeedBarOverflow.DisableNeedOverflow
 		public static readonly List<Def>[] disablingDefs = [[], [], [], []];
 
 		static DefExtension()
-		{
-			Log.Message("DisablingDefs static constructor called");
-			ManualConfig.LoadDisablingDefs();
-		}
+			=> Debug.StaticConstructorLog(typeof(DefExtension));
 
 		public static bool DefModExtension(Def def, Type needType)
 		{
