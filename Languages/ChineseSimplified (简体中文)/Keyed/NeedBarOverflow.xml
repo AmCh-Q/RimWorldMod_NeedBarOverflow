@@ -117,13 +117,13 @@
 
   <NBO.Need_Chemical.OverfEnabled>启用（成瘾）药品值溢出</NBO.Need_Chemical.OverfEnabled>
   <NBO.Need_Chemical.OverfEnabled_Tip>允许小人的药品值溢出，这种需求条一般会要求某类特定药品，常因为成瘾而出现。</NBO.Need_Chemical.OverfEnabled_Tip>
-  <NBO.Need_Chemical.OverfPerc>药品值溢出倍率：{0}</NBO.Need_Chemical.OverfPerc>
-  <NBO.Need_Chemical.OverfPerc_Tip>小人最大可以达到{0}药品值</NBO.Need_Chemical.OverfPerc_Tip>
+  <NBO.Need_Chemical.OverfPerc>药品值（成瘾）溢出倍率：{0}</NBO.Need_Chemical.OverfPerc>
+  <NBO.Need_Chemical.OverfPerc_Tip>小人最大可以达到{0}（成瘾导致的）药品值</NBO.Need_Chemical.OverfPerc_Tip>
 
   <NBO.Need_Chemical_Any.OverfEnabled>启用（特性）药品值溢出</NBO.Need_Chemical_Any.OverfEnabled>
   <NBO.Need_Chemical_Any.OverfEnabled_Tip>允许小人的药品值溢出，这种需求条一般不区分特定药品，常因为小人特性而出现。</NBO.Need_Chemical_Any.OverfEnabled_Tip>
-  <NBO.Need_Chemical_Any.OverfPerc>药品值溢出倍率：{0}</NBO.Need_Chemical_Any.OverfPerc>
-  <NBO.Need_Chemical_Any.OverfPerc_Tip>小人最大可以达到{0}药品值</NBO.Need_Chemical_Any.OverfPerc_Tip>
+  <NBO.Need_Chemical_Any.OverfPerc>药品值（特性）溢出倍率：{0}</NBO.Need_Chemical_Any.OverfPerc>
+  <NBO.Need_Chemical_Any.OverfPerc_Tip>小人最大可以达到{0}（特性导致的）药品值</NBO.Need_Chemical_Any.OverfPerc_Tip>
 
   <NBO.Need_Outdoors.OverfEnabled>启用户外值溢出</NBO.Need_Outdoors.OverfEnabled>
   <NBO.Need_Outdoors.OverfEnabled_Tip>允许小人的户外值溢出</NBO.Need_Outdoors.OverfEnabled_Tip>
