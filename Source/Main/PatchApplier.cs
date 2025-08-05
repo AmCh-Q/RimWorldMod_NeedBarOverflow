@@ -12,7 +12,7 @@ public static class PatchApplier
 	{
 		Debug.WatchStart($"static constructor of type [{typeof(PatchApplier).FullName}] called");
 		LoadPatches();
-		Debug.WatchStop($"static constructor: {Patches.Count} patches loaded");
+		Debug.WatchStop($"static constructor of type [{typeof(PatchApplier).FullName}]: {Patches.Count} patches loaded");
 	}
 	public static bool Patched(Type type)
 		=> Patches.Any(patch => patch.GetType() == type);
