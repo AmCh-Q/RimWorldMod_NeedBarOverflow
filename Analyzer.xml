@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This is for the mod "Dubs Performance Analyzer"
+There will be an extra tab tracking the performance of methods in this mod.
+这个是给"Dubs Performance Analyzer"模组使用的。
+添加了一个追踪本模组运行性能的页面。
+-->
+<Analyzer>
+  <NeedBarOverflow>
+    <Types>
+      <li>NeedBarOverflow.DisableNeedOverflow.Cache</li>
+      <li>NeedBarOverflow.DisableNeedOverflow.ChecksByType</li>
+      <li>NeedBarOverflow.DisableNeedOverflow.Common</li>
+      <li>NeedBarOverflow.DisableNeedOverflow.DefExtension</li>
+      <li>NeedBarOverflow.DisableNeedOverflow.Defs</li>
+      <li>NeedBarOverflow.DisableNeedOverflow.ManualConfig</li>
+      <li>NeedBarOverflow.ModCompat.VFEAncients</li>
+      <li>NeedBarOverflow.Setting_Common</li>
+    </Types>
+    <NestedTypes>
+      <li>NeedBarOverflow.Needs.Setting_Food</li>
+    </NestedTypes>
+  </NeedBarOverflow>
+</Analyzer>
