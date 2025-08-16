@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-[assembly: AssemblyVersionAttribute("1.4.3.0")]
+[assembly: AssemblyVersionAttribute("1.4.4.0")]
 namespace NeedBarOverflow;
 
 public class NeedBarOverflow : Mod
