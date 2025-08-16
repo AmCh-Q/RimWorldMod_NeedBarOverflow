@@ -163,22 +163,26 @@ public static class Utility
 	public static bool AddSimpleSetting(Listing_Standard ls, Type needType)
 	{
 		LsGap(ls);
-		float f0 = Setting_Common.GetOverflow(needType);
-		float f1 = f0;
-		bool b1 = f1 >= 0f;
-		f1 = b1 ? f1 : -f1 - 1f;
-		string numString = f1.CustomToString(true, true);
+		float raw = Setting_Common.GetOverflow(needType);
+		bool enabled = raw >= 0f;
+		float lvl = enabled ? raw : -raw - 1f;
+		string numString = lvl.CustomToString(true, true);
 		SettingLabel sl = new(needType.Name,
-			b1 ? Strings.OverfPerc : Strings.OverfEnabled);
-		ls.CheckboxLabeled(sl.TranslatedLabel(numString), ref b1, sl.TranslatedTip(numString));
+			enabled ? Strings.OverfPerc : Strings.OverfEnabled);
+		ls.CheckboxLabeled(sl.TranslatedLabel(numString),
+			ref enabled, sl.TranslatedTip(numString));
 		ls.Gap(ls.verticalSpacing * -0.5f);
-		if (b1)
+		if (enabled)
 		{
-			f1 = AddNumSetting(ls, f1, true,
+			lvl = AddNumSetting(ls, lvl, true,
 				0f, 2.002f, 1f, float.PositiveInfinity, null, sl.tip, true);
 		}
-		if (f1 != f0)
-			Setting_Common.SetOverflow(needType, b1 ? f1 : -f1 - 1f);
-		return b1;
+		else
+		{
+			lvl = -lvl - 1f;
+		}
+		if (lvl != raw)
+			Setting_Common.SetOverflow(needType, lvl);
+		return enabled;
 	}
 }
