@@ -59,6 +59,7 @@ public sealed class Setting_Common : IExposable
 			.Where(needDef => needDef.needClass is not null)
 			.GroupBy(needDef => needDef.needClass)
 			.ToDictionary(group => group.Key, group => group.Distinct().ToArray());
+		AddOrUpdateOverflow();
 	}
 
 	// Singleton pattern (except it's not readonly so we can ref it)
@@ -93,9 +94,28 @@ public sealed class Setting_Common : IExposable
 			overflow[typeof(Need)] = value;
 	}
 
+	public static void AddOrUpdateOverflow(IEnumerable<KeyValuePair<string, float>>? overflowData = null)
+	{
+		// Loading order: dfltOverflow > modsOverflow > overflowDataForExpose
+		// Result priority: overflowDataForExpose > modsOverflow > dfltOverflow
+		if (overflowData is null)
+			overflowData = modsOverflow;
+		else
+			overflowData = modsOverflow.Concat(overflowData);
+		overflow = new(dfltOverflow);
+		foreach (KeyValuePair<string, float> need in overflowData)
+		{
+			if (NeedTypesByName.TryGetValue(need.Key, out Type needType))
+				overflow[needType] = need.Value;
+			else
+				Debug.Message("Did not find need type of name " + need.Key);
+		}
+	}
+
 	public void ExposeData()
 	{
 		Debug.Message("Common.ExposeData() called with Scribe.mode == " + Scribe.mode);
+
 		Dictionary<string, float> overflowDataForExpose = [];
 		if (Scribe.mode == LoadSaveMode.Saving)
 		{
@@ -103,21 +123,9 @@ public sealed class Setting_Common : IExposable
 				overflowDataForExpose.Add(need.Key.FullName, need.Value);
 		}
 		Scribe_Collections.Look(ref overflowDataForExpose, Strings.overflow, LookMode.Value, LookMode.Value);
+		if (Scribe.mode == LoadSaveMode.LoadingVars)
+			AddOrUpdateOverflow(overflowDataForExpose);
+
 		DisableNeedOverflow.Common.ExposeData();
-
-		if (Scribe.mode != LoadSaveMode.LoadingVars)
-			return;
-		overflowDataForExpose ??= [];
-
-		// Loading order: dfltOverflow > modsOverflow > overflowDataForExpose
-		// Result priority: overflowDataForExpose > modsOverflow > dfltOverflow
-		overflow = new(dfltOverflow);
-		foreach (KeyValuePair<string, float> need in modsOverflow.Concat(overflowDataForExpose))
-		{
-			if (NeedTypesByName.TryGetValue(need.Key, out Type needType))
-				overflow[needType] = need.Value;
-			else
-				Debug.Message("Did not find need type of name " + need.Key);
-		}
 	}
 }
