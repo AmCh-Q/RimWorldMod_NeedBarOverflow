@@ -14,8 +14,19 @@ public class Settings : ModSettings
 
 	static Settings()
 	{
+		// We use this static constructor to initialize everything required on start up
 		Debug.StaticConstructorLog(typeof(Settings));
+
+		// Try get settings first
+		// if there's a settings file, ExposeData() would initialize everything
+		// As well as applying the patches
 		NeedBarOverflow.settings = NeedBarOverflow.ModInstance!.GetSettings<Settings>();
+
+		// if there's no settings file, ExposeData() would not be called
+		// so we call the PatchApplier
+		// If the patches has already been applied (due to prev line)
+		//    it'd just re-verify that patches has been applied and exit
+		Patches.PatchApplier.ApplyPatches();
 	}
 
 	public void DoWindowContents(Rect inRect)

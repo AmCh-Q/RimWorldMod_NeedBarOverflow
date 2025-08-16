@@ -18,12 +18,11 @@ public static class PatchApplier
 		=> Patches.Any(patch => patch.GetType() == type);
 	private static void LoadPatches()
 	{
-		List<Patch> patches = typeof(Patch)
+		IEnumerable<Patch> patches = typeof(Patch)
 			.AllSubclassesNonAbstract()
 			.Select(CreatePatch)
 			.Where(patch => patch is not null && patch.Patchable)
-			.Cast<Patch>()
-			.ToList();
+			.Cast<Patch>();
 		foreach (Patch patch in patches)
 		{
 			Patch? existing = Patches
