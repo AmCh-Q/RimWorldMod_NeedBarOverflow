@@ -163,7 +163,8 @@ public static class Utility
 	public static bool AddSimpleSetting(Listing_Standard ls, Type needType)
 	{
 		LsGap(ls);
-		float f1 = Setting_Common.GetOverflow(needType);
+		float f0 = Setting_Common.GetOverflow(needType);
+		float f1 = f0;
 		bool b1 = f1 >= 0f;
 		f1 = b1 ? f1 : -f1 - 1f;
 		string numString = f1.CustomToString(true, true);
@@ -176,7 +177,8 @@ public static class Utility
 			f1 = AddNumSetting(ls, f1, true,
 				0f, 2.002f, 1f, float.PositiveInfinity, null, sl.tip, true);
 		}
-		Setting_Common.SetOverflow(needType, b1 ? f1 : -f1 - 1f);
+		if (f1 != f0)
+			Setting_Common.SetOverflow(needType, b1 ? f1 : -f1 - 1f);
 		return b1;
 	}
 }

@@ -15,7 +15,6 @@ public static class VFEAncients
 	private static List<Def>? disablingDefs_modExtension;
 	private static List<Def> DisablingDefs_modExtension
 		=> active ? (disablingDefs_modExtension ??= Load_disablingDefs_modExtension()) : [];
-
 	private static List<Def> Load_disablingDefs_modExtension()
 	{
 		Type? t_PowerDef = GenTypes.GetTypeInAnyAssembly("VFEAncients.PowerDef");
@@ -28,7 +27,6 @@ public static class VFEAncients
 	private static Func<Pawn, IEnumerable<Def>>? getPawnPowerDefs;
 	private static Func<Pawn, IEnumerable<Def>> GetPawnPowerDefs
 		=> active ? (getPawnPowerDefs ??= Load_getPawnPowerDefs()) : (_ => []);
-
 	private static Func<Pawn, IEnumerable<Def>> Load_getPawnPowerDefs()
 	{
 		Type t_PowerTracker = GenTypes.GetTypeInAnyAssembly("VFEAncients.Pawn_PowerTracker");
