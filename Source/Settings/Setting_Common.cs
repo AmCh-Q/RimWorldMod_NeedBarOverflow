@@ -77,7 +77,9 @@ public sealed class Setting_Common : IExposable
 	{
 		if (overflow.TryGetValue(needType, out float value) ||
 			overflow.TryGetValue(typeof(Need), out value))
+		{
 			return value;
+		}
 		Debug.Error("Attempt to load Overflow setting before it's initialized!");
 		return 0f;
 	}

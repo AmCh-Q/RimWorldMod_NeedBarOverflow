@@ -85,8 +85,7 @@ public class Settings : ModSettings
 		Scribe_Deep.Look(ref OverflowStats_DrainGain<Need_KillThirst>.instance, nameof(Need_KillThirst));
 #endif
 
-		if (Scribe.mode == LoadSaveMode.PostLoadInit ||
-			Scribe.mode == LoadSaveMode.Saving)
+		if (Scribe.mode is LoadSaveMode.PostLoadInit or LoadSaveMode.Saving)
 			Patches.PatchApplier.ApplyPatches();
 	}
 }

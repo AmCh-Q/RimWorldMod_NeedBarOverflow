@@ -15,8 +15,9 @@ public abstract class Patch_Multi : Patch<MethodBase[]>
 		Delegate? transpiler = null,
 		Delegate? finalizer = null)
 		: base([.. original
-				.Where(m => m is not null)
-				.OrderBy(m => m!.Name)],
+			.Where(m => m is not null)
+			.Select(m => m!)
+			.OrderBy(m => m.Name)],
 			new Patches(prefix, postfix, transpiler, finalizer))
 	{ }
 	protected Patch_Multi(
@@ -26,9 +27,10 @@ public abstract class Patch_Multi : Patch<MethodBase[]>
 		Delegate? transpiler = null,
 		Delegate? finalizer = null)
 		: base([.. original
-				.Select(d => d?.Method)
-				.Where(m => m is not null)
-				.OrderBy(m => m!.Name)],
+			.Select(d => d?.Method)
+			.Where(m => m is not null)
+			.Select(m => m!)
+			.OrderBy(m => m.Name)],
 			new Patches(prefix, postfix, transpiler, finalizer))
 	{ }
 	public override bool Patchable
