@@ -4,12 +4,13 @@ using RimWorld;
 namespace NeedBarOverflow.Patches;
 
 // Limit CurLevelPercentage when drawing Widgets
-public sealed class InspectPaneFiller_DrawMechEnergy() : Patch_Single(
-	original: typeof(InspectPaneFiller).Method("DrawMechEnergy"),
+public sealed class PawnColumnWorker_Energy_DoCell()
+	: Patch_Single(
+	original: typeof(PawnColumnWorker_Energy)
+		.Method(nameof(PawnColumnWorker_Energy.DoCell)),
 	transpiler: Add1UpperBound.d_transpiler)
 {
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_MechEnergy)));
 }
-
 #endif

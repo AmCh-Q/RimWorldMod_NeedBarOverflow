@@ -4,6 +4,7 @@ using RimWorld;
 
 namespace NeedBarOverflow.Patches;
 
+// Limit CurLevelPercentage when drawing Widgets
 public sealed class Gizmo_GrowthTier_DrawLearning() : Patch_Single(
 	original: typeof(Gizmo_GrowthTier).Method("DrawLearning"),
 	transpiler: Add1UpperBound.d_transpiler)
