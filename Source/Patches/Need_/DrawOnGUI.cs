@@ -462,12 +462,12 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 				yield return new CodeInstruction(OpCodes.Ldarg_0);
 				yield return new CodeInstruction(OpCodes.Callvirt, Refs.get_MaxLevel);
 				yield return new CodeInstruction(OpCodes.Dup);  // consumed at #Bge_Un_S
-				yield return new CodeInstruction(OpCodes.Stloc_S, max.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Stloc_S, max);
 				//2	float cur = n.CurLevel;
 				yield return new CodeInstruction(OpCodes.Ldarg_0);
 				yield return new CodeInstruction(OpCodes.Callvirt, Refs.get_CurLevel);
 				yield return new CodeInstruction(OpCodes.Dup);  // consumed at #Bge_Un_S
-				yield return new CodeInstruction(OpCodes.Stloc_S, cur.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Stloc_S, cur);
 				//3	if (max < cur)				#Bge_Un_S
 				yield return new CodeInstruction(OpCodes.Bge_Un_S, jumpLabels[0]);
 
@@ -476,8 +476,8 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 				//1								#Pop
 				yield return new CodeInstruction(OpCodes.Pop);
 				//0		tmp1 = max / cur;
-				yield return new CodeInstruction(OpCodes.Ldloc_S, max.LocalIndex);
-				yield return new CodeInstruction(OpCodes.Ldloc_S, cur.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, max);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, cur);
 				//2								consumed at #Mul
 				yield return new CodeInstruction(OpCodes.Div);
 
@@ -486,10 +486,10 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 				// Case 3: MaxLevel < CurLevel <= 1f
 				//1		if (1f < cur)
 				yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-				yield return new CodeInstruction(OpCodes.Ldloc_S, cur.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, cur);
 				yield return new CodeInstruction(OpCodes.Bge_Un_S, jumpLabels[1]);
 				//1			tmp2 = max;			consumed at #Mul
-				yield return new CodeInstruction(OpCodes.Ldloc_S, max.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, max);
 				yield return new CodeInstruction(OpCodes.Br_S, jumpLabels[2]);
 				//1		else
 				//			tmp2 = tmp1;		consumed at #Mul
@@ -497,8 +497,8 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 
 				// Reset max to the real maximum, which is CurLevel
 				//2		max = cur;
-				yield return new CodeInstruction(OpCodes.Ldloc_S, cur.LocalIndex).WithLabels(jumpLabels[2]);
-				yield return new CodeInstruction(OpCodes.Stloc_S, max.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, cur).WithLabels(jumpLabels[2]);
+				yield return new CodeInstruction(OpCodes.Stloc_S, max);
 
 				// Case 1: mult = 1f
 				// Case 2: mult = MaxLevel * MaxLevel / CurLevel
@@ -506,7 +506,7 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 				//2		tmp1 *= tmp2;			#Mul
 				yield return new CodeInstruction(OpCodes.Mul);
 				//1		mult = tmp1;			#End
-				yield return new CodeInstruction(OpCodes.Stloc_S, mult.LocalIndex).WithLabels(jumpLabels[0]);
+				yield return new CodeInstruction(OpCodes.Stloc_S, mult).WithLabels(jumpLabels[0]);
 				//0	Done
 				yield return codeInstruction;
 				continue;
@@ -519,7 +519,7 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 				// Once max is calculated, whenever accessing MaxLevel;
 				// Instead of directly getting original MaxLevel
 				// Get the real max, which is MaxLevel in Case 1 and CurLevel in Case 2 or 3
-				yield return new CodeInstruction(OpCodes.Ldloc_S, max.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, max);
 				i++;
 				continue;
 			}
@@ -531,8 +531,8 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 				// Once max is calculated, whenever accessing CurLevelPercentage;
 				// Instead of directly getting original CurLevelPercentage
 				// Get the apparent percentage, which is CurLevel/MaxLevel in Case 1 and 1f in Case 2 or 3
-				yield return new CodeInstruction(OpCodes.Ldloc_S, cur.LocalIndex);
-				yield return new CodeInstruction(OpCodes.Ldloc_S, max.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, cur);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, max);
 				yield return new CodeInstruction(OpCodes.Div);
 				i++;
 				continue;
@@ -551,9 +551,9 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 				// Case 3:   num4 = CurLevel, mult = MaxLevel * MaxLevel / CurLevel
 				yield return codeInstruction;
 				yield return new CodeInstruction(OpCodes.Dup);
-				yield return new CodeInstruction(OpCodes.Ldloc_S, mult.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, mult);
 				yield return new CodeInstruction(OpCodes.Mul);
-				yield return new CodeInstruction(OpCodes.Stloc_S, mult.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Stloc_S, mult);
 				continue;
 			}
 			if ((state == 3 || state == 6) && i < instructionList.Count - 2 &&
@@ -573,7 +573,7 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 				// Case 3:   mult = MaxLevel * MaxLevel / CurLevel, drawn = value * MaxLevel / CurLevel < value
 				//	m_DrawBarThreshold.Invoke(n, new object[2] { barRect, threshPercents[i] * mult });
 				//	m_DrawBarInstantMarkerAt.Invoke(n, new object[2] { rect3, Mathf.ModifyClamp01(curInstantLevelPercentage * mult) });
-				yield return new CodeInstruction(OpCodes.Ldloc_S, mult.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, mult);
 				continue;
 			}
 			if (state == 4 && i < instructionList.Count - 4 &&

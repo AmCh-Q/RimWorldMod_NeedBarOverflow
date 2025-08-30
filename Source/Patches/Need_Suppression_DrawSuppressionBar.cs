@@ -39,11 +39,11 @@ public sealed class Need_Suppression_DrawSuppressionBar() : Patch_Single(
 				yield return new CodeInstruction(OpCodes.Dup);
 				yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
 				yield return new CodeInstruction(OpCodes.Call, Refs.m_Max);
-				yield return new CodeInstruction(OpCodes.Stloc_S, perc.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Stloc_S, perc);
 				yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-				yield return new CodeInstruction(OpCodes.Ldloc_S, perc.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, perc);
 				yield return new CodeInstruction(OpCodes.Div);
-				yield return new CodeInstruction(OpCodes.Stloc_S, perc.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Stloc_S, perc);
 			}
 			yield return codeInstruction;
 			if ((state == 1 || state == 2) &&
@@ -54,7 +54,7 @@ public sealed class Need_Suppression_DrawSuppressionBar() : Patch_Single(
 				state++;
 				// Shrink the two bars my multipling perc
 				// The top of the stack is the Vanilla SuppressionBar percentage
-				yield return new CodeInstruction(OpCodes.Ldloc_S, perc.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, perc);
 				yield return new CodeInstruction(OpCodes.Mul);
 			}
 			if (state == 3 && i < instructionList.Count - 1 &&
@@ -62,7 +62,7 @@ public sealed class Need_Suppression_DrawSuppressionBar() : Patch_Single(
 			{
 				// After drawing the two shrunken bars
 				state = 4;
-				yield return new CodeInstruction(OpCodes.Ldloc_S, perc.LocalIndex);
+				yield return new CodeInstruction(OpCodes.Ldloc_S, perc);
 				yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
 				yield return new CodeInstruction(OpCodes.Ble_S, end); // Skip if not overflowing
 
