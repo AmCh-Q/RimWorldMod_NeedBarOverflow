@@ -24,15 +24,14 @@ public sealed class FloatMenuOptionProvider_Ingest_GetSingleOptionFor() : Patch_
 		if (__result is null)
 			return;
 		ThingDef thingDef = clickedThing.def;
-		if (!thingDef.IsNutritionGivingIngestible)
+		if (!thingDef.IsNutritionGivingIngestible ||
+			thingDef.IsDrug ||
+			(ModDefOf.IngestedHemogenPack is not null &&
+			thingDef.ingestible.specialThoughtDirect == ModDefOf.IngestedHemogenPack) ||
+			Need_Food_Utility.CanConsumeMoreFood(context.FirstSelectedPawn))
+		{
 			return;
-		if (thingDef.IsDrug)
-			return;
-		if (ModDefOf.IngestedHemogenPack is not null &&
-			thingDef.ingestible.specialThoughtDirect == ModDefOf.IngestedHemogenPack)
-			return;
-		if (Need_Food_Utility.CanConsumeMoreFood(context.FirstSelectedPawn))
-			return;
+		}
 		__result.Label = string.Concat(__result.Label, ": ", Strings.FoodFull.Translate().CapitalizeFirst());
 		__result.action = null;
 	}

@@ -70,7 +70,7 @@ public sealed partial class Setting_Food : IExposable
 								.ToString(CultureInfo.InvariantCulture);
 						}
 					}
-					healthStat_strs[key] = string.Join(Strings.Space, statStr());
+					healthStat_strs[key] = string.Join(" ", statStr());
 				}
 			}
 
@@ -89,8 +89,8 @@ public sealed partial class Setting_Food : IExposable
 						continue;
 					}
 
-					float[] stats = statStr.Split(' ').Select(float.Parse).ToArray();
-					for (int i = 1; i < Mathf.Min(stats.Length, 9); i++)
+					List<float> stats = [.. statStr.Split(' ').Select(float.Parse)];
+					for (int i = 1; i < Mathf.Min(stats.Count, 9); i++)
 						healthStats[(int)key, i] = stats[i];
 					if (key != HealthName.Level &&
 						(healthStats[(int)key, 0] >= 0)
@@ -102,8 +102,7 @@ public sealed partial class Setting_Food : IExposable
 				healthStats[(int)HealthName.Level, 1] = 1f;
 			}
 
-			if (Scribe.mode == LoadSaveMode.PostLoadInit ||
-				Scribe.mode == LoadSaveMode.Saving)
+			if (Scribe.mode is LoadSaveMode.PostLoadInit or LoadSaveMode.Saving)
 				ApplyFoodHediffSettings();
 		}
 

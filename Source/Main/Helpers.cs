@@ -41,8 +41,9 @@ internal static class Helpers
 		Type[]? generics = null)
 	{
 		MethodInfo? methodInfo;
-		MethodInfo[] methods = GetMethods(type, name, flags, parameters).Take(2).ToArray();
-		switch (methods.Length)
+		List<MethodInfo> methods
+			= [.. GetMethods(type, name, flags, parameters).Take(2)];
+		switch (methods.Count)
 		{
 			case 0:
 				return null;
@@ -52,9 +53,11 @@ internal static class Helpers
 				break;
 
 			default:
-				Debug.Warning(string.Concat("Multiple matches on getting method for ",
-				type.FullName, ":", name, ", defaulting to first one. The first two methods are:\n",
-				methods[0].ToString(), "\n", methods[1].ToString()));
+				Debug.Warning(string.Concat(
+					"Multiple matches on getting method for ",
+					type.FullName, ":", name,
+					", defaulting to first one. The first two methods are:\n",
+					methods[0].ToString(), "\n", methods[1].ToString()));
 				methodInfo = methods[0];
 				break;
 		}
@@ -69,29 +72,30 @@ internal static class Helpers
 		Type[]? parameters = null,
 		Type[]? generics = null)
 	{
-		MethodInfo methodInfo = type.MethodNullable(name, flags, parameters, generics)!;
+		MethodInfo? methodInfo
+			= type.MethodNullable(name, flags, parameters, generics);
 		methodInfo.NotNull(nameof(methodInfo) + " " + name);
-		return methodInfo;
+		return methodInfo!;
 	}
 
 	internal static MethodInfo Getter(this Type type,
 		string name, BindingFlags flags = Consts.bindAll)
 	{
-		MethodInfo getMethod
+		MethodInfo? getMethod
 			= type.GetProperty(name, flags)
-			?.GetGetMethod(true)!;
+			?.GetGetMethod(true);
 		getMethod.NotNull(type.FullName + ":" + name);
-		return getMethod;
+		return getMethod!;
 	}
 
 	internal static MethodInfo Setter(this Type type,
 		string name, BindingFlags flags = Consts.bindAll)
 	{
-		MethodInfo setMethod
+		MethodInfo? setMethod
 			= type.GetProperty(name, flags)
-			?.GetSetMethod(true)!;
+			?.GetSetMethod(true);
 		setMethod.NotNull(type.FullName + ":" + name);
-		return setMethod;
+		return setMethod!;
 	}
 
 	internal static FieldInfo Field(this Type type,
@@ -107,7 +111,8 @@ internal static class Helpers
 		MethodBase method, params OpCode[] targetOpCodes)
 	{
 		return PatchProcessor.ReadMethodBody(method)
-			.Where(x => targetOpCodes.Length == 0 || targetOpCodes.Contains(x.Key))
+			.Where(x => targetOpCodes.Length == 0
+			|| targetOpCodes.Contains(x.Key))
 			.Select(x => x.Value)
 			.OfType<MethodInfo>();
 	}
@@ -143,14 +148,19 @@ internal static class Helpers
 		this float d, bool showAsPerc, bool localize)
 	{
 		if (!float.IsFinite(d))
-			return localize ? "∞" : d.ToString("F0", CultureInfo.InvariantCulture);
+		{
+			return localize ? "∞"
+				: d.ToString("F0", CultureInfo.InvariantCulture);
+		}
 		if (localize && d < 0f)
 			d = 0f;
 		else if (showAsPerc)
 			d *= 100f;
 		float abs = Mathf.Abs(d);
 		string result;
-		CultureInfo culture = localize ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
+		CultureInfo culture = localize
+			? CultureInfo.CurrentCulture
+			: CultureInfo.InvariantCulture;
 		if (abs >= 5000)
 		{
 			// Need to avoid scientific notation
@@ -177,6 +187,7 @@ internal static class Helpers
 		Input.GetKey(KeyCode.LeftControl) ||
 		Input.GetKey(KeyCode.RightCommand) ||
 		Input.GetKey(KeyCode.LeftCommand);
+
 	internal static bool ShiftDown =>
 		Input.GetKey(KeyCode.RightShift) ||
 		Input.GetKey(KeyCode.LeftShift);

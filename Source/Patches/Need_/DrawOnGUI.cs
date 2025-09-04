@@ -132,7 +132,7 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 		float verticalMargin = 14f; // Vanilla: num2
 		if (rect.height < 50f)
 			verticalMargin *= Mathf.InverseLerp(0f, 50f, rect.height);
-		customMargin = ((customMargin >= 0f) ? customMargin : 29f); // Vanilla: num3
+		customMargin = (customMargin >= 0f) ? customMargin : 29f; // Vanilla: num3
 		Rect needRect = new( // Vanilla: rect3
 			rect.x + customMargin, rect.y,
 			rect.width - customMargin * 2f,
@@ -142,7 +142,7 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 		if (drawLabel) // Always draw in 1.2-1.3
 #endif
 		{
-			Text.Font = ((rect.height > 55f) ? GameFont.Small : GameFont.Tiny);
+			Text.Font = (rect.height > 55f) ? GameFont.Small : GameFont.Tiny;
 			Text.Anchor = TextAnchor.LowerLeft;
 			Rect labelRect = new(
 				rect.x + customMargin + rect.width * 0.1f,

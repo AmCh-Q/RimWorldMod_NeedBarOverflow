@@ -21,7 +21,6 @@ public static class Consts
 public static class Strings
 {
 	public const string
-		Space = " ",
 		Name = "NBO.Name",
 		RestartReq_Tip = "NBO.RestartReq_Tip",
 		RestartNReq_Tip = "NBO.RestartNReq_Tip",
