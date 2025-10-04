@@ -27,6 +27,7 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 			typeof(Need).Method("OffsetDebugPercent")
 		);
 #endif
+
 	// Fast access method to get the threshold percents of a Need
 	public static readonly AccessTools.FieldRef<Need, List<float>>
 		fr_threshPercents
@@ -102,12 +103,13 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 		if (Event.current.type == EventType.Layout)
 			return false;
 
-		// (Custom) Get some common fields
+		// (Custom) Get some common properties
 		float maxLevel = __instance.MaxLevel;
 		float curLevel = __instance.CurLevel;
+		float curInstantLevel = __instance.CurInstantLevel;
 
 		// (Custom) Skip if not overflowing
-		if (curLevel <= maxLevel)
+		if (curLevel <= maxLevel && curInstantLevel <= maxLevel)
 			return true;
 
 		// (Vanilla 1.2+) Adjust to max height
@@ -222,8 +224,7 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 		}
 
 		// (Vanilla 1.2+, replaced, separated, modified) Draw instant markers
-		float drawInstantLevelPercentage
-			= __instance.CurInstantLevelPercentage * prcntShrinkFactor;
+		float drawInstantLevelPercentage = curInstantLevel / maxLevel * prcntShrinkFactor;
 		// In Vanilla, the rect wouldn't've been shrunk by (curLevel < 1f)
 		// But the difference is so small that I avoid creating an extra rect instead
 		// Every vanilla need with instant have max of 1f
