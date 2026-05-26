@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <FoodOverflow.label>Объедание</FoodOverflow.label>
+  <FoodOverflow.description>Съедено слишком много еды за раз. Вероятно, это пройдёт со временем.</FoodOverflow.description>
+  <FoodOverflow.stages.0.label>сытый</FoodOverflow.stages.0.label>
+  <FoodOverflow.stages.1.label>наполненный</FoodOverflow.stages.1.label>
+  <FoodOverflow.stages.2.label>объевшийся</FoodOverflow.stages.2.label>
+  <FoodOverflow.stages.3.label>обожравшийся</FoodOverflow.stages.3.label>
+  <FoodOverflow.stages.4.label>набитый</FoodOverflow.stages.4.label>
+  <FoodOverflow.stages.5.label>лопающийся</FoodOverflow.stages.5.label>
+  <FoodOverflow.stages.6.label>лопающийся</FoodOverflow.stages.6.label>
+  <FoodOverflow.stages.7.label>лопающийся</FoodOverflow.stages.7.label>
+</LanguageData>
