@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+	<NBO.Name>Need Bar Overflow</NBO.Name>
+	<NBO.RestartReq> (требуется перезапуск)</NBO.RestartReq>
+	<NBO.RestartNReq> (перезапуск не требуется)</NBO.RestartNReq>
+	<NBO.RestartReq_Tip>Некоторые изменения требуют перезапуска игры для вступления в силу. До этого они могут работать частично.</NBO.RestartReq_Tip>
+	<NBO.RestartNReq_Tip>Все изменения применяются после закрытия окна настроек. Перезапуск игры не требуется, если не указано иное.</NBO.RestartNReq_Tip>
+	<NBO.NoOverf.ShowSettings>Показать настройки для отключения переполнения потребностей</NBO.NoOverf.ShowSettings>
+	<NBO.NoOverf.ShowSettings_Tip>Вы можете отключить переполнение потребностей для персонажей при определённых условиях. Обратите внимание, что этот флажок только скрывает/показывает настройки.</NBO.NoOverf.ShowSettings_Tip>
+	<NBO.NoOverf.checkIntervalTicks>Максимальная частота обновления: каждые {0} тиков</NBO.NoOverf.checkIntervalTicks>
+	<NBO.NoOverf.checkIntervalTicks_Tip>Одна секунда равна 60 тикам на обычной скорости. Обновление будет выполняться только по мере необходимости, поэтому реальная частота обновления может быть ниже.</NBO.NoOverf.checkIntervalTicks_Tip>
+	<NBO.AllowOverf.AllowColonists>Разрешить переполнение потребностей колонистов</NBO.AllowOverf.AllowColonists>
+	<NBO.AllowOverf.AllowColonySlaves>Разрешить переполнение потребностей рабов колонии</NBO.AllowOverf.AllowColonySlaves>
+	<NBO.AllowOverf.AllowColonyGuests>Разрешить переполнение потребностей гостей колонии</NBO.AllowOverf.AllowColonyGuests>
+	<NBO.AllowOverf.AllowColonyPrisoners>Разрешить переполнение потребностей заключённых колонии</NBO.AllowOverf.AllowColonyPrisoners>
+	<NBO.AllowOverf.AllowOtherHumans>Разрешить переполнение потребностей других гуманоидов</NBO.AllowOverf.AllowOtherHumans>
+	<NBO.AllowOverf.AllowPlayerAnimals>Разрешить переполнение потребностей животных колонии</NBO.AllowOverf.AllowPlayerAnimals>
+	<NBO.AllowOverf.AllowWildAnimals>Разрешить переполнение потребностей диких животных</NBO.AllowOverf.AllowWildAnimals>
+	<NBO.AllowOverf.AllowOtherAnimals>Разрешить переполнение потребностей других животных</NBO.AllowOverf.AllowOtherAnimals>
+	<NBO.AllowOverf.AllowPlayerMutants>Разрешить переполнение потребностей мутантов колонии</NBO.AllowOverf.AllowPlayerMutants>
+	<NBO.AllowOverf.AllowOtherMutants>Разрешить переполнение потребностей других мутантов</NBO.AllowOverf.AllowOtherMutants>
+	<NBO.AllowOverf.AllowPlayerOthers>Разрешить переполнение потребностей других поселенцев колонии</NBO.AllowOverf.AllowPlayerOthers>
+	<NBO.AllowOverf.AllowOthers>Разрешить переполнение потребностей всех остальных персонажей</NBO.AllowOverf.AllowOthers>
+	<NBO.NoOverf.ListDefs>Следующее условие отключит переполнение перечисленных потребностей из-за настроек XML:{0}</NBO.NoOverf.ListDefs>
+	<NBO.NoOverf.ListDefs_Tip>Настройки XML требуют перезапуска игры, но позволяют детально настроить, какое переполнение потребностей отключить, в то время как текстовые поля ниже позволяют только полностью отключить переполнение всех потребностей.</NBO.NoOverf.ListDefs_Tip>
+	<NBO.NoOverf.NoDefsFound>(Настройки XML не найдены)</NBO.NoOverf.NoDefsFound>
+	<NBO.NoOverf.OfRace>Персонажи следующих рас:</NBO.NoOverf.OfRace>
+	<NBO.NoOverf.OfApparel>Персонажи в следующих предметах экипировки:</NBO.NoOverf.OfApparel>
+	<NBO.NoOverf.OfHediff>Персонажи со следующими имплантами/состояниями здоровья:</NBO.NoOverf.OfHediff>
+	<NBO.NoOverf.OfGene>Персонажи со следующими активными генами:</NBO.NoOverf.OfGene>
+	<NBO.NoOverf.OfVFEAPower>Персонажи со следующими активными способностями VFE — Ancients:</NBO.NoOverf.OfVFEAPower>
+	<NBO.NoOverf.Race>Отключить переполнение потребностей для некоторых рас</NBO.NoOverf.Race>
+	<NBO.NoOverf.Race_Tip>Расы с указанными ниже defNames (предпочтительно) или полными названиями (на текущем языке игры) не могут переполнять свои шкалы потребностей. Список разделён запятыми, регистр не важен. Названия, распознанные модом, будут подсвечены.</NBO.NoOverf.Race_Tip>
+	<NBO.NoOverf.Apparel>Отключить переполнение потребностей при определённой экипировке</NBO.NoOverf.Apparel>
+	<NBO.NoOverf.Apparel_Tip>Персонажи в экипировке с указанными ниже defNames (предпочтительно) или полными названиями (на текущем языке игры) не могут переполнять свои шкалы потребностей. Список разделён запятыми, регистр не важен. Названия, распознанные модом, будут подсвечены.</NBO.NoOverf.Apparel_Tip>
+	<NBO.NoOverf.Hediff>Отключить переполнение потребностей при некоторых состояниях здоровья</NBO.NoOverf.Hediff>
+	<NBO.NoOverf.Hediff_Tip>Персонажи с состояниями здоровья, имеющими указанные ниже defNames (предпочтительно) или полные названия (на текущем языке игры), не могут переполнять свои шкалы потребностей. Список разделён запятыми, регистр не важен. Названия, распознанные модом, будут подсвечены.</NBO.NoOverf.Hediff_Tip>
+	<NBO.NoOverf.Gene>Отключить переполнение потребностей при некоторых генах</NBO.NoOverf.Gene>
+	<NBO.NoOverf.Gene_Tip>Персонажи с активными генами, имеющими указанные ниже defNames (предпочтительно) или полные названия (на текущем языке игры), не могут переполнять свои шкалы потребностей. Неактивные гены не имеют эффекта. Список разделён запятыми, регистр не важен. Названия, распознанные модом, будут подсвечены.</NBO.NoOverf.Gene_Tip>
+	<NBO.Need_Food.OverfEnabled>Включить переполнение еды</NBO.Need_Food.OverfEnabled>
+	<NBO.Need_Food.OverfEnabled_Tip>Разрешить переполнение шкалы еды у персонажей.</NBO.Need_Food.OverfEnabled_Tip>
+	<NBO.Need_Food.OverfPerc>Множитель переполнения еды: {0}</NBO.Need_Food.OverfPerc>
+	<NBO.Need_Food.OverfPerc_Tip>Персонаж может достичь максимума еды {0}. Будет применено большее значение из этого и бонуса переполнения еды.</NBO.Need_Food.OverfPerc_Tip>
+	<NBO.Need_Food.OverflowBonus>Бонус переполнения еды: {0}</NBO.Need_Food.OverflowBonus>
+	<NBO.Need_Food.OverflowBonus_Tip>Персонаж может съесть дополнительно {0} единиц еды. Будет применено большее значение из этого и множителя переполнения еды.\n</NBO.Need_Food.OverflowBonus_Tip>
+	<NBO.Need_Food.DisableEating>Запретить есть при заполнении выше {0}</NBO.Need_Food.DisableEating>
+	<NBO.Need_Food.DisableEating_Tip>Если уровень еды персонажа выше {0}, игрок не может приказать ему потреблять больше еды. Персонаж всё ещё может употреблять наркотики с нулевой питательностью, а персонажи в нервном срыве могут продолжать есть во время пищевого запоя.</NBO.Need_Food.DisableEating_Tip>
+	<NBO.Disabled_FoodFull>Сыт</NBO.Disabled_FoodFull>
+	<NBO.Need_Food.HealthDetails>Показать настройку эффектов на здоровье</NBO.Need_Food.HealthDetails>
+	<NBO.Need_Food.HealthDetails_Tip>Эти настройки будут применяться, пока соответствующие флажки отмечены; этот флажок просто показывает/скрывает настройки.</NBO.Need_Food.HealthDetails_Tip>
+	<NBO.Need_Food.HealthEnable.HungerFactor>Еда расходуется быстрее, когда сыт</NBO.Need_Food.HealthEnable.HungerFactor>
+	<NBO.Need_Food.HealthEnable.HungerFactor_Tip>Если уровень еды персонажа выше 100%, его потребность в еде может снижаться быстрее.</NBO.Need_Food.HealthEnable.HungerFactor_Tip>
+	<NBO.Need_Food.HealthEnable.HealingFactor>Лечение ускоряется, когда сыт</NBO.Need_Food.HealthEnable.HealingFactor>
+	<NBO.Need_Food.HealthEnable.HealingFactor_Tip>Если уровень еды персонажа выше 100%, его раны заживают немного быстрее.</NBO.Need_Food.HealthEnable.HealingFactor_Tip>
+	<NBO.Need_Food.HealthEnable.MovingOffset>Медленнее двигается, когда сыт</NBO.Need_Food.HealthEnable.MovingOffset>
+	<NBO.Need_Food.HealthEnable.MovingOffset_Tip>Если уровень еды персонажа выше 100%, он будет двигаться медленнее.</NBO.Need_Food.HealthEnable.MovingOffset_Tip>
+	<NBO.Need_Food.HealthEnable.EatingOffset>Медленнее ест, когда сыт</NBO.Need_Food.HealthEnable.EatingOffset>
+	<NBO.Need_Food.HealthEnable.EatingOffset_Tip>Если уровень еды персонажа выше 100%, он будет есть медленнее.</NBO.Need_Food.HealthEnable.EatingOffset_Tip>
+	<NBO.Need_Food.HealthEnable.VomitFreq>Временами рвота при переедании</NBO.Need_Food.HealthEnable.VomitFreq>
+	<NBO.Need_Food.HealthEnable.VomitFreq_Tip>Если уровень еды персонажа выше 100%, его может иногда вырвать.</NBO.Need_Food.HealthEnable.VomitFreq_Tip>
+	<NBO.Need_Food.NonHumanMult>Множитель эффектов для не-гуманоидов: {0}</NBO.Need_Food.NonHumanMult>
+	<NBO.Need_Food.NonHumanMult_Tip>Когда уровень еды не-гуманоида выше 100%, он получает уменьшенные эффекты от переполнения еды, как если бы он был переполнен на {0}.</NBO.Need_Food.NonHumanMult_Tip>
+	<NBO.Need_Food.GourmandMult>Множитель эффектов для гурманов: {0}</NBO.Need_Food.GourmandMult>
+	<NBO.Need_Food.GourmandMult_Tip>Когда уровень еды персонажа-гурмана выше 100%, он получает уменьшенные эффекты от переполнения еды, как если бы он был переполнен на {0}.</NBO.Need_Food.GourmandMult_Tip>
+	<NBO.Need_Food.ShowHediffLvl>Эффекты видны при заполнении выше {0}</NBO.Need_Food.ShowHediffLvl>
+	<NBO.Need_Food.ShowHediffLvl_Tip>Эффекты переполнения еды на здоровье видны, когда персонаж заполнен более чем на {0}; это учитывает два предыдущих параметра, поэтому таким персонажам может потребоваться больше переполнения, чтобы показывать видимые эффекты.</NBO.Need_Food.ShowHediffLvl_Tip>
+	<NBO.Need_Food.HealthStat.Level>Когда персонаж заполнен не менее чем на {0}...</NBO.Need_Food.HealthStat.Level>
+	<NBO.Need_Food.HealthStat.HungerFactor>Уровень еды персонажа будет расходоваться со скоростью {0}</NBO.Need_Food.HealthStat.HungerFactor>
+	<NBO.Need_Food.HealthStat.HealingFactor>Раны персонажа заживают со скоростью {0}</NBO.Need_Food.HealthStat.HealingFactor>
+	<NBO.Need_Food.HealthStat.MovingOffset>Способность персонажа к передвижению снизится на {0}</NBO.Need_Food.HealthStat.MovingOffset>
+	<NBO.Need_Food.HealthStat.VomitFreq>Персонаж будет рвать в среднем {0} раз в день</NBO.Need_Food.HealthStat.VomitFreq>
+	<NBO.Need_Food.HealthStat.EatingOffset>Скорость еды персонажа снизится на {0}</NBO.Need_Food.HealthStat.EatingOffset>
+	<NBO.Need_Rest.OverfEnabled>Включить переполнение сна</NBO.Need_Rest.OverfEnabled>
+	<NBO.Need_Rest.OverfEnabled_Tip>Разрешить переполнение шкалы сна у персонажей</NBO.Need_Rest.OverfEnabled_Tip>
+	<NBO.Need_Rest.OverfPerc>Множитель переполнения сна: {0}</NBO.Need_Rest.OverfPerc>
+	<NBO.Need_Rest.OverfPerc_Tip>Максимальный уровень сна, которого может достичь персонаж: {0}.</NBO.Need_Rest.OverfPerc_Tip>
+	<NBO.Need_Rest.FastDrain>Более быстрая потеря сна при полном отдыхе: эффект {0}</NBO.Need_Rest.FastDrain>
+	<NBO.Need_Rest.FastDrain_Tip>Когда уровень сна персонажа выше 100%, его сон будет падать ({0} × величина переполнения) быстрее во время бодрствования. Чем выше уровень сна и этот параметр, тем быстрее падает сон.</NBO.Need_Rest.FastDrain_Tip>
+	<NBO.Need_Rest.SlowGain>Более медленное восстановление сна при полном отдыхе: эффект {0}</NBO.Need_Rest.SlowGain>
+	<NBO.Need_Rest.SlowGain_Tip>Когда уровень сна персонажа выше 100%, его сон будет восстанавливаться с обычной скоростью ÷ (100% + {0} × величина переполнения) во время сна. Чем выше уровень сна и этот параметр, тем менее эффективен пересып. Это влияет только на активность сна, а не на другие способы получения сна, такие как употребление наркотиков.</NBO.Need_Rest.SlowGain_Tip>
+	<NBO.Need_Joy.OverfEnabled>Включить переполнение отдыха</NBO.Need_Joy.OverfEnabled>
+	<NBO.Need_Joy.OverfEnabled_Tip>Разрешить переполнение шкалы отдыха у персонажей</NBO.Need_Joy.OverfEnabled_Tip>
+	<NBO.Need_Joy.OverfPerc>Множитель переполнения отдыха: {0}</NBO.Need_Joy.OverfPerc>
+	<NBO.Need_Joy.OverfPerc_Tip>Максимальный уровень отдыха, которого может достичь персонаж: {0}.</NBO.Need_Joy.OverfPerc_Tip>
+	<NBO.Need_Joy.FastDrain>Более быстрая потеря отдыха при переизбытке: эффект {0}</NBO.Need_Joy.FastDrain>
+	<NBO.Need_Joy.FastDrain_Tip>Когда уровень отдыха персонажа выше 100%, его отдых будет падать ({0} × величина переполнения) быстрее. Чем выше уровень отдыха и этот параметр, тем быстрее падает отдых.</NBO.Need_Joy.FastDrain_Tip>
+	<NBO.Need_Joy.SlowGain>Более медленное восстановление отдыха при переизбытке: эффект {0}</NBO.Need_Joy.SlowGain>
+	<NBO.Need_Joy.SlowGain_Tip>Когда уровень отдыха персонажа выше 100%, его отдых будет восстанавливаться с обычной скоростью ÷ (100% + {0} × величина переполнения). Чем выше уровень отдыха и этот параметр, тем меньше будет получено.</NBO.Need_Joy.SlowGain_Tip>
+	<NBO.Need_Mood.OverfEnabled>Включить переполнение настроения</NBO.Need_Mood.OverfEnabled>
+	<NBO.Need_Mood.OverfEnabled_Tip>Разрешить переполнение шкалы настроения у персонажей</NBO.Need_Mood.OverfEnabled_Tip>
+	<NBO.Need_Mood.OverfPerc>Множитель переполнения настроения: {0}</NBO.Need_Mood.OverfPerc>
+	<NBO.Need_Mood.OverfPerc_Tip>Максимальное настроение, которого может достичь персонаж: {0}.</NBO.Need_Mood.OverfPerc_Tip>
+	<NBO.Need_Beauty.OverfEnabled>Включить переполнение красоты</NBO.Need_Beauty.OverfEnabled>
+	<NBO.Need_Beauty.OverfEnabled_Tip>Разрешить переполнение шкалы красоты у персонажей</NBO.Need_Beauty.OverfEnabled_Tip>
+	<NBO.Need_Beauty.OverfPerc>Множитель переполнения красоты: {0}</NBO.Need_Beauty.OverfPerc>
+	<NBO.Need_Beauty.OverfPerc_Tip>Максимальный уровень красоты, которого может достичь персонаж: {0}.</NBO.Need_Beauty.OverfPerc_Tip>
+	<NBO.Need_Comfort.OverfEnabled>Включить переполнение комфорта</NBO.Need_Comfort.OverfEnabled>
+	<NBO.Need_Comfort.OverfEnabled_Tip>Разрешить переполнение шкалы комфорта у персонажей</NBO.Need_Comfort.OverfEnabled_Tip>
+	<NBO.Need_Comfort.OverfPerc>Множитель переполнения комфорта: {0}</NBO.Need_Comfort.OverfPerc>
+	<NBO.Need_Comfort.OverfPerc_Tip>Максимальный уровень комфорта, которого может достичь персонаж: {0}.</NBO.Need_Comfort.OverfPerc_Tip>
+	<NBO.Need_Chemical.OverfEnabled>Включить переполнение химической потребности (зависимость)</NBO.Need_Chemical.OverfEnabled>
+	<NBO.Need_Chemical.OverfEnabled_Tip>Разрешить переполнение шкалы химических потребностей у персонажей. Этот тип потребностей обычно требует особой категории наркотиков и часто вызван зависимостью.</NBO.Need_Chemical.OverfEnabled_Tip>
+	<NBO.Need_Chemical.OverfPerc>Множитель переполнения химической потребности (зависимость): {0}</NBO.Need_Chemical.OverfPerc>
+	<NBO.Need_Chemical.OverfPerc_Tip>Максимальный уровень химической потребности, которого может достичь персонаж: {0}.</NBO.Need_Chemical.OverfPerc_Tip>
+	<NBO.Need_Chemical_Any.OverfEnabled>Включить переполнение химической потребности (черты)</NBO.Need_Chemical_Any.OverfEnabled>
+	<NBO.Need_Chemical_Any.OverfEnabled_Tip>Разрешить переполнение шкалы химических потребностей у персонажей. Этот тип потребностей обычно не различает наркотики и часто вызван чертами характера персонажа.</NBO.Need_Chemical_Any.OverfEnabled_Tip>
+	<NBO.Need_Chemical_Any.OverfPerc>Множитель переполнения химической потребности (черты): {0}</NBO.Need_Chemical_Any.OverfPerc>
+	<NBO.Need_Chemical_Any.OverfPerc_Tip>Максимальный уровень химической потребности, которого может достичь персонаж: {0}.</NBO.Need_Chemical_Any.OverfPerc_Tip>
+	<NBO.Need_Outdoors.OverfEnabled>Включить переполнение потребности в нахождении на улице</NBO.Need_Outdoors.OverfEnabled>
+	<NBO.Need_Outdoors.OverfEnabled_Tip>Разрешить переполнение шкалы потребности в нахождении на улице у персонажей</NBO.Need_Outdoors.OverfEnabled_Tip>
+	<NBO.Need_Outdoors.OverfPerc>Множитель переполнения потребности на улице: {0}</NBO.Need_Outdoors.OverfPerc>
+	<NBO.Need_Outdoors.OverfPerc_Tip>Максимальный уровень потребности на улице, которого может достичь персонаж: {0}.</NBO.Need_Outdoors.OverfPerc_Tip>
+	<NBO.Need_Indoors.OverfEnabled>Включить переполнение потребности в нахождении в помещении</NBO.Need_Indoors.OverfEnabled>
+	<NBO.Need_Indoors.OverfEnabled_Tip>Разрешить переполнение шкалы потребности в нахождении в помещении у персонажей</NBO.Need_Indoors.OverfEnabled_Tip>
+	<NBO.Need_Indoors.OverfPerc>Множитель переполнения потребности в помещении: {0}</NBO.Need_Indoors.OverfPerc>
+	<NBO.Need_Indoors.OverfPerc_Tip>Максимальный уровень потребности в помещении, которого может достичь персонаж: {0}.</NBO.Need_Indoors.OverfPerc_Tip>
+	<NBO.Need_Suppression.OverfEnabled>Включить переполнение подавления</NBO.Need_Suppression.OverfEnabled>
+	<NBO.Need_Suppression.OverfEnabled_Tip>Разрешить переполнение шкалы подавления у рабов, хотя в ванильной игре нет способа переполнить эту шкалу.</NBO.Need_Suppression.OverfEnabled_Tip>
+	<NBO.Need_Suppression.OverfPerc>Множитель переполнения подавления: {0}</NBO.Need_Suppression.OverfPerc>
+	<NBO.Need_Suppression.OverfPerc_Tip>Максимальный уровень подавления, которого может достичь раб: {0}.</NBO.Need_Suppression.OverfPerc_Tip>
+	<NBO.Need_RoomSize.OverfEnabled>Включить переполнение размера комнаты</NBO.Need_RoomSize.OverfEnabled>
+	<NBO.Need_RoomSize.OverfEnabled_Tip>Разрешить переполнение шкалы размера комнаты у персонажей, хотя в ванильной игре нет метода переполнить эту шкалу.</NBO.Need_RoomSize.OverfEnabled_Tip>
+	<NBO.Need_RoomSize.OverfPerc>Множитель переполнения размера комнаты: {0}</NBO.Need_RoomSize.OverfPerc>
+	<NBO.Need_RoomSize.OverfPerc_Tip>Максимальный уровень размера комнаты, которого может достичь персонаж: {0}.</NBO.Need_RoomSize.OverfPerc_Tip>
+	<NBO.Need_Deathrest.OverfEnabled>Включить переполнение смерти-покоя</NBO.Need_Deathrest.OverfEnabled>
+	<NBO.Need_Deathrest.OverfEnabled_Tip>Разрешить переполнение шкалы смерти-покоя у персонажей</NBO.Need_Deathrest.OverfEnabled_Tip>
+	<NBO.Need_Deathrest.OverfPerc>Множитель переполнения смерти-покоя: {0}</NBO.Need_Deathrest.OverfPerc>
+	<NBO.Need_Deathrest.OverfPerc_Tip>Максимальный уровень смерти-покоя, которого может достичь персонаж: {0}.</NBO.Need_Deathrest.OverfPerc_Tip>
+	<NBO.Need_KillThirst.OverfEnabled>Включить переполнение насыщения убийствами</NBO.Need_KillThirst.OverfEnabled>
+	<NBO.Need_KillThirst.OverfEnabled_Tip>Разрешить переполнение шкалы насыщения убийствами у персонажей</NBO.Need_KillThirst.OverfEnabled_Tip>
+	<NBO.Need_KillThirst.OverfPerc>Множитель переполнения насыщения убийствами: {0}</NBO.Need_KillThirst.OverfPerc>
+	<NBO.Need_KillThirst.OverfPerc_Tip>Максимальное насыщение убийствами, которого может достичь персонаж: {0}.</NBO.Need_KillThirst.OverfPerc_Tip>
+	<NBO.Need_KillThirst.FastDrain>Более быстрая потеря насыщения убийствами при переполнении: эффект {0}</NBO.Need_KillThirst.FastDrain>
+	<NBO.Need_KillThirst.FastDrain_Tip>Когда насыщение убийствами персонажа выше 100%, оно будет падать ({0} × величина переполнения) быстрее. Чем выше насыщение убийствами и этот параметр, тем быстрее оно падает.</NBO.Need_KillThirst.FastDrain_Tip>
+	<NBO.Need_KillThirst.SlowGain>Меньшее насыщение убийствами при переполнении: эффект {0}</NBO.Need_KillThirst.SlowGain>
+	<NBO.Need_KillThirst.SlowGain_Tip>Когда насыщение убийствами персонажа выше 100%, дополнительные убийства насыщают только на 100% ÷ (100% + {0} × величина переполнения). Чем выше насыщение убийствами и этот параметр, тем меньше будет насыщение.</NBO.Need_KillThirst.SlowGain_Tip>
+	<NBO.Need_MechEnergy.OverfEnabled>Включить переполнение энергии механоидов</NBO.Need_MechEnergy.OverfEnabled>
+	<NBO.Need_MechEnergy.OverfEnabled_Tip>Разрешить переполнение шкалы энергии у механоидов</NBO.Need_MechEnergy.OverfEnabled_Tip>
+	<NBO.Need_MechEnergy.OverfPerc>Множитель переполнения энергии механоидов: {0}</NBO.Need_MechEnergy.OverfPerc>
+	<NBO.Need_MechEnergy.OverfPerc_Tip>Максимальный уровень энергии, которого может достичь механоид: {0}.</NBO.Need_MechEnergy.OverfPerc_Tip>
+	<NBO.Need_Learning.OverfEnabled>Включить переполнение обучения</NBO.Need_Learning.OverfEnabled>
+	<NBO.Need_Learning.OverfEnabled_Tip>Разрешить переполнение шкалы обучения у детей, хотя в ванильной игре нет метода переполнить эту шкалу.</NBO.Need_Learning.OverfEnabled_Tip>
+	<NBO.Need_Learning.OverfPerc>Множитель переполнения обучения: {0}</NBO.Need_Learning.OverfPerc>
+	<NBO.Need_Learning.OverfPerc_Tip>Максимальный уровень обучения, которого может достичь ребёнок: {0}.</NBO.Need_Learning.OverfPerc_Tip>
+	<NBO.Need_Play.OverfEnabled>Включить переполнение игры</NBO.Need_Play.OverfEnabled>
+	<NBO.Need_Play.OverfEnabled_Tip>Разрешить переполнение шкалы игры у младенцев, хотя в ванильной игре нет метода переполнить эту шкалу.</NBO.Need_Play.OverfEnabled_Tip>
+	<NBO.Need_Play.OverfPerc>Множитель переполнения игры: {0}</NBO.Need_Play.OverfPerc>
+	<NBO.Need_Play.OverfPerc_Tip>Максимальный уровень игры, которого может достичь младенец: {0}.</NBO.Need_Play.OverfPerc_Tip>
+	<NBO.ShowHiddenSettings>Показать нерекомендуемые настройки переполнения</NBO.ShowHiddenSettings>
+	<NBO.ShowHiddenSettings_Tip>Настройки ниже либо не реализованы в ванильной игре, либо по своей природе содержат ошибки, поэтому вам, вероятно, следует оставить их выключенными. Обратите внимание, что этот флажок только скрывает/показывает настройки, и вам всё равно нужно отключить их по отдельности, если они включены.</NBO.ShowHiddenSettings_Tip>
+	<NBO.Need.OverfEnabled>Включить переполнение стандартных потребностей</NBO.Need.OverfEnabled>
+	<NBO.Need.OverfEnabled_Tip>Разрешить переполнение любых текущих неподдерживаемых потребностей у персонажей. Это может привести к множеству неожиданных действий/ошибок, но это единственный вариант, если вы действительно хотите, чтобы некоторые шкалы из модов переполнялись.</NBO.Need.OverfEnabled_Tip>
+	<NBO.Need.OverfPerc>Множитель переполнения стандартных потребностей: {0}</NBO.Need.OverfPerc>
+	<NBO.Need.OverfPerc_Tip>Для любых текущих неподдерживаемых потребностей максимальный уровень потребности, которого может достичь персонаж: {0}.</NBO.Need.OverfPerc_Tip>
+	<NBO.Need_Authority.OverfEnabled>Включить переполнение авторитета</NBO.Need_Authority.OverfEnabled>
+	<NBO.Need_Authority.OverfEnabled_Tip>Разрешить переполнение шкалы авторитета у персонажей, хотя это просто фиктивная потребность, которая, вероятно, ничего не делает.</NBO.Need_Authority.OverfEnabled_Tip>
+	<NBO.Need_Authority.OverfPerc>Множитель переполнения авторитета: {0}</NBO.Need_Authority.OverfPerc>
+	<NBO.Need_Authority.OverfPerc_Tip>Максимальный уровень авторитета, которого может достичь персонаж: {0}.</NBO.Need_Authority.OverfPerc_Tip>
+	<NBO.Need_Sadism.OverfEnabled>Включить переполнение садизма</NBO.Need_Sadism.OverfEnabled>
+	<NBO.Need_Sadism.OverfEnabled_Tip>Разрешить переполнение шкалы садизма у персонажей, эта потребность не завершена в ванильной игре, поэтому она, вероятно, ничего не делает.</NBO.Need_Sadism.OverfEnabled_Tip>
+	<NBO.Need_Sadism.OverfPerc>Множитель переполнения садизма: {0}</NBO.Need_Sadism.OverfPerc>
+	<NBO.Need_Sadism.OverfPerc_Tip>Максимальный уровень садизма, которого может достичь персонаж: {0}.</NBO.Need_Sadism.OverfPerc_Tip>
+</LanguageData>
