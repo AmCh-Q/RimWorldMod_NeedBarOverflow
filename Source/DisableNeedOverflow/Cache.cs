@@ -12,12 +12,14 @@ public static class Cache
 	// A queue to keep track of the oldest potential entry (tick, hash)
 	private static readonly Queue<Pair<int, int>>
 		expireQueue = [];
+
 	// pawn.thingID -> canOverflow & lastCheckTick (masked)
 	private static readonly Dictionary<int, int>
 		checkCache = [];
 
 	// bitmasks for cache value
 	private const int CheckTickMask = int.MaxValue;
+
 	private const int CanOverflowMask = int.MinValue;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -83,7 +85,7 @@ public static class Cache
 			ls, checkIntervalTicks, sl, true, 0f, 5f, 1f, 100000f);
 	}
 
-	public static void ExposeData()
+	public static void StaticExposeData()
 	{
 		Scribe_Values.Look(ref checkIntervalTicks,
 			Strings.checkIntervalTicks, 600);

@@ -62,11 +62,6 @@ public sealed class Setting_Common : IExposable
 		AddOrUpdateOverflow();
 	}
 
-	public Setting_Common()
-	{ }
-
-	public static Setting_Common instance = new();
-
 	public static bool AnyEnabled => overflow.Values.Any(x => x > 0f);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -128,5 +123,11 @@ public sealed class Setting_Common : IExposable
 			AddOrUpdateOverflow(dataForExpose);
 
 		DisableNeedOverflow.Common.StaticExposeData();
+	}
+
+	public static void StaticExposeData()
+	{
+		Setting_Common instance = new();
+		Scribe_Deep.Look(ref instance, nameof(Setting_Common));
 	}
 }

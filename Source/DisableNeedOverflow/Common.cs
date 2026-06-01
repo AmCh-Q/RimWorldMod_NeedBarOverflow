@@ -70,8 +70,8 @@ public static class Common
 
 	public static void StaticExposeData()
 	{
-		Cache.ExposeData();
-		ChecksByType.Membership_ExposeData();
-		ManualConfig.ExposeData();
+		Cache.StaticExposeData();
+		ChecksByType.StaticExposeData();
+		ManualConfig.StaticExposeData();
 	}
 }

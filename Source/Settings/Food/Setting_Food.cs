@@ -20,24 +20,25 @@ public sealed partial class Setting_Food : Setting<Need_Food>, IExposable
 	static Setting_Food()
 		=> Debug.StaticConstructorLog(typeof(Setting_Food));
 
-	// Singleton pattern (except it's not readonly so we can ref it)
-	private Setting_Food()
-	{ }
-	public static Setting_Food instance = new();
-
-	public void ExposeData()
-	{
-		// Saves configurations of StatName_Food
-		OverflowStats_Food.instance.ExposeData();
-		// Saves configurations of HealthStats.HealthName
-		HealthStats.ExposeData();
-	}
-
 	public static void AddSettings(Listing_Standard ls)
 	{
 		// Add settings UI of StatName_Food
 		OverflowStats_Food.AddSettings(ls);
 		// Add settings UI of HealthStats.HealthName
 		HealthStats.AddSettings(ls);
+	}
+
+	public void ExposeData()
+	{
+		// Saves configurations of StatName_Food
+		OverflowStats_Food.StaticExposeData();
+		// Saves configurations of HealthStats.HealthName
+		HealthStats.StaticExposeData();
+	}
+
+	public static void StaticExposeData()
+	{
+		Setting_Food instance = new();
+		Scribe_Deep.Look(ref instance, nameof(Need_Food));
 	}
 }

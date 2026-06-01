@@ -35,6 +35,7 @@ public sealed class Character_Editor_AAddNeed() : Patch_Multi(
 {
 	public override void Toggle()
 		=> Toggle(Setting_Common.AnyEnabled);
+
 	private static float GetOffset()
 	{
 		bool ctrl = Helpers.CtrlDown;
@@ -45,6 +46,7 @@ public sealed class Character_Editor_AAddNeed() : Patch_Multi(
 			return 0.01f;
 		return 0.1f;
 	}
+
 	private static IEnumerable<CodeInstruction> TranspilerMethod(
 		IEnumerable<CodeInstruction> instructions)
 	{

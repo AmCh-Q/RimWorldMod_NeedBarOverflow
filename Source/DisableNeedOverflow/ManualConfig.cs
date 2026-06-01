@@ -11,6 +11,7 @@ public static class ManualConfig
 
 	// The default values of disablingDefs_str (all disabled by default)
 	private static readonly string suffix = "DISABLED";
+
 	private static readonly string[] dfltDisablingDefNames =
 	[
 		suffix, suffix, suffix, suffix
@@ -112,7 +113,7 @@ public static class ManualConfig
 		}
 	}
 
-	public static void ExposeData()
+	public static void StaticExposeData()
 	{
 		Debug.Message("DisablingDefs.ExposeData() called with Scribe.mode == " + Scribe.mode);
 		// Needs to be a Dictionary with Enum as key here

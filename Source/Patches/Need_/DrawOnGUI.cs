@@ -21,11 +21,13 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 		BarInstantMarkerTex;
 
 #if g1_5 && DEBUG // Won't use this if not debugging
+
 	public static readonly Action<Need, float> d_OffsetDebugPercent
 		= (Action<Need, float>)Delegate.CreateDelegate(
 			typeof(Action<Need, float>),
 			typeof(Need).Method("OffsetDebugPercent")
 		);
+
 #endif
 
 	// Fast access method to get the threshold percents of a Need

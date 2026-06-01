@@ -88,12 +88,12 @@ public class Settings : ModSettings
 		Debug.Message("Settings.ExposeData() called with Scribe.mode == " + Scribe.mode);
 		base.ExposeData();
 
-		Scribe_Deep.Look(ref Setting_Common.instance, nameof(Setting_Common));
-		Scribe_Deep.Look(ref Setting_Food.instance, nameof(Need_Food));
-		Scribe_Deep.Look(ref OverflowStats_DrainGain<Need_Rest>.instance, nameof(Need_Rest));
-		Scribe_Deep.Look(ref OverflowStats_DrainGain<Need_Joy>.instance, nameof(Need_Joy));
+		Setting_Common.StaticExposeData();
+		Setting_Food.StaticExposeData();
+		OverflowStats_DrainGain<Need_Rest>.StaticExposeData();
+		OverflowStats_DrainGain<Need_Joy>.StaticExposeData();
 #if g1_4
-		Scribe_Deep.Look(ref OverflowStats_DrainGain<Need_KillThirst>.instance, nameof(Need_KillThirst));
+		OverflowStats_DrainGain<Need_KillThirst>.StaticExposeData();
 #endif
 
 		if (Scribe.mode is LoadSaveMode.PostLoadInit or LoadSaveMode.Saving)

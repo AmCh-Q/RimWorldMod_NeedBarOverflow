@@ -60,51 +60,6 @@ public sealed partial class Setting_Food : IExposable
 			}
 		}
 
-		public static void ExposeData()
-		{
-			Array Enums = Enum.GetValues(typeof(HealthName));
-			// Needs to be a Dictionary with Enum as key here
-			// (instead of an array)
-			// so that Scribe_Collections can save the Enum by name
-			Dictionary<HealthName, string> healthStat_strs = [];
-			if (Scribe.mode == LoadSaveMode.Saving)
-			{
-				foreach (HealthName key in Enums)
-					healthStat_strs[key] = string.Join(" ", StatStr((int)key));
-			}
-
-			Scribe_Collections.Look(ref healthStat_strs,
-				Strings.healthStats, LookMode.Value, LookMode.Value);
-			if (Scribe.mode == LoadSaveMode.LoadingVars)
-			{
-				Buffer.BlockCopy(dfltHealthStats, 0, healthStats, 0,
-					6 * 10 * sizeof(float));
-				foreach (HealthName key in Enums)
-				{
-					if (healthStat_strs is null ||
-						!healthStat_strs.TryGetValue(key, out string statStr) ||
-						statStr.NullOrEmpty())
-					{
-						continue;
-					}
-
-					List<float> stats = [.. statStr.Split(' ').Select(float.Parse)];
-					for (int i = 1; i < Mathf.Min(stats.Count, 9); i++)
-						healthStats[(int)key, i] = stats[i];
-					if (key != HealthName.Level &&
-						(healthStats[(int)key, 0] >= 0)
-						!= (stats[0] >= 0))
-					{
-						healthStats[(int)key, 0] = -healthStats[(int)key, 0] - 1f;
-					}
-				}
-				healthStats[(int)HealthName.Level, 1] = 1f;
-			}
-
-			if (Scribe.mode is LoadSaveMode.PostLoadInit or LoadSaveMode.Saving)
-				ApplyFoodHediffSettings();
-		}
-
 		public class DrawingContext(Listing_Standard ls)
 		{
 			public Listing_Standard ls = ls;
@@ -308,6 +263,51 @@ public sealed partial class Setting_Food : IExposable
 				capacity = ModDefOf.Eating,
 				offset = offset
 			};
+		}
+
+		public static void StaticExposeData()
+		{
+			Array Enums = Enum.GetValues(typeof(HealthName));
+			// Needs to be a Dictionary with Enum as key here
+			// (instead of an array)
+			// so that Scribe_Collections can save the Enum by name
+			Dictionary<HealthName, string> healthStat_strs = [];
+			if (Scribe.mode == LoadSaveMode.Saving)
+			{
+				foreach (HealthName key in Enums)
+					healthStat_strs[key] = string.Join(" ", StatStr((int)key));
+			}
+
+			Scribe_Collections.Look(ref healthStat_strs,
+				Strings.healthStats, LookMode.Value, LookMode.Value);
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				Buffer.BlockCopy(dfltHealthStats, 0, healthStats, 0,
+					6 * 10 * sizeof(float));
+				foreach (HealthName key in Enums)
+				{
+					if (healthStat_strs is null ||
+						!healthStat_strs.TryGetValue(key, out string statStr) ||
+						statStr.NullOrEmpty())
+					{
+						continue;
+					}
+
+					List<float> stats = [.. statStr.Split(' ').Select(float.Parse)];
+					for (int i = 1; i < Mathf.Min(stats.Count, 9); i++)
+						healthStats[(int)key, i] = stats[i];
+					if (key != HealthName.Level &&
+						(healthStats[(int)key, 0] >= 0)
+						!= (stats[0] >= 0))
+					{
+						healthStats[(int)key, 0] = -healthStats[(int)key, 0] - 1f;
+					}
+				}
+				healthStats[(int)HealthName.Level, 1] = 1f;
+			}
+
+			if (Scribe.mode is LoadSaveMode.PostLoadInit or LoadSaveMode.Saving)
+				ApplyFoodHediffSettings();
 		}
 	}
 }

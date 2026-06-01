@@ -17,7 +17,7 @@ public enum StatName_Food
 
 public sealed partial class Setting_Food : IExposable
 {
-	public sealed class OverflowStats_Food : IExposable
+	public static class OverflowStats_Food
 	{
 		// StatName_Food.OverflowBonus
 		// StatName_Food.DisableEating
@@ -39,26 +39,6 @@ public sealed partial class Setting_Food : IExposable
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float EffectStat(int statId)
 			=> overflowStats[statId];
-
-		public void ExposeData()
-		{
-			Array Enums = Enum.GetValues(typeof(StatName_Food));
-			// Needs to be a Dictionary with Enum as key here
-			// (instead of an array)
-			// so that Scribe_Collections can save the Enum by name
-			Dictionary<StatName_Food, float> dict = [];
-			if (Scribe.mode == LoadSaveMode.Saving)
-			{
-				foreach (StatName_Food settingName in Enums)
-					dict[settingName] = overflowStats[(int)settingName];
-			}
-			Scribe_Collections.Look(ref dict, Strings.overflowStats, LookMode.Value, LookMode.Value);
-			if (Scribe.mode == LoadSaveMode.LoadingVars)
-			{
-				foreach (StatName_Food settingName in Enums)
-					overflowStats[(int)settingName] = dict.GetValueOrDefault(settingName, dfltStats[(int)settingName]);
-			}
-		}
 
 		public static void AddSettings(Listing_Standard ls)
 		{
@@ -110,9 +90,24 @@ public sealed partial class Setting_Food : IExposable
 				1f, float.PositiveInfinity, true);
 		}
 
-		public OverflowStats_Food()
-		{ }
-
-		public static OverflowStats_Food instance = new();
+		public static void StaticExposeData()
+		{
+			Array Enums = Enum.GetValues(typeof(StatName_Food));
+			// Needs to be a Dictionary with Enum as key here
+			// (instead of an array)
+			// so that Scribe_Collections can save the Enum by name
+			Dictionary<StatName_Food, float> dict = [];
+			if (Scribe.mode == LoadSaveMode.Saving)
+			{
+				foreach (StatName_Food settingName in Enums)
+					dict[settingName] = overflowStats[(int)settingName];
+			}
+			Scribe_Collections.Look(ref dict, Strings.overflowStats, LookMode.Value, LookMode.Value);
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				foreach (StatName_Food settingName in Enums)
+					overflowStats[(int)settingName] = dict.GetValueOrDefault(settingName, dfltStats[(int)settingName]);
+			}
+		}
 	}
 }

@@ -19,6 +19,8 @@ dotnet_diagnostic.IDE0005.severity = none
 dotnet_diagnostic.IDE0045.severity = none
 # IDE0046: Use conditional expression for return
 dotnet_diagnostic.IDE0046.severity = none
+# IDE0057: Use range operator
+dotnet_diagnostic.IDE0057.severity = none
 # CA1000: Do not declare static members on generic types
 dotnet_diagnostic.CA1000.severity = none
 # CA1051: Do not declare visible instance fields

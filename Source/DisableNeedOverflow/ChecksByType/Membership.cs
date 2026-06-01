@@ -33,6 +33,7 @@ public static partial class ChecksByType
 		true, false,
 		true, false,
 		];
+
 	public static readonly bool[] membershipSetting = (bool[])dfltMembershipSetting.Clone();
 
 	public static bool Membership(Pawn pawn)
@@ -91,13 +92,15 @@ public static partial class ChecksByType
 			if (key == MemberShipType.AllowColonySlaves)
 				continue;
 #endif
-			if ((key == MemberShipType.AllowPlayerMutants
-				|| key == MemberShipType.AllowOtherMutants)
+			if (key is MemberShipType.AllowPlayerMutants
+				or MemberShipType.AllowOtherMutants
 #if g1_5
 				&& !ModLister.BiotechInstalled
 #endif
 				)
+			{
 				continue;
+			}
 
 			SettingLabel sl = new(Strings.AllowOverf, key.ToString());
 			bool setting = membershipSetting[(int)key];
@@ -106,7 +109,7 @@ public static partial class ChecksByType
 		}
 	}
 
-	public static void Membership_ExposeData()
+	public static void StaticExposeData()
 	{
 		Array Enums = Enum.GetValues(typeof(MemberShipType));
 		// Needs to be a Dictionary with Enum as key here
@@ -120,14 +123,15 @@ public static partial class ChecksByType
 		}
 		Scribe_Collections.Look(ref membership_dict,
 			Strings.membership, LookMode.Value, LookMode.Value);
-		if (Scribe.mode == LoadSaveMode.LoadingVars)
+		if (Scribe.mode != LoadSaveMode.LoadingVars)
+			return;
+		Array.Copy(dfltMembershipSetting, membershipSetting, dfltMembershipSetting.Length);
+		foreach (MemberShipType key in Enums)
 		{
-			Array.Copy(dfltMembershipSetting, membershipSetting, dfltMembershipSetting.Length);
-			foreach (MemberShipType key in Enums)
+			if (membership_dict is not null &&
+				membership_dict.TryGetValue(key, out bool setting))
 			{
-				if (membership_dict is not null &&
-					membership_dict.TryGetValue(key, out bool setting))
-					membershipSetting[(int)key] = setting;
+				membershipSetting[(int)key] = setting;
 			}
 		}
 	}

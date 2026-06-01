@@ -14,7 +14,9 @@ public enum StatName_DrainGain
 
 public sealed class OverflowStats_DrainGain<T> : IExposable where T : Need
 {
-	private static float[] dfltStats, overflowStats;
+	private static readonly float[]
+		dfltStats = [-0.5f, -0.5f], // FastDrain, SlowGain
+		overflowStats = (float[])dfltStats.Clone();
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool EffectEnabled(IConvertible statName)
@@ -28,26 +30,8 @@ public sealed class OverflowStats_DrainGain<T> : IExposable where T : Need
 	public static float EffectStat(int statId)
 		=> overflowStats[statId];
 
-	public void ExposeData()
-	{
-		Array Enums = Enum.GetValues(typeof(StatName_DrainGain));
-		// Needs to be a Dictionary with Enum as key here
-		// (instead of an array)
-		// so that Scribe_Collections can save the Enum by name
-		Dictionary<StatName_DrainGain, float> dict = [];
-		if (Scribe.mode == LoadSaveMode.Saving)
-		{
-			foreach (StatName_DrainGain settingName in Enums)
-				dict[settingName] = overflowStats[(int)settingName];
-		}
-		Scribe_Collections.Look(ref dict, Strings.overflowStats, LookMode.Value, LookMode.Value);
-		if (Scribe.mode == LoadSaveMode.LoadingVars)
-		{
-			foreach (StatName_DrainGain settingName in Enums)
-				overflowStats[(int)settingName]
-					= dict.GetValueOrDefault(settingName, dfltStats[(int)settingName]);
-		}
-	}
+	public OverflowStats_DrainGain()
+		=> Debug.StaticConstructorLog(typeof(OverflowStats_DrainGain<T>));
 
 	public static void AddSettings(Listing_Standard ls)
 	{
@@ -75,15 +59,32 @@ public sealed class OverflowStats_DrainGain<T> : IExposable where T : Need
 		overflowStats[(int)settingName] = b1 ? f1 : -f1 - 1f;
 	}
 
-	static OverflowStats_DrainGain()
+	public void ExposeData()
 	{
-		Debug.StaticConstructorLog(typeof(OverflowStats_DrainGain<T>));
-		dfltStats = [-0.5f, -0.5f]; // FastDrain, SlowGain
-		overflowStats = (float[])dfltStats.Clone();
+		Array Enums = Enum.GetValues(typeof(StatName_DrainGain));
+		// Needs to be a Dictionary with Enum as key here
+		// (instead of an array)
+		// so that Scribe_Collections can save the Enum by name
+		Dictionary<StatName_DrainGain, float> dict = [];
+		if (Scribe.mode == LoadSaveMode.Saving)
+		{
+			foreach (StatName_DrainGain settingName in Enums)
+				dict[settingName] = overflowStats[(int)settingName];
+		}
+		Scribe_Collections.Look(ref dict, Strings.overflowStats, LookMode.Value, LookMode.Value);
+		if (Scribe.mode == LoadSaveMode.LoadingVars)
+		{
+			foreach (StatName_DrainGain settingName in Enums)
+			{
+				overflowStats[(int)settingName]
+					= dict.GetValueOrDefault(settingName, dfltStats[(int)settingName]);
+			}
+		}
 	}
 
-	// Singleton pattern (except it's not readonly so we can ref it)
-	private OverflowStats_DrainGain()
-	{ }
-	public static OverflowStats_DrainGain<T> instance = new();
+	public static void StaticExposeData()
+	{
+		OverflowStats_DrainGain<T> instance = new();
+		Scribe_Deep.Look(ref instance, typeof(T).Name);
+	}
 }
