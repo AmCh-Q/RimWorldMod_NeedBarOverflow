@@ -62,9 +62,9 @@ public sealed class Setting_Common : IExposable
 		AddOrUpdateOverflow();
 	}
 
-	// Singleton pattern (except it's not readonly so we can ref it)
-	private Setting_Common()
+	public Setting_Common()
 	{ }
+
 	public static Setting_Common instance = new();
 
 	public static bool AnyEnabled => overflow.Values.Any(x => x > 0f);
@@ -82,7 +82,7 @@ public sealed class Setting_Common : IExposable
 			return value;
 		}
 		Debug.Error("Attempt to load Overflow setting before it's initialized!");
-		return 0f;
+		return 1f;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -103,12 +103,12 @@ public sealed class Setting_Common : IExposable
 		else
 			overflowData = modsOverflow.Concat(overflowData);
 		overflow = new(dfltOverflow);
-		foreach (KeyValuePair<string, float> need in overflowData)
+		foreach ((string typeName, float value) in overflowData)
 		{
-			if (NeedTypesByName.TryGetValue(need.Key, out Type needType))
-				overflow[needType] = need.Value;
+			if (NeedTypesByName.TryGetValue(typeName, out Type needType))
+				overflow[needType] = value;
 			else
-				Debug.Message("Did not find need type of name " + need.Key);
+				Debug.Message("Did not find need type of name " + typeName);
 		}
 	}
 
@@ -116,16 +116,17 @@ public sealed class Setting_Common : IExposable
 	{
 		Debug.Message("Common.ExposeData() called with Scribe.mode == " + Scribe.mode);
 
-		Dictionary<string, float> overflowDataForExpose = [];
+		Dictionary<string, float>? dataForExpose = null;
 		if (Scribe.mode == LoadSaveMode.Saving)
 		{
-			foreach (KeyValuePair<Type, float> need in overflow)
-				overflowDataForExpose.Add(need.Key.FullName, need.Value);
+			dataForExpose = [];
+			foreach ((Type type, float value) in overflow)
+				dataForExpose.Add(type.FullName, value);
 		}
-		Scribe_Collections.Look(ref overflowDataForExpose, Strings.overflow, LookMode.Value, LookMode.Value);
+		Scribe_Collections.Look(ref dataForExpose, Strings.overflow, LookMode.Value, LookMode.Value);
 		if (Scribe.mode == LoadSaveMode.LoadingVars)
-			AddOrUpdateOverflow(overflowDataForExpose);
+			AddOrUpdateOverflow(dataForExpose);
 
-		DisableNeedOverflow.Common.ExposeData();
+		DisableNeedOverflow.Common.StaticExposeData();
 	}
 }

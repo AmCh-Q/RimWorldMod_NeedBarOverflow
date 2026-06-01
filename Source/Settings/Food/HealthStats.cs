@@ -51,6 +51,15 @@ public sealed partial class Setting_Food : IExposable
 			.Cast<int>().Any(
 				stat => healthStats[stat, 0] >= 0f);
 
+		public static IEnumerable<string> StatStr(int k)
+		{
+			for (int i = 0; i < 9; i++)
+			{
+				yield return healthStats[k, i]
+					.ToString(CultureInfo.InvariantCulture);
+			}
+		}
+
 		public static void ExposeData()
 		{
 			Array Enums = Enum.GetValues(typeof(HealthName));
@@ -61,17 +70,7 @@ public sealed partial class Setting_Food : IExposable
 			if (Scribe.mode == LoadSaveMode.Saving)
 			{
 				foreach (HealthName key in Enums)
-				{
-					IEnumerable<string> statStr()
-					{
-						for (int i = 0; i < 9; i++)
-						{
-							yield return healthStats[(int)key, i]
-								.ToString(CultureInfo.InvariantCulture);
-						}
-					}
-					healthStat_strs[key] = string.Join(" ", statStr());
-				}
+					healthStat_strs[key] = string.Join(" ", StatStr((int)key));
 			}
 
 			Scribe_Collections.Look(ref healthStat_strs,
@@ -106,8 +105,30 @@ public sealed partial class Setting_Food : IExposable
 				ApplyFoodHediffSettings();
 		}
 
+		public class DrawingContext(Listing_Standard ls)
+		{
+			public Listing_Standard ls = ls;
+
+			private HealthName _healthName;
+
+			public HealthName HealthName
+			{
+				get => _healthName;
+				set
+				{
+					_healthName = value;
+					SettingLabel = new(nameof(Need_Food), Strings.HealthStat_ + value.ToString());
+				}
+			}
+
+			public SettingLabel SettingLabel { get; private set; }
+			public int idx;
+			public float txt_min, txt_max;
+		}
+
 		public static void AddSettings(Listing_Standard ls)
 		{
+			DrawingContext cxt = new(ls);
 			Array Enums = Enum.GetValues(typeof(HealthName));
 			Utility.LsGap(ls);
 			SettingLabel sl = new(nameof(Need_Food), Strings.HealthDetails);
@@ -133,52 +154,80 @@ public sealed partial class Setting_Food : IExposable
 			OverflowStats_Food.AddSettingsForHealthStats(ls);
 			for (int i = 1; i < 9; i++)
 			{
+				cxt.idx = i;
 				Utility.LsGap(ls);
-				foreach (HealthName key in Enums)
+				foreach (HealthName healthName in Enums)
 				{
-					if (key != HealthName.Level &&
-						healthStats[(int)key, 0] < 0f)
-					{
-						continue;
-					}
-
-					sl = new(nameof(Need_Food), Strings.HealthStat_ + key.ToString());
-					float txt_min = dfltHealthStats[(int)key, 0];
-					float txt_max = dfltHealthStats[(int)key, 9];
-					txt_min = txt_min < 0f ? txt_min : -txt_min - 1f;
-					txt_min = Mathf.Max(txt_min, healthStats[(int)key, i - 1]);
-					txt_max = Mathf.Min(txt_max, healthStats[(int)key, i + 1]);
-					if (i == 1 && key == HealthName.Level)
-					{
-						healthStats[(int)key, i] = 1f;
-						ls.Label(sl.label
-							.Translate(1f.CustomToString(true, true)));
-						//ls.Gap(Text.LineHeight * 1.2f - ls.verticalSpacing * 0.6f);
-					}
-					else if (txt_min < txt_max)
-					{
-						float f1 = healthStats[(int)key, i];
-						float slider_min = Mathf.Log10(txt_min);
-						bool logSlider = txt_max == float.PositiveInfinity;
-						f1 = Utility.AddNumSetting(
-							ls, f1, logSlider,
-							logSlider ? slider_min : txt_min,
-							logSlider ? (slider_min + 1f) : txt_max,
-							txt_min, txt_max,
-							sl.label, null,
-							key != HealthName.VomitFreq);
-						healthStats[(int)key, i] = f1;
-					}
-					else
-					{
-						healthStats[(int)key, i] = Mathf.Clamp(healthStats[(int)key, i], txt_max, txt_min);
-						ls.Label(sl.label
-							.Translate(healthStats[(int)key, i]
-							.CustomToString(true, true)));
-						ls.Gap(Text.LineHeight * 1.2f - ls.verticalSpacing * 0.6f);
-					}
+					cxt.HealthName = healthName;
+					AddSettingsPerType(cxt);
 				}
 			}
+		}
+
+		public static void AddSettingsPerType(DrawingContext cxt)
+		{
+			HealthName key = cxt.HealthName;
+			int i = cxt.idx;
+
+			if (key != HealthName.Level && healthStats[(int)key, 0] < 0f)
+				return;
+
+			if (key == HealthName.Level && i == 1)
+			{
+				AddSetting_1stLevel(cxt);
+				return;
+			}
+
+			float txt_min = dfltHealthStats[(int)key, 0];
+			float txt_max = dfltHealthStats[(int)key, 9];
+			txt_min = txt_min < 0f ? txt_min : -txt_min - 1f;
+			cxt.txt_min = Mathf.Max(txt_min, healthStats[(int)key, i - 1]);
+			cxt.txt_max = Mathf.Min(txt_max, healthStats[(int)key, i + 1]);
+
+			if (txt_min < txt_max)
+				AddSetting_Slider(cxt);
+			else
+				AddSetting_Fixed(cxt);
+		}
+
+		public static void AddSetting_1stLevel(DrawingContext cxt)
+		{
+			healthStats[(int)HealthName.Level, 1] = 1f;
+			cxt.ls.Label(cxt.SettingLabel.TranslatedLabel(1f.CustomToString(true, true)));
+		}
+
+		public static void AddSetting_Slider(DrawingContext cxt)
+		{
+			HealthName key = cxt.HealthName;
+			int i = cxt.idx;
+			float txt_min = cxt.txt_min;
+			float txt_max = cxt.txt_max;
+
+			float f1 = healthStats[(int)key, i];
+			float slider_min = Mathf.Log10(txt_min);
+			bool logSlider = txt_max == float.PositiveInfinity;
+			f1 = Utility.AddNumSetting(
+				cxt.ls, f1, logSlider,
+				logSlider ? slider_min : txt_min,
+				logSlider ? (slider_min + 1f) : txt_max,
+				txt_min, txt_max,
+				cxt.SettingLabel.label, null,
+				key != HealthName.VomitFreq);
+			healthStats[(int)key, i] = f1;
+		}
+
+		public static void AddSetting_Fixed(DrawingContext cxt)
+		{
+			HealthName key = cxt.HealthName;
+			int i = cxt.idx;
+			float txt_min = cxt.txt_min;
+			float txt_max = cxt.txt_max;
+
+			healthStats[(int)key, i] = Mathf.Clamp(healthStats[(int)key, i], txt_max, txt_min);
+			cxt.ls.Label(cxt.SettingLabel
+				.TranslatedLabel(healthStats[(int)key, i]
+				.CustomToString(true, true)));
+			cxt.ls.Gap(Text.LineHeight * 1.2f - cxt.ls.verticalSpacing * 0.6f);
 		}
 
 		public static void ApplyFoodHediffSettings()
@@ -189,41 +238,76 @@ public sealed partial class Setting_Food : IExposable
 			for (int i = 1; i < 9; i++)
 			{
 				HediffStage stage = ModDefOf.FoodOverflow.stages[i - 1];
-				stage.minSeverity = healthStats[(int)HealthName.Level, i] - 1f;
-				if (healthStats[(int)HealthName.HungerFactor, 0] >= 0f)
-					stage.hungerRateFactor = healthStats[(int)HealthName.HungerFactor, i];
-				else
-					stage.hungerRateFactor = 1f;
-				if (healthStats[(int)HealthName.HealingFactor, 0] >= 0f)
-					stage.naturalHealingFactor = healthStats[(int)HealthName.HealingFactor, i];
-				else
-					stage.naturalHealingFactor = -1f;
-				stage.capMods.Clear();
-				float offset = -healthStats[(int)HealthName.MovingOffset, i];
-				if (healthStats[(int)HealthName.MovingOffset, 0] >= 0f && offset < 0f)
-				{
-					PawnCapacityModifier capMod = new()
-					{
-						capacity = PawnCapacityDefOf.Moving,
-						offset = offset
-					};
-					stage.capMods.Add(capMod);
-				}
-				offset = -healthStats[(int)HealthName.EatingOffset, i];
-				if (healthStats[(int)HealthName.EatingOffset, 0] >= 0f && offset < 0f)
-				{
-					PawnCapacityModifier capMod = new()
-					{
-						capacity = ModDefOf.Eating,
-						offset = offset
-					};
-					stage.capMods.Add(capMod);
-				}
-				if (healthStats[(int)HealthName.VomitFreq, 0] >= 0f)
-					stage.vomitMtbDays = 1f / healthStats[(int)HealthName.VomitFreq, i];
-				else
-					stage.vomitMtbDays = -1f;
+				ApplyFoodHediff_minSeverity(stage, i);
+				ApplyFoodHediff_hungerRateFactor(stage, i);
+				ApplyFoodHediff_naturalHealingFactor(stage, i);
+				ApplyFoodHediff_vomitMtbDays(stage, i);
+				ApplyFoodHediff_capMods(stage, i);
 			}
+		}
+
+		public static void ApplyFoodHediff_minSeverity(HediffStage stage, int i)
+			=> stage.minSeverity = healthStats[(int)HealthName.Level, i] - 1f;
+
+		public static void ApplyFoodHediff_hungerRateFactor(HediffStage stage, int i)
+		{
+			if (healthStats[(int)HealthName.HungerFactor, 0] >= 0f)
+				stage.hungerRateFactor = healthStats[(int)HealthName.HungerFactor, i];
+			else
+				stage.hungerRateFactor = 1f;
+		}
+
+		public static void ApplyFoodHediff_naturalHealingFactor(HediffStage stage, int i)
+		{
+			if (healthStats[(int)HealthName.HealingFactor, 0] >= 0f)
+				stage.naturalHealingFactor = healthStats[(int)HealthName.HealingFactor, i];
+			else
+				stage.naturalHealingFactor = -1f;
+		}
+
+		public static void ApplyFoodHediff_vomitMtbDays(HediffStage stage, int i)
+		{
+			if (healthStats[(int)HealthName.VomitFreq, 0] >= 0f)
+				stage.vomitMtbDays = 1f / healthStats[(int)HealthName.VomitFreq, i];
+			else
+				stage.vomitMtbDays = -1f;
+		}
+
+		public static void ApplyFoodHediff_capMods(HediffStage stage, int i)
+		{
+			stage.capMods.Clear();
+			if (GetFoodHediff_capMod_Moving(i) is PawnCapacityModifier capMod_Moving)
+				stage.capMods.Add(capMod_Moving);
+			if (GetFoodHediff_capMod_Eating(i) is PawnCapacityModifier capMod_Eating)
+				stage.capMods.Add(capMod_Eating);
+		}
+
+		public static PawnCapacityModifier? GetFoodHediff_capMod_Moving(int i)
+		{
+			if (healthStats[(int)HealthName.MovingOffset, 0] < 0f)
+				return null;
+			float offset = -healthStats[(int)HealthName.MovingOffset, i];
+			if (offset >= 0f)
+				return null;
+			return new()
+			{
+				capacity = PawnCapacityDefOf.Moving,
+				offset = offset
+			};
+		}
+
+		public static PawnCapacityModifier? GetFoodHediff_capMod_Eating(int i)
+		{
+			if (healthStats[(int)HealthName.EatingOffset, 0] < 0f)
+				return null;
+			float offset = -healthStats[(int)HealthName.EatingOffset, i];
+			if (offset >= 0f)
+				return null;
+			return new()
+			{
+				capacity = ModDefOf.Eating,
+				offset = offset
+			};
 		}
 	}
 }

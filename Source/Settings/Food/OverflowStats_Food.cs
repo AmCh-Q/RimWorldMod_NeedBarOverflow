@@ -19,7 +19,14 @@ public sealed partial class Setting_Food : IExposable
 {
 	public sealed class OverflowStats_Food : IExposable
 	{
-		private static readonly float[] dfltStats, overflowStats;
+		// StatName_Food.OverflowBonus
+		// StatName_Food.DisableEating
+		// StatName_Food.NonHumanMult
+		// StatName_Food.GourmandMult
+		// StatName_Food.ShowHediffLvl
+		private static readonly float[]
+			dfltStats = [1f, 1f, 0.25f, 0.25f, 1.2f],
+			overflowStats = dfltStats;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool EffectEnabled(IConvertible statName)
@@ -103,21 +110,9 @@ public sealed partial class Setting_Food : IExposable
 				1f, float.PositiveInfinity, true);
 		}
 
-		static OverflowStats_Food()
-		{
-			Debug.StaticConstructorLog(typeof(OverflowStats_Food));
-			// StatName_Food.OverflowBonus
-			// StatName_Food.DisableEating
-			// StatName_Food.NonHumanMult
-			// StatName_Food.GourmandMult
-			// StatName_Food.ShowHediffLvl
-			dfltStats = [1f, 1f, 0.25f, 0.25f, 1.2f];
-			overflowStats = (float[])dfltStats.Clone();
-		}
-
-		// Singleton pattern (except it's not readonly so we can ref it)
-		private OverflowStats_Food()
+		public OverflowStats_Food()
 		{ }
+
 		public static OverflowStats_Food instance = new();
 	}
 }

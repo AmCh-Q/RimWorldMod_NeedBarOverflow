@@ -68,7 +68,7 @@ public static class Common
 		ManualConfig.AddSettings(ls);
 	}
 
-	public static void ExposeData()
+	public static void StaticExposeData()
 	{
 		Cache.ExposeData();
 		ChecksByType.Membership_ExposeData();
