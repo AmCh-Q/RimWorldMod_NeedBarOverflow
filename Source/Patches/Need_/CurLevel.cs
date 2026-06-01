@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
+using static HarmonyLib.Code;
 
 namespace NeedBarOverflow.Patches;
 
@@ -24,16 +25,19 @@ public sealed class Need_CurLevel() : Patch_Single(
 	public static float Adjusted_MaxLevel(Need need)
 	{
 		float originalMax = need.MaxLevel;
-		if (!DisableNeedOverflow.Common.CanOverflow(need))
-			return originalMax;
 		Type type = need.GetType();
-		float mult = Setting_Common.GetOverflow(type);
-		if (mult < 1)
+
+		if (!Setting_Common.Enabled(type) ||
+			!DisableNeedOverflow.Common.CanOverflow(need))
+		{
 			return originalMax;
-		if (type == typeof(Need_Food))
-			return Mathf.Max(originalMax * mult,
-				originalMax + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
-		return originalMax * mult;
+		}
+
+		float multipliedMax = originalMax * Setting_Common.GetOverflow(type);
+		if (type != typeof(Need_Food))
+			return multipliedMax;
+		return Mathf.Max(multipliedMax,
+			originalMax + Setting_Food.EffectStat(StatName_Food.OverflowBonus));
 	}
 
 	private static IEnumerable<CodeInstruction> TranspilerMethod(
@@ -67,7 +71,9 @@ public sealed class Need_CurLevel() : Patch_Single(
 				instructionList[i + 4].Calls(Refs.m_Clamp) &&
 				// There is one more instruction after that
 				i < instructionList.Count - 5))
+			{
 				continue;
+			}
 
 			// Enter patch
 			state = 1;
