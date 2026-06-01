@@ -107,9 +107,16 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 		float maxLevel = __instance.MaxLevel;
 		float curLevel = __instance.CurLevel;
 		float curInstantLevel = __instance.CurInstantLevel;
+		float trueMaxLevel = Mathf.Max(maxLevel, curLevel);
 
-		// (Custom) Skip if not overflowing
-		if (curLevel <= maxLevel && curInstantLevel <= maxLevel)
+#if l1_3
+		bool showDevGizmos = Prefs.DevMode && DebugSettings.godMode;
+#else
+		bool showDevGizmos = DebugSettings.ShowDevGizmos;
+#endif
+
+		// (Custom) Skip if not overflowing and not showing Dev Gizmos
+		if (curLevel <= maxLevel && curInstantLevel <= maxLevel && !showDevGizmos)
 			return true;
 
 		// (Vanilla 1.2+) Adjust to max height
@@ -158,24 +165,16 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 		}
 
 		// (Vanilla 1.4+, separated, down supported to 1.2+) ShowDevGizmos
-		{
-			bool showDevGizmos
-#if l1_3
-				= Prefs.DevMode && DebugSettings.godMode;
-#else
-				= DebugSettings.ShowDevGizmos;
-#endif
-			if (showDevGizmos)
-				ShowDevGizmos(__instance, needRect);
-		}
+		if (showDevGizmos)
+			ShowDevGizmos(__instance, needRect);
 
 		// Vanilla rect6 no longer needed
 		// Vanilla num4 no longer needed
-		float prcntShrinkFactor = maxLevel / curLevel; // New
+		float prcntShrinkFactor = maxLevel / trueMaxLevel; // New
 
 		NeedDef def = __instance.def;
-		if (curLevel < 1f && def.scaleBar)
-			needRect.width *= curLevel;
+		if (trueMaxLevel < 1f && def.scaleBar)
+			needRect.width *= trueMaxLevel;
 
 		// (Vanilla 1.2+, replaced) Draw fillable bar
 		Rect barRect = FillableBar(needRect, curLevel / maxLevel);
@@ -195,11 +194,10 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 
 		// (Vanilla 1.2+) Draw unit ticks
 		// Modified checks (also draw orignal maxLevel is exactly 1f)
-		bool showUnitTicks
 #if l1_3
-			= def.scaleBar;
+		bool showUnitTicks = def.scaleBar;
 #else
-			= def.showUnitTicks;
+		bool showUnitTicks = def.showUnitTicks;
 #endif
 		if (showUnitTicks || maxLevel == 1f)
 		{
@@ -207,12 +205,12 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 			// So I need to shift x a little
 			barRect.x += 2f;
 			// 0.0078125f is just a small power-of-two number I picked
-			float minDrawLevel = curLevel * 0.0078125f;
-			for (float j = 1f, step = 1f; j < curLevel; j += step)
+			float minDrawLevel = trueMaxLevel * 0.0078125f;
+			for (float j = 1f, step = 1f; j < trueMaxLevel; j += step)
 			{
 				// Don't draw too dense of divisions at the left
 				if (j >= minDrawLevel)
-					d_DrawBarDivision(__instance, barRect, j / curLevel);
+					d_DrawBarDivision(__instance, barRect, j / trueMaxLevel);
 				// Draw at 1,2,3,...,9
 				// Then 10,20,30...,90
 				// Then 100,200,300, and so on
