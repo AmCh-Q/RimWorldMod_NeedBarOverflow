@@ -9,7 +9,7 @@
 		<DefineConstants>$(DefineConstants);g1_2;g1_3;g1_4;g1_5;g1_6;v1_6;l1_6;l1_7;l1_8;l1_9;</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*-*" />
-		<PackageReference Include="Lib.Harmony.Ref" Version="2.4.1" />
+		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" />
+		<PackageReference Include="Lib.Harmony.Ref" Version="2.4.3" />
 	</ItemGroup>
 </Project>

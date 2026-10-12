@@ -11,6 +11,7 @@ This is a Mod for the game [RimWorld](https://store.steampowered.com/app/294100)
 ## Compile by Yourself
 A Visual Studio Solution is provided in the source file.  
 This mod requires [RimRef](https://www.nuget.org/packages/Krafs.Rimworld.Ref) and [Lib.Harmony](https://www.nuget.org/packages/Lib.Harmony) to compile correctly.  
+For game version 1.7+, mod version 1.5.0+: There is no latest Nuget packages yet, so you need to manually add ``Assembly-CSharp.dll``,``UnityStubs.dll``,``0Harmony.dll``   as reference.
 
 ---
 
@@ -27,3 +28,4 @@ This mod requires [RimRef](https://www.nuget.org/packages/Krafs.Rimworld.Ref) an
 ## 自行编译
 源代码里提供了Visual Studio的Solution文件。  
 这个模组需要[RimRef](https://www.nuget.org/packages/Krafs.Rimworld.Ref)和[Lib.Harmony](https://www.nuget.org/packages/Lib.Harmony)的支持才能正确编译。  
+游戏版本1.7以上，模组版本1.5.0以上：因为暂时不存在最新的Nuget依赖包，额外需要你手动添加最新的游戏``Assembly-CSharp.dll``,``UnityStubs.dll``,``0Harmony.dll``依赖文件。  

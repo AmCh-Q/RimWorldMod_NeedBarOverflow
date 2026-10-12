@@ -4,4 +4,5 @@
   <Project Path="1.4.csproj" />
   <Project Path="1.5.csproj" />
   <Project Path="1.6.csproj" />
+  <Project Path="1.7.csproj" />
 </Solution>

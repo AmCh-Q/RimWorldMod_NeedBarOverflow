@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<!-- Framework properties
+		https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#framework-properties -->
+		<TargetFramework>net10.0</TargetFramework>
+		<!-- Language options
+		https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language -->
+		<DefineConstants>$(DefineConstants);g1_2;g1_3;g1_4;g1_5;g1_6;g1_7;v1_7;l1_7;l1_8;l1_9;</DefineConstants>
+		<!-- Disable generated dependency file, as this is a mod, not standalone app
+		2026-10-12: There is no official documentation of it yet, so source code below
+		https://github.com/dotnet/sdk/blob/a9d9e0a552ee177088ded0ef09f6061a44223596/src/Tasks/Microsoft.NET.Build.Tasks/build/Microsoft.NET.Sdk.targets#L93-L108 -->
+		<GenerateDependencyFile>false</GenerateDependencyFile>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Reference Include="0Harmony">
+	    <HintPath>..\..\..\..\..\workshop\content\294100\2009463077\1.7\Assemblies\0Harmony.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Assembly-CSharp">
+	    <HintPath>..\..\..\Assembly-CSharp.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="UnityStubs">
+	    <HintPath>..\..\..\UnityStubs.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	</ItemGroup>
+</Project>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <packageId>AmCh.NeedBarOverflow</packageId>
-  <modVersion IgnoreIfNoMatchingField="True">1.4.7</modVersion>
+  <modVersion IgnoreIfNoMatchingField="True">1.5.0</modVersion>
   <name>Need Bar Overflow</name>
   <author>AmCh</author>
   <url>https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow</url>
@@ -15,6 +15,7 @@ Pawn's Need Bars are no longer clamped to 100%.\n\nThis mod allows pawn's need b
     <li>1.4</li>
     <li>1.5</li>
     <li>1.6</li>
+    <li>1.7</li>
   </supportedVersions>
   <modDependencies>
     <li>
