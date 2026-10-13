@@ -101,9 +101,9 @@ internal static class Helpers
 	internal static FieldInfo Field(this Type type,
 		string name, BindingFlags flags = Consts.bindAll)
 	{
-		FieldInfo field = type.GetField(name, flags);
-		field.NotNull(type.FullName + ":" + name);
-		return field;
+		FieldInfo? field = type?.GetField(name, flags);
+		field.NotNull(type?.FullName + ":" + name);
+		return field!;
 	}
 
 	// Get children methods which the input method uses

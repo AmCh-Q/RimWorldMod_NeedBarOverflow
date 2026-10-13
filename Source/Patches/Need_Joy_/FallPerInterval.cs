@@ -3,10 +3,11 @@ using RimWorld;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Joy_FallPerInterval() : Patch_Single(
-	original: typeof(Need_Joy).Getter("FallPerInterval"),
+public sealed class Need_Joy_FallPerInterval() : Patch(
 	postfix: PostFixMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Joy).Getter("FallPerInterval")];
 	public override void Toggle()
 		=> Toggle(OverflowStats_DrainGain<Need_Joy>.EffectEnabled(StatName_DrainGain.FastDrain));
 

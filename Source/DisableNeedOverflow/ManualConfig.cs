@@ -44,18 +44,19 @@ public static class ManualConfig
 		Dictionary<string, Def> defDict = Defs.GetDefDictionary(defType);
 
 		disablingDefs[(int)defType].Clear();
-		if (!Setting_Common.AnyEnabled ||
-			defNameStr.NullOrEmpty() ||
-			defNameStr.EndsWith(suffix, StringComparison.Ordinal))
+		if (!Setting_Common.AnyEnabled)
 			return;
-
+		if (defNameStr.NullOrEmpty())
+			return;
+		if (defNameStr.EndsWith(suffix, StringComparison.Ordinal))
+			return;
 		string[] defNames = defNameStr.ToLowerInvariant().Split(',');
 		if (defNames.NullOrEmpty())
 			return;
 
 		foreach (string defName in defNames)
 		{
-			if (defDict.TryGetValue(defName.Trim(), out Def def))
+			if (defDict.TryGetValue(defName.Trim(), out Def? def))
 				disablingDefs[(int)defType].Add(def);
 		}
 		Debug.Message("DisablingDefs.ParseDisabledDefs() parsed " + defType.ToString());
@@ -72,7 +73,7 @@ public static class ManualConfig
 		{
 			if (defDict.TryGetValue(
 				strArr[i].Trim().ToLowerInvariant(),
-				out Def def))
+				out Def? def))
 			{
 				strArr[i] = string.Concat(
 					def.LabelCap, " (", def.defName, ")")

@@ -4,6 +4,7 @@ using NeedBarOverflow.Needs;
 using NeedBarOverflow.Patches;
 using RimWorld;
 using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Reflection;
 using Verse;
@@ -12,12 +13,23 @@ namespace NeedBarOverflow.ModCompat;
 
 // Vanilla Nutrient Paste Expanded
 // https://steamcommunity.com/sharedfiles/filedetails/?id=2920385763
-public sealed class VanillaNutrientPasteExpanded() : Patch_Single(
-	original: ModsConfig.IsActive("VanillaExpanded.VNutrientE")
-	? GenTypes.GetTypeInAnyAssembly("VNPE.Building_Dripper")?
-		.MethodNullable("TickRare") : null,
+public sealed class VanillaNutrientPasteExpanded() : Patches.Patch(
 	postfix: PostfixMethod)
 {
+	protected override void Initialize()
+	{
+		if (Target is not null)
+			return;
+		if (!ModsConfig.IsActive("VanillaExpanded.VNutrientE"))
+			return;
+		Type? type = GenTypes.GetTypeInAnyAssembly("VNPE.Building_Dripper");
+		if (type is null)
+		{
+			Debug.Warning("VNPE.Building_Dripper is null");
+			return;
+		}
+		Target = [type.Method("StartInspirationMTBDays")];
+	}
 	public static readonly AccessTools.FieldRef<object, CompFacility>? fr_facilityComp;
 	static VanillaNutrientPasteExpanded()
 	{

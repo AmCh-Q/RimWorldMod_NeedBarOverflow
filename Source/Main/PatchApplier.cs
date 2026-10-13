@@ -20,14 +20,13 @@ public static class PatchApplier
 	{
 		IEnumerable<Patch> patches = typeof(Patch)
 			.AllSubclassesNonAbstract()
-			.Select(CreatePatch)
-			.Where(patch => patch is not null && patch.Patchable)
+			.Select(Patch.TryCreatePatch)
+			.Where(patch => patch is not null)
 			.Cast<Patch>();
 		foreach (Patch patch in patches)
 		{
 			Patch? existing = Patches
-				.Where(existing => existing.Equals(patch))
-				.FirstOrDefault();
+				.FirstOrDefault(existing => existing.Equals(patch));
 			if (existing is null)
 			{
 				Patches.Add(patch);
@@ -38,19 +37,6 @@ public static class PatchApplier
 				"Multiple conflicting patches: [",
 				patch.GetType().Name, "], [",
 				existing.GetType().Name, "]."));
-		}
-	}
-	private static Patch? CreatePatch(Type patchClass)
-	{
-		try
-		{
-			Patch patch = (Patch)Activator.CreateInstance(patchClass);
-			return patch;
-		}
-		catch (Exception e)
-		{
-			Debug.Warning($"Error in patch {patchClass}: {e}");
-			return null;
 		}
 	}
 	public static void ApplyPatches()

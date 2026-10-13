@@ -19,11 +19,13 @@ namespace NeedBarOverflow.Patches;
 //   then JobGiver_GetDeathrest.TryGiveJob might also need to be patched
 #if false
 internal class JobGiver_GetDeathrest_GetPriority()
-	: Patch_Single(
-	original: typeof(JobGiver_GetDeathrest)
-		.Method(nameof(JobGiver_GetDeathrest.GetPriority)),
-	transpiler: TranspilerMethod)
+	: Patch(transpiler: TranspilerMethod)
 {
+
+	protected override void Initialize()
+		=> Target ??= [typeof(JobGiver_GetDeathrest)
+		.Method(nameof(JobGiver_GetDeathrest.GetPriority))];
+
 	public override void Toggle()
 		=> Toggle(ModsConfig.BiotechActive &&
 			Setting_Common.Enabled(typeof(Need_Deathrest)));

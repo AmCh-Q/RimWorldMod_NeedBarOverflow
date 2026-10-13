@@ -1,11 +1,14 @@
-﻿using Verse;
+﻿using RimWorld;
+using Verse;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class SavedGameLoaderNow_LoadGameFromSaveFileNow() : Patch_Single(
-	original: SavedGameLoaderNow.LoadGameFromSaveFileNow,
+public sealed class SavedGameLoaderNow_LoadGameFromSaveFileNow() : Patch(
 	postfix: PostfixMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(SavedGameLoaderNow)
+		.Method(nameof(SavedGameLoaderNow.LoadGameFromSaveFileNow))];
 	public override void Toggle()
 		=> Toggle(true);
 	private static void PostfixMethod()

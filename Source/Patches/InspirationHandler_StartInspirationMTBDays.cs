@@ -7,11 +7,11 @@ using System.Reflection.Emit;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class InspirationHandler_StartInspirationMTBDays() : Patch_Single(
-	original: typeof(InspirationHandler)
-		.Getter("StartInspirationMTBDays"),
+public sealed class InspirationHandler_StartInspirationMTBDays() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(InspirationHandler).Getter("StartInspirationMTBDays")];
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_Mood)));
 	private static IEnumerable<CodeInstruction> TranspilerMethod(

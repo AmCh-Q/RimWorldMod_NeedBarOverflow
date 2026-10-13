@@ -24,7 +24,7 @@ public static partial class ChecksByType
 			return true;
 
 		// Check
-		return genes.Where(gene => gene.Active)
+		return genes!.Where(gene => gene.Active)
 			.Select(gene => gene.def)
 			.All(def => !manualDefs.Contains(def)
 			&& DefExtension.DefModExtension(def, needType));

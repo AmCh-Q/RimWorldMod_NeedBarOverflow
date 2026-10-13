@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using Verse;
 
 namespace NeedBarOverflow.Patches;
 
@@ -8,11 +9,11 @@ namespace NeedBarOverflow.Patches;
 //   we restabilsh that assumption by short circuiting
 //   so that if the threshold is exactly 1f, it'd never be satisfied
 public sealed class ThinkNode_ConditionalNeedPercentageAbove_Satisfied()
-	: Patch_Single(
-	original: typeof(ThinkNode_ConditionalNeedPercentageAbove)
-		.Method("Satisfied"),
-	prefix: PrefixMethod)
+	: Patch(prefix: PrefixMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(ThinkNode_ConditionalNeedPercentageAbove)
+		.Method("Satisfied")];
 	public override void Toggle()
 		=> Toggle(Setting_Common.AnyEnabled);
 	private static bool PrefixMethod(

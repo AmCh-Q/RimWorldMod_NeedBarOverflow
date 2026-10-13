@@ -5,11 +5,12 @@ using System.Collections.Generic;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Rest_NeedInterval() : Patch_Single(
-	original: typeof(Need_Rest).Method(nameof(Need_Rest.NeedInterval)),
+public sealed class Need_Rest_NeedInterval() : Patch(
 	transpiler: TranspilerMethod)
 {
 	private static bool patchDrain, patchGain;
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Rest).Method(nameof(Need_Rest.NeedInterval))];
 	public override void Toggle()
 	{
 		bool enableDrain = OverflowStats_DrainGain<Need_Rest>
@@ -28,9 +29,7 @@ public sealed class Need_Rest_NeedInterval() : Patch_Single(
 	}
 	public void Toggle(bool enableDrain, bool enableGain)
 	{
-		if (Patched
-			&& ((patchDrain != enableDrain)
-			|| (patchGain != enableGain)))
+		if (Patched && ((patchDrain != enableDrain) || (patchGain != enableGain)))
 			base.Toggle(false);
 		patchDrain = enableDrain;
 		patchGain = enableGain;

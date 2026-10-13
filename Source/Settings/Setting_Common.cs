@@ -53,8 +53,8 @@ public sealed class Setting_Common : IExposable
 			.Select(needDef => needDef.needClass)
 			.Where(needType => needType is not null)
 			.Distinct()
-			.ToDictionary(needType => needType.FullName);
-		NeedTypesByName[typeof(Need).FullName] = typeof(Need);
+			.ToDictionary(needType => needType.FullName!);
+		NeedTypesByName[typeof(Need).FullName!] = typeof(Need);
 		NeedDefByType = DefDatabase<NeedDef>.AllDefsListForReading
 			.Where(needDef => needDef.needClass is not null)
 			.GroupBy(needDef => needDef.needClass)
@@ -100,7 +100,7 @@ public sealed class Setting_Common : IExposable
 		overflow = new(dfltOverflow);
 		foreach ((string typeName, float value) in overflowData)
 		{
-			if (NeedTypesByName.TryGetValue(typeName, out Type needType))
+			if (NeedTypesByName.TryGetValue(typeName, out Type? needType))
 				overflow[needType] = value;
 			else
 				Debug.Message("Did not find need type of name " + typeName);
@@ -116,7 +116,7 @@ public sealed class Setting_Common : IExposable
 		{
 			dataForExpose = [];
 			foreach ((Type type, float value) in overflow)
-				dataForExpose.Add(type.FullName, value);
+				dataForExpose.Add(type.FullName!, value);
 		}
 		Scribe_Collections.Look(ref dataForExpose, Strings.overflow, LookMode.Value, LookMode.Value);
 		if (Scribe.mode == LoadSaveMode.LoadingVars)

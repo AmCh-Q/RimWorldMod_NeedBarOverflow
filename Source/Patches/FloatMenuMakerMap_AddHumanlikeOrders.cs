@@ -13,10 +13,11 @@ namespace NeedBarOverflow.Patches;
 // FloatMenuMakerMap is removed in 1.6
 // See FloatMenuOptionProvider_Ingest_GetSingleOptionFor for 1.6
 // Disable right click option to consume food if pawn is too full on food
-public sealed class FloatMenuMakerMap_AddHumanlikeOrders() : Patch_Single(
-	original: typeof(FloatMenuMakerMap).Method("AddHumanlikeOrders"),
+public sealed class FloatMenuMakerMap_AddHumanlikeOrders() : Patch(
 	postfix: PostfixMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(FloatMenuMakerMap).Method("AddHumanlikeOrders")];
 	private static MethodInfo? targetOptionMethod;
 	private static readonly FieldInfo f_Ingest
 		= typeof(JobDefOf).Field(nameof(JobDefOf.Ingest));
@@ -25,9 +26,8 @@ public sealed class FloatMenuMakerMap_AddHumanlikeOrders() : Patch_Single(
 	public override void Toggle(bool enable)
 	{
 		targetOptionMethod ??= Helpers
-			.GetInternalMethods(Original!, OpCodes.Ldftn)
-			.Where(IsIngestJobMethod)
-			.FirstOrDefault();
+			.GetInternalMethods(Target[0], OpCodes.Ldftn)
+			.FirstOrDefault(IsIngestJobMethod);
 		targetOptionMethod.NotNull("Patch FloatMenuMakerMap_AddHumanlikeOrders.targetOptionMethod");
 		base.Toggle(enable);
 	}

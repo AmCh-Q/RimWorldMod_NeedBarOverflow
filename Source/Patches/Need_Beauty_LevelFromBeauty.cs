@@ -6,10 +6,11 @@ using System.Reflection.Emit;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Beauty_LevelFromBeauty() : Patch_Single(
-	original: typeof(Need_Beauty).Method("LevelFromBeauty"),
+public sealed class Need_Beauty_LevelFromBeauty() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Beauty).Method("LevelFromBeauty")];
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_Beauty)));
 	private static IEnumerable<CodeInstruction> TranspilerMethod(

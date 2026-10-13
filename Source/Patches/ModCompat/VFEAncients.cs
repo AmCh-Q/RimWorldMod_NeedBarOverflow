@@ -12,34 +12,62 @@ public static class VFEAncients
 	public static readonly bool active
 		= ModsConfig.IsActive("VanillaExpanded.VFEA");
 
-	private static List<Def>? disablingDefs_modExtension;
+	private static readonly Lazy<List<Def>> disablingDefs_modExtension
+		= new(Load_disablingDefs_modExtension);
+
 	private static List<Def> DisablingDefs_modExtension
-		=> active ? (disablingDefs_modExtension ??= Load_disablingDefs_modExtension()) : [];
+		=> active ? disablingDefs_modExtension.Value : [];
+
 	private static List<Def> Load_disablingDefs_modExtension()
 	{
 		Type? t_PowerDef = GenTypes.GetTypeInAnyAssembly("VFEAncients.PowerDef");
-		Debug.Assert(t_PowerDef is not null, "VFEAncients.t_PowerDef is not null");
+		if (t_PowerDef is null)
+		{
+			Debug.Warning("VFEAncients.t_PowerDef is null");
+			return [];
+		}
 		return [..GenDefDatabase
 			.GetAllDefsInDatabaseForDef(t_PowerDef)
 			.Where(def => def.HasModExtension<DisableNeedOverflowExtension>())];
 	}
 
-	private static Func<Pawn, IEnumerable<Def>>? getPawnPowerDefs;
+	private static readonly Lazy<Func<Pawn, IEnumerable<Def>>>
+		getPawnPowerDefs = new(Load_getPawnPowerDefs);
+	private static readonly Func<object, IEnumerable<Def>>
+		EmptyResult = _ => [];
 	private static Func<Pawn, IEnumerable<Def>> GetPawnPowerDefs
-		=> active ? (getPawnPowerDefs ??= Load_getPawnPowerDefs()) : (_ => []);
+		=> active ? getPawnPowerDefs.Value : EmptyResult;
 	private static Func<Pawn, IEnumerable<Def>> Load_getPawnPowerDefs()
 	{
 		Type t_PowerTracker = GenTypes.GetTypeInAnyAssembly("VFEAncients.Pawn_PowerTracker");
-		Debug.Assert(t_PowerTracker is not null, "VFEAncients.t_PowerTracker is not null");
+		if (t_PowerTracker is null)
+		{
+			Debug.Warning("VFEAncients.Pawn_PowerTracker is null");
+			return EmptyResult;
+		}
 
-		MethodInfo m_Get = t_PowerTracker!.Method("Get");
-		MethodInfo m_AllPowers = t_PowerTracker!.Getter("AllPowers");
-		MethodInfo m_Cast = typeof(Enumerable)
-			.GetMethod(nameof(Enumerable.Cast))
+		MethodInfo m_Get = t_PowerTracker.Method("Get");
+		if (m_Get is null)
+		{
+			Debug.Warning("VFEAncients.Pawn_PowerTracker.Get is null");
+			return EmptyResult;
+		}
+
+		MethodInfo m_AllPowers = t_PowerTracker.Getter("AllPowers");
+		if (m_AllPowers is null)
+		{
+			Debug.Warning("VFEAncients.Pawn_PowerTracker.AllPowers is null");
+			return EmptyResult;
+		}
+
+		MethodInfo? m_Cast = typeof(Enumerable)
+			.GetMethod(nameof(Enumerable.Cast))?
 			.MakeGenericMethod(typeof(Def));
-		Debug.Assert(m_Get is not null, "VFEAncients.PowerTracker.Get(Pawn) is not null");
-		Debug.Assert(m_AllPowers is not null, "VFEAncients.PowerTracker.AllPowers is not null");
-		Debug.Assert(m_Cast is not null, "Enumerable.Cast<Def>() is not null");
+		if (m_Cast is null)
+		{
+			Debug.Warning("Enumerable.Cast<Def>() is null");
+			return EmptyResult;
+		}
 
 		// PowerTracker tracker = PowerTracker.Get(pawn);
 		ParameterExpression exp_param = Expression.Parameter(typeof(Pawn), "pawn");

@@ -8,8 +8,7 @@ using Verse;
 namespace NeedBarOverflow.Patches;
 
 [StaticConstructorOnStartup]
-public sealed class Need_DrawOnGUI() : Patch_Single(
-	original: typeof(Need).Method(nameof(Need.DrawOnGUI)),
+public sealed class Need_DrawOnGUI() : Patch(
 	prefix: PrefixMethod)
 {
 	// Textures for use in GUI, initialized in static constructor
@@ -74,8 +73,11 @@ public sealed class Need_DrawOnGUI() : Patch_Single(
 		// Texture for the instant tick marker
 		BarInstantMarkerTex = (Texture2D)typeof(Need)
 			.Field("BarInstantMarkerTex")
-			.GetValue(null);
+			.GetValue(null)!;
 	}
+
+	protected override void Initialize()
+		=> Target ??= [typeof(Need).Method(nameof(Need.DrawOnGUI))];
 
 	public override void Toggle()
 		=> Toggle(Setting_Common.AnyEnabled);

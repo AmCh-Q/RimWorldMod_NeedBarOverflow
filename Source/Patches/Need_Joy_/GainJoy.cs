@@ -8,11 +8,12 @@ using System.Reflection.Emit;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Joy_GainJoy() : Patch_Single(
-	original: typeof(Need_Joy).Method(nameof(Need_Joy.GainJoy)),
+public sealed class Need_Joy_GainJoy() : Patch(
 	prefix: PrefixMethod,
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Joy).Method(nameof(Need_Joy.GainJoy))];
 	public override void Toggle()
 	{
 		bool enable = Setting_Common.Enabled(typeof(Need_Joy));
@@ -37,23 +38,21 @@ public sealed class Need_Joy_GainJoy() : Patch_Single(
 		=> Unpatch(false, false);
 	private void Dopatch(bool enable, bool enableGain)
 	{
-		HarmonyLib.Patches? patches = PatchProcessor.GetPatchInfo(Original);
+		HarmonyLib.Patches? patches = PatchProcessor.GetPatchInfo(Target[0]);
 		bool patchTranspiler = enable &&
 			(patches is null || patches.Transpilers.All(p => p.owner != harmony.Id));
 		bool patchPrefix = enable && enableGain &&
 			(patches is null || patches.Prefixes.All(p => p.owner != harmony.Id));
 		if (!patchTranspiler && !patchPrefix)
 			return;
-		Debug.Message("Patching Method "
-			+ Original!.DeclaringType.Name
-			+ ":" + Original.Name);
-		harmony.Patch(Original,
+		Debug.Message("Patching Method " + Target[0].FullDescription());
+		harmony.Patch(Target[0],
 			prefix: patchPrefix ? Prefix : null,
 			transpiler: patchTranspiler ? Transpiler : null);
 	}
 	private void Unpatch(bool enable, bool enableGain)
 	{
-		HarmonyLib.Patches? patches = PatchProcessor.GetPatchInfo(Original);
+		HarmonyLib.Patches? patches = PatchProcessor.GetPatchInfo(Target[0]);
 		if (patches is null)
 			return;
 		bool unpatchTranspiler = !enable &&
@@ -62,15 +61,13 @@ public sealed class Need_Joy_GainJoy() : Patch_Single(
 			patches.Prefixes.Any(p => p.owner == harmony.Id);
 		if (!unpatchTranspiler && !unpatchPrefix)
 			return;
-		Debug.Message("Unpatching Method "
-			+ Original!.DeclaringType.Name
-			+ ":" + Original.Name);
+		Debug.Message("Unpatching Method " + Target[0].FullDescription());
 		HarmonyPatchType unpatchType = HarmonyPatchType.All;
 		if (unpatchTranspiler && !unpatchPrefix)
 			unpatchType = HarmonyPatchType.Transpiler;
 		else if (!unpatchTranspiler && unpatchPrefix)
 			unpatchType = HarmonyPatchType.Prefix;
-		harmony.Unpatch(Original, unpatchType, harmony.Id);
+		harmony.Unpatch(Target[0], unpatchType, harmony.Id);
 	}
 	private static void PrefixMethod(Need_Joy __instance, ref float amount)
 	{

@@ -11,10 +11,11 @@ using Verse;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Food_NeedInterval() : Patch_Single(
-	original: typeof(Need_Food).Method(nameof(Need_Food.NeedInterval)),
+public sealed class Need_Food_NeedInterval() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Food).Method(nameof(Need_Food.NeedInterval))];
 	public static readonly Dictionary<Pawn, float> pawnsWithFoodOverflow = [];
 
 #if l1_4

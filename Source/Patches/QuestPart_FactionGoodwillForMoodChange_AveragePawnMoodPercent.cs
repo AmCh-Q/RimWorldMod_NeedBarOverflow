@@ -8,11 +8,11 @@ namespace NeedBarOverflow.Patches;
 // I am not sure if I should enable this patch yet...
 #if false
 public sealed class QuestPart_FactionGoodwillForMoodChange_AveragePawnMoodPercent()
-	: Patch_Single(
-	original: typeof(QuestPart_FactionGoodwillForMoodChange)
-		.Getter("AveragePawnMoodPercent"),
-	transpiler: Add1UpperBound.d_transpiler)
+	: Patch(transpiler: Add1UpperBound.d_transpiler)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(QuestPart_FactionGoodwillForMoodChange)
+		.Getter("AveragePawnMoodPercent")];
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_Mood)));
 }

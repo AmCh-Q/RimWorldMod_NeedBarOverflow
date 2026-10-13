@@ -9,11 +9,12 @@ using System.Reflection.Emit;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Learning_Learn() : Patch_Single(
-	original: typeof(Need_Learning)
-		.Method(nameof(Need_Learning.Learn)),
+public sealed class Need_Learning_Learn() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Learning)
+		.Method(nameof(Need_Learning.Learn))];
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_Learning)));
 	private static IEnumerable<CodeInstruction> TranspilerMethod(

@@ -6,11 +6,12 @@ using System.Reflection.Emit;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Comfort_CurInstantLevel() : Patch_Single(
-	original: typeof(Need_Comfort)
-		.Getter(nameof(Need_Comfort.CurInstantLevel)),
+public sealed class Need_Comfort_CurInstantLevel() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Comfort)
+		.Getter(nameof(Need_Comfort.CurInstantLevel))];
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_Comfort)));
 	private static IEnumerable<CodeInstruction> TranspilerMethod(

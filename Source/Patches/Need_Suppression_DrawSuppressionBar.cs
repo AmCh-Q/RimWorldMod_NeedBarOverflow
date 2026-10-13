@@ -10,11 +10,12 @@ using System.Reflection.Emit;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Suppression_DrawSuppressionBar() : Patch_Single(
-	original: typeof(Need_Suppression)
-		.Method(nameof(Need_Suppression.DrawSuppressionBar)),
+public sealed class Need_Suppression_DrawSuppressionBar() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Suppression)
+		.Method(nameof(Need_Suppression.DrawSuppressionBar))];
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_Suppression)));
 	private static IEnumerable<CodeInstruction> TranspilerMethod(

@@ -12,27 +12,43 @@ namespace NeedBarOverflow.ModCompat;
 
 // Character Editor
 // https://steamcommunity.com/sharedfiles/filedetails/?id=1874644848
-public sealed class Character_Editor_AAddNeed() : Patch_Multi(
-#if v1_5
-	// Version 1.5 only -- Mod used obfuscated method name
-	original: ModsConfig.IsActive("void.charactereditor") ?
-	[
-		GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+f")?
-		.MethodNullable(name: "a", parameters: [typeof(Need)]),
-		GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+f")?
-		.MethodNullable(name: "b", parameters: [typeof(Need)])
-	] : [],
-#else
-	original: ModsConfig.IsActive("void.charactereditor") ?
-	[
-		GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-		.MethodNullable(name: "AAddNeed", parameters: [typeof(Need)]),
-		GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+BlockNeeds")?
-		.MethodNullable(name: "ASubNeed", parameters: [typeof(Need)])
-	] : [],
-#endif
+public sealed class Character_Editor_AAddNeed() : Patches.Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+	{
+		if (Target is not null)
+			return;
+		if (!ModsConfig.IsActive("void.charactereditor"))
+			return;
+#if v1_5
+		// Version 1.5 only -- Mod used obfuscated method name
+		Type? type = GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+f");
+		if (type is null)
+		{
+			Debug.Warning("CharacterEditor.CEditor+EditorUI+f is null");
+			return;
+		}
+		Target =
+		[
+			type.Method(name: "a", parameters: [typeof(Need)]),
+			type.Method(name: "b", parameters: [typeof(Need)]),
+		];
+#else
+		Type? type = GenTypes.GetTypeInAnyAssembly("CharacterEditor.CEditor+EditorUI+BlockNeeds");
+		if (type is null)
+		{
+			Debug.Warning("CharacterEditor.CEditor+EditorUI+f is null");
+			return;
+		}
+		Target =
+		[
+			type.Method(name: "AAddNeed", parameters: [typeof(Need)]),
+			type.Method(name: "ASubNeed", parameters: [typeof(Need)]),
+		];
+#endif
+	}
+
 	public override void Toggle()
 		=> Toggle(Setting_Common.AnyEnabled);
 

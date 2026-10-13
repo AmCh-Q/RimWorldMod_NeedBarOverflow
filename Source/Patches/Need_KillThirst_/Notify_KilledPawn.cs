@@ -10,13 +10,16 @@ using System.Reflection.Emit;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_KillThirst_Notify_KilledPawn() : Patch_Single(
-	original: typeof(Need_KillThirst)
-		.Method(nameof(Need_KillThirst.Notify_KilledPawn)),
+public sealed class Need_KillThirst_Notify_KilledPawn() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_KillThirst)
+		.Method(nameof(Need_KillThirst.Notify_KilledPawn))];
+
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_KillThirst)));
+
 	private static IEnumerable<CodeInstruction> TranspilerMethod(
 		IEnumerable<CodeInstruction> instructions)
 	{

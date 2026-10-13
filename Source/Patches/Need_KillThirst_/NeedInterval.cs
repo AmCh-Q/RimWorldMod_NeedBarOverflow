@@ -6,11 +6,12 @@ using System.Collections.Generic;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_KillThirst_NeedInterval() : Patch_Single(
-	original: typeof(Need_KillThirst)
-		.Method(nameof(Need_KillThirst.NeedInterval)),
+public sealed class Need_KillThirst_NeedInterval() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_KillThirst)
+		.Method(nameof(Need_KillThirst.NeedInterval))];
 	public override void Toggle()
 		=> Toggle(OverflowStats_DrainGain<Need_KillThirst>.EffectEnabled(StatName_DrainGain.FastDrain));
 	private static float DrainMultiplier()

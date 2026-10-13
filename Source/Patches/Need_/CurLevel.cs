@@ -14,10 +14,12 @@ namespace NeedBarOverflow.Patches;
 // Need.CurLevel setter method usually clamps the level between 0 and Need.MaxLevel
 // This patch adjusts the apparent Need.MaxLevel fed to the clamp
 // This method is what allows for need bars overflowing
-public sealed class Need_CurLevel() : Patch_Single(
-	original: typeof(Need).Setter(nameof(Need.CurLevel)),
+public sealed class Need_CurLevel() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need).Setter(nameof(Need.CurLevel))];
+
 	public override void Toggle()
 		=> Toggle(Setting_Common.AnyEnabled);
 

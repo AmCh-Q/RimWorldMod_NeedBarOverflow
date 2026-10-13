@@ -21,7 +21,7 @@ public static partial class ChecksByType
 			return true;
 
 		// Check
-		return hediffs.Select(hediff => hediff.def)
+		return hediffs!.Select(hediff => hediff.def)
 			.All(def => !manualDefs.Contains(def)
 			&& DefExtension.DefModExtension(def, needType));
 	}

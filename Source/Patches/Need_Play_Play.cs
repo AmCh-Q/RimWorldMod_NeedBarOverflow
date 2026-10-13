@@ -6,13 +6,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Emit;
+using Verse;
 
 namespace NeedBarOverflow.Patches;
 
-public sealed class Need_Play_Play() : Patch_Single(
-	original: typeof(Need_Play).Method(nameof(Need_Play.Play)),
+public sealed class Need_Play_Play() : Patch(
 	transpiler: TranspilerMethod)
 {
+	protected override void Initialize()
+		=> Target ??= [typeof(Need_Play).Method(nameof(Need_Play.Play))];
 	public override void Toggle()
 		=> Toggle(Setting_Common.Enabled(typeof(Need_Play)));
 	private static IEnumerable<CodeInstruction> TranspilerMethod(

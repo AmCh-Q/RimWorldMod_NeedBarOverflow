@@ -64,14 +64,12 @@ public sealed partial class Setting_Food : IExposable
 		{
 			public Listing_Standard ls = ls;
 
-			private HealthName _healthName;
-
 			public HealthName HealthName
 			{
-				get => _healthName;
+				get;
 				set
 				{
-					_healthName = value;
+					field = value;
 					SettingLabel = new(nameof(Need_Food), Strings.HealthStat_ + value.ToString());
 				}
 			}
@@ -287,7 +285,7 @@ public sealed partial class Setting_Food : IExposable
 				foreach (HealthName key in Enums)
 				{
 					if (healthStat_strs is null ||
-						!healthStat_strs.TryGetValue(key, out string statStr) ||
+						!healthStat_strs.TryGetValue(key, out string? statStr) ||
 						statStr.NullOrEmpty())
 					{
 						continue;

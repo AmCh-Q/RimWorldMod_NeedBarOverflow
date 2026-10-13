@@ -22,7 +22,7 @@ public static partial class ChecksByType
 			return true;
 
 		// Check
-		return apparels.Select(apparel => apparel.def)
+		return apparels!.Select(apparel => apparel.def)
 			.All(def => !manualDefs.Contains(def)
 			&& DefExtension.DefModExtension(def, needType));
 	}
