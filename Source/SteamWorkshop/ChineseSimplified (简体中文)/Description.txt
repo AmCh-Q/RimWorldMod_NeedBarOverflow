@@ -1,0 +1,120 @@
+[h1]解除小人需求条的100%上限[/h1]
+原版里面因为饮食值上限100%，小人吃东西的时候会浪费10%-20%营养，更小体型的生物浪费的就更多了。
+类似的各种药效也会因为休息值达到100%之类的原因消失。
+[u]这个模组允许小人的需求条略微溢出。[/u]
+[img]https://i.ibb.co/RKt3qyP/1-rimworld-improved-need-bar-mod-propaganda-v0-ypm5ygu18vph1.webp[/img]
+[img]https://i.ibb.co/JF7SSK17/2-rimworld-improved-need-bar-mod-propaganda-v0-4by6nmu18vph1.webp[/img]
+[img]https://i.ibb.co/S7GBwsKL/3-rimworld-improved-need-bar-mod-propaganda-v0-f17k4lu18vph1.webp[/img]
+[img]https://i.ibb.co/fRZCgV2/4-rimworld-improved-need-bar-mod-propaganda-v0-c7tprdu18vph1.webp[/img]
+(漫画原作者[url=https://fonzawa.carrd.co/]Fonzawa[/url]，授权翻译转载。)
+
+[u]小人仍将100%视作上限[/u] 除了暴饮暴食外不会主动去溢出自己的需求。
+[list]
+    [*]小动物/模组种族/小孩 都可以吃下一整份食物而不浪费。
+    [*]其他模组的>1营养值的食物也有意义了。
+    [*]小人哪怕刚睡醒就吃清醒丸也能获得100%的休息值加成。
+    [*]你的传奇敲击兽皮沙发 也能够提供 完整的舒适度/美观度加成。
+[/list]
+
+[h1]手动下载和源代码[/h1]
+最新版和过往旧版本可以[url=https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow/releases]在这里下载[/url]
+
+[h1]现有特性[/h1]
+支持所有原版游戏+DLC的需求条。
+不过部分需求条（房间大小、奴隶压制、孩子学习、孩子玩耍、威严值、虐待值）在没有别的模组支持的情况下没有溢出的方法。
+不支持血源质/灵能溢出（游戏本体不把这些视作通常的“需求”）
+
+[h1]额外效果[/h1]
+添加了一些可选的增益减益：
+饮食：溢出后饿的更快、伤愈更快、吃的更慢、移动更慢、溢出太多导致呕吐效果
+休息：溢出后睡眠效率更低、累得更快
+娱乐：溢出后更容易无聊、娱乐效率更低
+
+[h1]设置[/h1]
+全部数值设置都可以在关闭设置窗口及时生效，无需重启游戏。
+默认情况下只开启了 饮食、休息、娱乐 三个条的溢出，同时饮食值溢出会减一点移速。
+支持手动设置禁用特定种族，健康状况，基因，穿着的小人溢出需求条（可用于解决软性的模组不兼容）。
+
+[h1]优化[/h1]
+游戏性能影响应该非常小，绝大多数补丁在我自己的测试里耗时小于 0.005 毫秒。
+所以补丁都是按需启用——不启用的功能对游戏0影响
+绝大多数除了游戏启动/存档/读档之外的操作都是 O(1) （总之就是快的意思） 或者实测发现比 O(1) 方案更快（例如通常极短的数组等等）。
+
+[h1]兼容[/h1]
+已测试兼容：
+[list]
+    [*]边缘世界 1.2-1.6 ([url=https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow/releases/tag/v1.5.0]官方1.7-兼容版[/url] 将在几天后更新到创意工坊，但1.6版本应该也能用。)
+    [*]全部DLC （不必须）
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2890901044]战斗拓展(Combat Extended)[/url]
+[/list]
+
+兼容，内置了兼容补丁:
+[list]
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1508850027]RimHUD[/url]
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2695164414]Tweaks Galore[/url]
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1874644848]人物编辑器(Character Editor)[/url]
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2006605356]CM Color Coded Mood Bar[/url]
+[/list]
+
+兼容，但部分情况下会禁用一些需求条的溢出：
+[table]
+    [tr]
+        [th]模组[/th]
+        [th]禁用……需求溢出[/th]
+        [th]如果以下为真[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3480725900]食尘小兔 (Dust Bunnies) [/url][/th]
+        [th]饮食[/th]
+        [th]种族: Dust bunny[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2886992038]WVC的基因模组 (WVC - Xenotypes and Genes)[/url][/th]
+        [th]饮食[/th]
+        [th]基因: Dead Stomach[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3042690053]Vanilla Races Expanded - Fungoid[/url][/th]
+        [th]心情[/th]
+        [th]基因: Mind Coalescence[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2654846754]Vanilla Factions Expanded - Ancients[/url][/th]
+        [th]饮食[/th]
+        [th]超能力: Redundant Stomach[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2938820380]Vanilla Factions Expanded - Empire[/url][/th]
+        [th]休息/娱乐[/th]
+        [th]穿着: Techfriar Crown[/th]
+    [/tr]
+[/table]
+
+可能不兼容:
+[list]
+    [*]边缘世界 1.1 以前的版本（支持太麻烦了）
+    [*]Alpha Books (收到报告说小人不读书，但我没能复现）
+    [*]因为总有可能有模组没预料到需求条可以超过100%，软性不兼容的情况还是有可能发生的，欢迎报告
+    [*]用户界面类模组可能会出现需求条变形的问题，这个只能报告给我我一个个修
+[/list]
+
+[h1]排序[/h1]
+放在Harmony、游戏本体、DLC 的后面。
+
+[h1]语言支持[/h1]
+自带中文（简体+繁体）+英文。
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2884166027]kamikadza13的俄语(Русский)翻译[/url]
+如果你会别的语言, 也欢迎你向我提供翻译文本。
+
+[h1]更新[/h1]
+我习惯同步更新全部游戏版本对应的模组：
+[list]
+    [*]新功能，错误修理，优化等也会应用到旧版游戏上。
+    [*]但有时也会给旧版模组带来新问题。
+    [*]如果你打算玩长期存档，认为稳定性比新更新重要，那我推荐你从本地加载模组。
+[/list]
+
+[h1]授权相关[/h1]
+此模组的所有代码都是我(AmCh)写的。以[url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans]GPLv3[/url]发布。
+漫画的作者是[url=https://fonzawa.carrd.co/]Fonzawa[/url]，保留著作权。
+如果你分享我的模组，欢迎告知我一下，但不必须。

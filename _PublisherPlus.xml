@@ -4,5 +4,7 @@
     <exclude>.git</exclude>
     <exclude>Source\.vs</exclude>
     <exclude>Source\obj</exclude>
+    <exclude>Source\SteamWorkshop\ChineseSimplified (简体中文)\images</exclude>
+    <exclude>Source\SteamWorkshop\English\images</exclude>
   </Excluded>
 </Configuration>

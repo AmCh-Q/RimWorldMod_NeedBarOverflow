@@ -1,0 +1,121 @@
+[h1]Pawn's Need Bars are no longer clamped to 100%[/h1]
+In a vanilla game, when a pawn eats a full meal, around 10%-20% of the food is wasted due to hunger being capped at 100%, with more wasted if the body size is small.
+Similarly, if a colonist wakes up and immediately take their daily dose of wake-up or Ya-yo, the effects are just wasted.
+[u]To accomodate that, this mod allows food and other need levels to temporarily overflow.[/u]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2566316158&l=schinese]简体中文介绍在这[/url]
+[img]https://i.ibb.co/QjqsZKw7/1-rimworld-improved-need-bar-mod-propaganda-v0-ypm5ygu18vph1.webp[/img]
+[img]https://i.ibb.co/FLMJpgkv/2-rimworld-improved-need-bar-mod-propaganda-v0-4by6nmu18vph1.webp[/img]
+[img]https://i.ibb.co/QjMHSdKH/3-rimworld-improved-need-bar-mod-propaganda-v0-f17k4lu18vph1.webp[/img]
+[img]https://i.ibb.co/svgdqMG6/4-rimworld-improved-need-bar-mod-propaganda-v0-c7tprdu18vph1.webp[/img]
+(Art by [url=https://fonzawa.carrd.co/]Fonzawa[/url], used with permission.)
+
+[u]Pawns still think of 100% as their cap.[/u] So they won't actively try to overflow their need bars when it is already nearly full, unless they are on a binge.
+[list]
+    [*]Small animals, moddeds races, and children can now digest a whole meal without wasting nutrition.
+    [*]Modded large meals (with >1 nutrition) now makes sense.
+    [*]You can put your colonists on a regular schedule of Wake-up and they will always receive the full +100% rest effect.
+    [*]Your legendary thrumbofur armchair and golden grand sculpture can also provide the full comfort and beauty benefit they are capable of.
+[/list]
+
+[h1]Manual Download & Source Code[/h1]
+You can find latest & previous versions on [url=https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow/releases]GitHub[/url]
+
+[h1]Supported Needs[/h1]
+Currently supports all base game + DLC needs.
+Support all pawns with needs (humans, animals, mechanoids (may need additional configuration), etc.)
+However, some needs (Room Size, Slave Suppression, Child Learning, Child Play, Authority, Sadism) currently have no way of overflowing without other mods (I don't know if those mods exist, but if someone makes a "magical learning pill" in the future, it'd probably be supported).
+Not supported: Hemogen, Psyfocus (they are not considered "needs" by the game).
+
+[h1]Additional Effects[/h1]
+There are optional buffs/de-buffs:
+Food: Hunger drains faster, Heal faster, Move slower, occasional vomit reaction, disallow eating when food level is above some threshold;
+Rest: Gets tired faster, sleep less effective;
+Recreation: Gets bored faster, recreational activities less effective.
+
+[h1]Configuation[/h1]
+Settings are applied as soon as you close the settings window.
+Default: only food, sleep, and recreation needs can overflow, too full on food would slightly reduce movement speed and makes eating slower.
+You can disable pawns of some races, with health conditions/genes, or clothing from overflowing the food bar (useful in case of potential soft incompatibilities with race mod / body part mods / gene mods).
+
+[h1]Performance[/h1]
+There should be negligible impact on game speed, as most patches take <0.005 milliseconds per game second on average in my tests;
+All patches are applied conditionally on game start–features you don't use have 0 impact on the game;
+Almost everything outside of game startup/saving/loading is O(1) (in another word, fast) or are tested to be faster than O(1) solutions (such as very short lists, etc).
+
+[h1]Compatibilities[/h1]
+Tested compatible:
+[list]
+    [*]RimWorld 1.2-1.6 ([url=https://github.com/AmCh-Q/RimWorldMod_NeedBarOverflow/releases/tag/v1.5.0]officially 1.7-compatible version[/url] will be uploaded to the workshop soon, in the meantime the 1.6 version should also work.)
+    [*]All DLCs.
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2890901044]Combat Extended[/url]
+[/list]
+
+Compatible, via built-in compatibility patches:
+[list]
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1508850027]RimHUD[/url]
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2695164414]Tweaks Galore[/url]
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1874644848]Character Editor[/url]
+    [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2006605356]CM Color Coded Mood Bar[/url]
+[/list]
+
+Compatible, but would disable some needs from overflowing in some circumstances:
+[table]
+    [tr]
+        [th]Mod[/th]
+        [th]Disable Oveflow for[/th]
+        [th]When this is true[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3480725900]Dust Bunnies[/url][/th]
+        [th]Food[/th]
+        [th]Race: Dust bunny[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2886992038]WVC - Xenotypes and Genes[/url][/th]
+        [th]Food[/th]
+        [th]Active Gene: Dead Stomach[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3042690053]Vanilla Races Expanded - Fungoid[/url][/th]
+        [th]Mood[/th]
+        [th]Active Gene: Mind Coalescence[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2654846754]Vanilla Factions Expanded - Ancients[/url][/th]
+        [th]Food[/th]
+        [th]Active Power: Redundant Stomach[/th]
+    [/tr]
+    [tr]
+        [th][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2938820380]Vanilla Factions Expanded - Empire[/url][/th]
+        [th]Rest, Recreation[/th]
+        [th]Wearing: Techfriar Crown[/th]
+    [/tr]
+[/table]
+
+Potentially Incompatibile:
+[list]
+    [*]RimWorld versions 1.1 and earlier (too complicated to support).
+    [*]Alpha Books (There are reports that pawns can't read books but I wasn't able to reproduce that).
+    [*]It is always possible that some mods expect some needs to be always ≤100% and behave strangely otherwise, let me know if you notice such behavior so I can take a look at it.
+    [*]UI mods may see overflowing bar visuals, send me a screenshot if you see any so I can fix them.
+[/list]
+
+[h1]Load Order[/h1]
+Anywhere after Harmony, the base game, and the DLCs.
+
+[h1]Languages[/h1]
+Included: English, Chinese (Simplified, Traditional)
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2884166027]Russian(Русский) translation Patch thanks to kamikadza13[/url]
+
+[h1]Updates[/h1]
+I backport all of my changes:
+[list]
+    [*]New features, bugfixes, and optimizations will apply to older game versions.
+    [*]However, this can sometimes introduce new bugs.
+    [*]If you are making a long playthrough and prefer stability over fresh updates, please load the mod locally.
+[/list]
+
+[h1]Licenses[/h1]
+All codes are written by me (AmCh), released under [url=https://www.gnu.org/licenses/gpl-3.0.en.html]GPLv3[/url].
+The arts are by [url=https://fonzawa.carrd.co/]Fonzawa[/url] and they reserve the rights.
+I'd appreciate it if you let me know of your redistribution, but it's not required.
